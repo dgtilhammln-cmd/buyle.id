@@ -1911,28 +1911,66 @@
                     </section>
                 @endif
 
-                {{-- ══ 5. FAQ SECTION (FREQUENTLY ASKED QUESTIONS) ══ --}}
-                <section style="margin-bottom: 3rem;" id="faq-tix">
-                    <div class="tix-section-header" style="margin-bottom: 1.5rem;">
-                        <div>
-                            <div
-                                style="font-size:0.75rem; font-weight:800; color:#1eb349; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-                                <span
-                                    style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#1eb349;"></span>
-                                FAQ Buyle TIX
-                            </div>
-                            <h2 class="tix-section-title" style="margin:0;">
-                                Pertanyaan Umum Seputar Tiket
-                            </h2>
-                            <p style="font-size:0.88rem; color:#64748b; margin:6px 0 0;">
-                                Temukan jawaban cepat seputar pemesanan tiket, mekanisme check-in di venue, hingga layanan
-                                untuk EO.
-                            </p>
-                        </div>
-                    </div>
-
-                    @include('tix.partials.faq_accordion', ['accordionPrefix' => 'tix_page_faq'])
-                </section>
+                {{-- ══ 5. FAQ SCHEMA JSON-LD (VISUAL DIHAPUS, SCHEMA TETAP AKTIF UNTUK SEO GOOGLE) ══ --}}
+                @php
+                    $tixFaqSchema = [
+                        '@context'   => 'https://schema.org',
+                        '@type'      => 'FAQPage',
+                        'mainEntity' => [
+                            [
+                                '@type'          => 'Question',
+                                'name'           => 'Bagaimana cara membeli tiket di Buyle TIX?',
+                                'acceptedAnswer' => [
+                                    '@type' => 'Answer',
+                                    'text'  => 'Pilih event di buyle.id/tix, tentukan kategori dan jumlah tiket, klik Beli Sekarang lalu lengkapi data pemesan (KTP/identitas). Pilih metode pembayaran (QRIS instan, Virtual Account, Transfer Bank), e-tiket resmi ber-QR Code akan langsung dikirimkan ke email dan tersimpan di akun Buyle Anda.'
+                                ]
+                            ],
+                            [
+                                '@type'          => 'Question',
+                                'name'           => 'Bagaimana mekanisme masuk (check-in) di hari H acara?',
+                                'acceptedAnswer' => [
+                                    '@type' => 'Answer',
+                                    'text'  => 'Cukup tunjukkan Barcode/QR Code E-Tiket dari layar smartphone Anda kepada panitia di gate masuk. Panitia akan scan menggunakan Buyle Gate Scanner dalam waktu kurang dari 1 detik.'
+                                ]
+                            ],
+                            [
+                                '@type'          => 'Question',
+                                'name'           => 'Bagaimana kebijakan pembatalan dan pengembalian dana (refund)?',
+                                'acceptedAnswer' => [
+                                    '@type' => 'Answer',
+                                    'text'  => 'Seluruh tiket yang telah berhasil dibayar bersifat non-refundable (tidak dapat dibatalkan atau diuangkan kembali), kecuali acara dibatalkan resmi oleh Event Organizer.'
+                                ]
+                            ],
+                            [
+                                '@type'          => 'Question',
+                                'name'           => 'Apakah e-tiket perlu ditukarkan menjadi tiket fisik atau gelang (wristband)?',
+                                'acceptedAnswer' => [
+                                    '@type' => 'Answer',
+                                    'text'  => 'Untuk sebagian besar event di Buyle TIX tidak perlu menukar tiket fisik karena sistem check-in sudah 100% digital. Jika EO mewajibkan penukaran fisik, informasi penukaran akan diumumkan di deskripsi event.'
+                                ]
+                            ],
+                            [
+                                '@type'          => 'Question',
+                                'name'           => 'Apa saja metode pembayaran yang didukung di Buyle TIX?',
+                                'acceptedAnswer' => [
+                                    '@type' => 'Answer',
+                                    'text'  => 'Buyle TIX mendukung QRIS Realtime (semua bank & e-wallet), Virtual Account otomatis 24 jam, serta Transfer Bank terverifikasi aman.'
+                                ]
+                            ],
+                            [
+                                '@type'          => 'Question',
+                                'name'           => 'Bagaimana jika email e-tiket belum diterima setelah pembayaran?',
+                                'acceptedAnswer' => [
+                                    '@type' => 'Answer',
+                                    'text'  => 'Periksa folder Spam/Promotions pada email Anda, atau langsung login ke akun Buyle.id dan buka menu Tiket Saya untuk mengunduh e-tiket PDF kapan saja.'
+                                ]
+                            ]
+                        ]
+                    ];
+                @endphp
+                <script type="application/ld+json">
+                    {!! json_encode($tixFaqSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+                </script>
 
                 {{-- ══ 6. PROMOTER & CREATOR CTA BANNER (LIGHT THEME) ══ --}}
                 <div class="tix-cta-box">
