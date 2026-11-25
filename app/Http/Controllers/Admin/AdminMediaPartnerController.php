@@ -124,7 +124,7 @@ class AdminMediaPartnerController extends Controller
 
         $badgePath = null;
         if ($request->hasFile('badge_image')) {
-            $badgePath = $this->storeWebPNoCrop($request->file('badge_image'), 'media-partners/badges', 800, 400, 90);
+            $badgePath = $this->storeWebPNoCrop($request->file('badge_image'), 'media-partners/badges', 1920, 1920, 95);
         }
 
         $mediaPartner = MediaPartner::create([
@@ -251,7 +251,7 @@ class AdminMediaPartnerController extends Controller
             if ($badgePath && Storage::disk('public')->exists($badgePath)) {
                 Storage::disk('public')->delete($badgePath);
             }
-            $badgePath = $this->storeWebPNoCrop($request->file('badge_image'), 'media-partners/badges', 800, 400, 90);
+            $badgePath = $this->storeWebPNoCrop($request->file('badge_image'), 'media-partners/badges', 1920, 1920, 95);
         } elseif ($request->boolean('remove_badge_image')) {
             if ($badgePath && Storage::disk('public')->exists($badgePath)) {
                 Storage::disk('public')->delete($badgePath);
