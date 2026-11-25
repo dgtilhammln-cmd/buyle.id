@@ -1,10 +1,15 @@
 @php
-    $adsenseEnabled = \App\Models\Setting::get('adsense_status', 'enabled') === 'enabled';
+    $adsenseStatus = \App\Models\Setting::get('adsense_status', 'enabled');
+    $interstitialStatus = \App\Models\Setting::get('adsense_bio_interstitial_status', 'enabled');
+    
+    // Iklan aktif hanya jika adsense_status bernilai 'enabled' (bukan disabled / 0 / false)
+    $adsenseEnabled = ($adsenseStatus === 'enabled' || $adsenseStatus === '1' || $adsenseStatus === true);
+    $interstitialEnabled = $adsenseEnabled && ($interstitialStatus === 'enabled' || $interstitialStatus === '1' || $interstitialStatus === true);
+    
     $pubId = \App\Models\Setting::get('adsense_publisher_id', 'ca-pub-8031682064726767');
     $scriptCode = \App\Models\Setting::get('adsense_script_code', '');
     $customImage = \App\Models\Setting::get('adsense_custom_image', '');
     $customUrl = \App\Models\Setting::get('adsense_custom_url', '');
-    $interstitialEnabled = \App\Models\Setting::get('adsense_bio_interstitial_status', 'enabled') === 'enabled';
     $interstitialDelay = (int) \App\Models\Setting::get('adsense_interstitial_delay', 3);
 @endphp
 
