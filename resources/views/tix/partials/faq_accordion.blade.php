@@ -405,6 +405,27 @@ BUYLE TIX — FAQ ACCORDION COMPONENT (LIGHT THEME & INTERACTIVE)
                 const isOpen = card.classList.contains('is-open');
                 const answer = card.querySelector('.tix-faq-answer');
                 const trigger = card.querySelector('.tix-faq-trigger');
+                const container = card.closest('.tix-faq-container');
+
+                // Jika card yang diklik akan dibuka (bukan ditutup), tutup semua card lainnya di container yang sama
+                if (!isOpen && container) {
+                    const siblingCards = container.querySelectorAll('.tix-faq-card.is-open');
+                    siblingCards.forEach(function (sibling) {
+                        if (sibling !== card) {
+                            sibling.classList.remove('is-open');
+                            const sTrigger = sibling.querySelector('.tix-faq-trigger');
+                            const sAnswer = sibling.querySelector('.tix-faq-answer');
+                            if (sTrigger) sTrigger.setAttribute('aria-expanded', 'false');
+                            if (sAnswer) {
+                                sAnswer.style.overflow = 'hidden';
+                                sAnswer.style.maxHeight = sAnswer.scrollHeight + 'px';
+                                requestAnimationFrame(() => {
+                                    sAnswer.style.maxHeight = '0px';
+                                });
+                            }
+                        }
+                    });
+                }
 
                 if (isOpen) {
                     card.classList.remove('is-open');
