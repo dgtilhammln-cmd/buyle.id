@@ -83,6 +83,18 @@ Maksimal 7 variasi per produk, layout compact & proporsional.
             </div>
         </div>
 
+        {{-- Banner Notice Khusus Tiket Event --}}
+        <div id="variantTicketInfoBanner"
+            style="display:none; background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:10px; padding:0.65rem 0.85rem; margin-bottom:0.85rem; font-size:0.75rem; color:#065f46; line-height:1.45;">
+            <div style="font-weight:700; margin-bottom:2px; display:flex; align-items:center; gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Foto Benefit / Denah Tiket (Format Landscape 16:9)
+            </div>
+            <div>
+                Khusus tiket event/konser, upload foto variasi dalam format <strong>Landscape (16:9)</strong> untuk menampilkan rincian benefit atau denah tempat duduk. Foto ini akan <strong>tampil besar seukuran pop-up</strong> di halaman pemesanan. <em>Jika dikosongkan, sistem otomatis menggunakan foto/poster utama event (Jalur Image 1).</em>
+            </div>
+        </div>
+
         {{-- Tabel Variasi Compact & Proporsional --}}
         <div style="width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;">
             <table style="width:100%; min-width:580px; border-collapse:separate; border-spacing:0 6px;">
@@ -222,10 +234,15 @@ Maksimal 7 variasi per produk, layout compact & proporsional.
 
     function updateVariantTypeExample(type) {
         const contentBox = document.getElementById('variantTypeExampleContent');
-        if (!contentBox) return;
+        if (contentBox) {
+            const exampleHtml = VARIANT_EXAMPLES[type] || VARIANT_EXAMPLES['external_link'];
+            contentBox.innerHTML = exampleHtml;
+        }
 
-        const exampleHtml = VARIANT_EXAMPLES[type] || VARIANT_EXAMPLES['external_link'];
-        contentBox.innerHTML = exampleHtml;
+        const ticketBanner = document.getElementById('variantTicketInfoBanner');
+        if (ticketBanner) {
+            ticketBanner.style.display = (type === 'ticket') ? 'block' : 'none';
+        }
     }
 
     function updateVariantCountUI() {

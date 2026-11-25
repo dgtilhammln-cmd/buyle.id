@@ -2294,6 +2294,11 @@
                                         $basePrice = (!$isFreeProduct && $service->sale_price > 0 && $service->sale_price < $service->price)
                                             ? (float) $service->sale_price : (float) ($service->price ?? 0);
                                         $defaultProductImage = !empty($imgs[0]) ? $imgs[0] : ($service->image ? asset('storage/' . $service->image) : asset('images/service-default.jpg'));
+                                        $eventPoster = !empty($service->og_image)
+                                            ? (str_starts_with($service->og_image, 'http') ? $service->og_image : asset('storage/' . ltrim($service->og_image, '/')))
+                                            : (!empty($service->image)
+                                                ? (str_starts_with($service->image, 'http') ? $service->image : asset('storage/' . ltrim($service->image, '/')))
+                                                : $defaultProductImage);
                                     @endphp
                                     <div id="pd-variant-section" style="display:none;">
                                         @foreach($service->variantOptions as $option)
@@ -2306,14 +2311,15 @@
                                                 <div class="pd-attr-content" style="flex-wrap:wrap; gap:0.5rem;">
                                                     @foreach($option->values as $val)
                                                         @php
-                                                            $vImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                                            $vImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . ltrim($val->image, '/'))) : null;
+                                                            $effectiveVImg = $vImg ?: ($isTicket ? $eventPoster : $defaultProductImage);
                                                         @endphp
                                                         <button type="button" class="pd-variant-pill" data-variant-id="{{ $val->id }}"
                                                             data-price="{{ $val->finalPrice() }}"
                                                             data-price-formatted="Rp{{ number_format($val->finalPrice(), 0, ',', '.') }}"
                                                             data-stock="{{ $val->stock }}"
                                                             data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
-                                                            data-img="{{ $vImg ?: $defaultProductImage }}"
+                                                            data-img="{{ $effectiveVImg }}"
                                                             data-has-custom-img="{{ $vImg ? '1' : '0' }}" @if($val->stock !== null && $val->stock <= 0) disabled style="opacity:0.4;cursor:not-allowed;" @endif
                                                             onclick="selectPdVariant(this)">
                                                             @if($vImg)
@@ -3011,28 +3017,61 @@
                                         </div>
 
                                         {{-- Header: Gambar Variasi / Produk + Harga + Stok + Tombol Tutup --}}
-                                        <div class="bvm-header">
-                                            <div class="bvm-thumb-wrap" onclick="openBvmLightbox()"
-                                                title="Klik untuk memperbesar denah / foto"
-                                                style="cursor: zoom-in; position: relative;">
-                                                <img id="bvm-thumb-img" src="{{ $defaultProductImage }}" alt="{{ $service->name }}"
-                                                    class="bvm-thumb">
-                                                <span class="bvm-thumb-zoom-badge" title="Perbesar Denah / Foto">
-                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                        stroke="currentColor" stroke-width="2.5">
+                                        @if($isTicket)
+                                            {{-- TICKET BANNER LANDSCAPE 16:9 SEUKURAN POPUP --}}
+                                            <div class="bvm-ticket-banner-wrap" onclick="openBvmLightbox()"
+                                                title="Klik untuk memperbesar denah / benefit tiket" style="cursor: zoom-in; position: relative;">
+                                                <img id="bvm-thumb-img" src="{{ $eventPoster }}" alt="{{ $service->name }}" class="bvm-ticket-banner-img">
+                                                <div class="bvm-ticket-banner-overlay"></div>
+                                                <div class="bvm-banner-badge" id="bvm-thumb-badge" style="display:none;">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                                                    </svg>
+                                                    <span>Benefit / Denah Tiket</span>
+                                                </div>
+                                                <span class="bvm-banner-zoom-pill" title="Perbesar Layar Penuh">
+                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                                         <circle cx="11" cy="11" r="8"></circle>
                                                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                                         <line x1="11" y1="8" x2="11" y2="14"></line>
                                                         <line x1="8" y1="11" x2="14" y2="11"></line>
                                                     </svg>
+                                                    <span>Perbesar</span>
                                                 </span>
-                                                <span id="bvm-thumb-badge" class="bvm-thumb-badge" style="display:none;">Foto
-                                                    Variasi</span>
+                                                <button type="button" class="bvm-close-btn bvm-close-on-banner" onclick="closePdVariantModal()" aria-label="Tutup">
+                                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </button>
                                             </div>
-                                            <div class="bvm-header-info">
-                                                <div class="bvm-price" id="bvm-price-display">
-                                                    Rp{{ number_format($basePrice, 0, ',', '.') }}</div>
-                                                @if(!$isTicket)
+                                            <div class="bvm-ticket-sub-header">
+                                                <div class="bvm-price" id="bvm-price-display">Rp{{ number_format($basePrice, 0, ',', '.') }}</div>
+                                                <div class="bvm-stock" id="bvm-stock-display" style="display:none;"></div>
+                                                <div class="bvm-selected-label" id="bvm-selected-label">Silakan pilih kategori tiket</div>
+                                            </div>
+                                        @else
+                                            <div class="bvm-header">
+                                                <div class="bvm-thumb-wrap" onclick="openBvmLightbox()"
+                                                    title="Klik untuk memperbesar denah / foto"
+                                                    style="cursor: zoom-in; position: relative;">
+                                                    <img id="bvm-thumb-img" src="{{ $defaultProductImage }}" alt="{{ $service->name }}"
+                                                        class="bvm-thumb">
+                                                    <span class="bvm-thumb-zoom-badge" title="Perbesar Denah / Foto">
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2.5">
+                                                            <circle cx="11" cy="11" r="8"></circle>
+                                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                                            <line x1="11" y1="8" x2="11" y2="14"></line>
+                                                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                                                        </svg>
+                                                    </span>
+                                                    <span id="bvm-thumb-badge" class="bvm-thumb-badge" style="display:none;">Foto
+                                                        Variasi</span>
+                                                </div>
+                                                <div class="bvm-header-info">
+                                                    <div class="bvm-price" id="bvm-price-display">
+                                                        Rp{{ number_format($basePrice, 0, ',', '.') }}</div>
                                                     <div class="bvm-stock" id="bvm-stock-display">
                                                         @if(is_null($service->stock))
                                                             <span style="color:#10b981;">• Stok Tersedia</span>
@@ -3042,22 +3081,20 @@
                                                             <span style="color:#ef4444;">• Stok Habis</span>
                                                         @endif
                                                     </div>
-                                                @else
-                                                    <div class="bvm-stock" id="bvm-stock-display" style="display:none;"></div>
-                                                @endif
-                                                <div class="bvm-selected-label" id="bvm-selected-label">
-                                                    {{ $isTicket ? 'Silakan pilih kategori tiket' : 'Silakan pilih opsi variasi' }}
+                                                    <div class="bvm-selected-label" id="bvm-selected-label">
+                                                        Silakan pilih opsi variasi
+                                                    </div>
                                                 </div>
+                                                <button type="button" class="bvm-close-btn" onclick="closePdVariantModal()"
+                                                    aria-label="Tutup">
+                                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
+                                                        viewBox="0 0 24 24">
+                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                    </svg>
+                                                </button>
                                             </div>
-                                            <button type="button" class="bvm-close-btn" onclick="closePdVariantModal()"
-                                                aria-label="Tutup">
-                                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"
-                                                    viewBox="0 0 24 24">
-                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                </svg>
-                                            </button>
-                                        </div>
+                                        @endif
 
                                         {{-- Body: List Grup Variasi & Kuantitas --}}
                                         <div class="bvm-body">
@@ -3071,20 +3108,21 @@
                                                     <div class="bvm-pills {{ $isTicket ? 'bvm-ticket-grid' : '' }}">
                                                         @foreach($option->values as $val)
                                                             @php
-                                                                $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . $val->image)) : null;
+                                                                $valImg = $val->image ? (\Illuminate\Support\Str::startsWith($val->image, 'http') ? $val->image : asset('storage/' . ltrim($val->image, '/'))) : null;
                                                                 $valFinalPrice = $val->finalPrice();
                                                                 $isValOutOfStock = ($val->stock !== null && $val->stock <= 0);
                                                                 $bvmValDiff = ($val->price > 0 && $val->price != $basePrice) ? ($val->price - $basePrice) : 0;
+                                                                $effectiveBvmImg = $valImg ?: ($isTicket ? $eventPoster : $defaultProductImage);
                                                             @endphp
                                                             @if($isTicket)
-                                                                {{-- CARD BERBENTUK TIKET MINIMALIS (CATEGORY & HARGA TERPISAH DIVIDER DASHED)
+                                                                {{-- CARD BERBENTUK TIKET MINIMALIS 1 KOLOM (CATEGORY & HARGA TERPISAH DIVIDER DASHED)
                                                                 --}}
                                                                 <button type="button" class="bvm-pill bvm-ticket-card"
                                                                     data-variant-id="{{ $val->id }}" data-price="{{ $valFinalPrice }}"
                                                                     data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
                                                                     data-stock="{{ $val->stock }}"
                                                                     data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
-                                                                    data-img="{{ $valImg ?: $defaultProductImage }}"
+                                                                    data-img="{{ $effectiveBvmImg }}"
                                                                     data-has-custom-img="{{ $valImg ? '1' : '0' }}" @if($isValOutOfStock)
                                                                     disabled @endif onclick="selectBvmVariant(this)">
                                                                     <div class="bvm-tix-main">
@@ -3110,7 +3148,7 @@
                                                                     data-price-formatted="Rp{{ number_format($valFinalPrice, 0, ',', '.') }}"
                                                                     data-stock="{{ $val->stock }}"
                                                                     data-label="{{ $bvmOptPrefix }}: {{ $val->value }}"
-                                                                    data-img="{{ $valImg ?: $defaultProductImage }}"
+                                                                    data-img="{{ $effectiveBvmImg }}"
                                                                     data-has-custom-img="{{ $valImg ? '1' : '0' }}" @if($isValOutOfStock)
                                                                     disabled @endif onclick="selectBvmVariant(this)">
                                                                     @if($valImg)
@@ -3434,19 +3472,114 @@
                                         opacity: 0.8;
                                     }
 
-                                    /* ── CLEAN TICKET CATEGORY CARD STYLING (BUYLE TIKET) ── */
-                                    .bvm-ticket-grid {
-                                        display: grid !important;
-                                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
-                                        gap: 0.75rem !important;
-                                        width: 100% !important;
+                                    /* ── TICKET BANNER LANDSCAPE (16:9) SEUKURAN POP-UP ── */
+                                    .bvm-ticket-banner-wrap {
+                                        position: relative;
+                                        width: 100%;
+                                        aspect-ratio: 16 / 9;
+                                        max-height: 220px;
+                                        background: #0f172a;
+                                        overflow: hidden;
+                                        cursor: zoom-in;
+                                        display: block;
+                                        border-top-left-radius: inherit;
+                                        border-top-right-radius: inherit;
                                     }
 
-                                    @media (max-width: 480px) {
-                                        .bvm-ticket-grid {
-                                            grid-template-columns: 1fr !important;
-                                            gap: 0.6rem !important;
-                                        }
+                                    .bvm-ticket-banner-img {
+                                        width: 100%;
+                                        height: 100%;
+                                        object-fit: cover;
+                                        display: block;
+                                        transition: transform 0.25s ease, opacity 0.2s ease;
+                                    }
+
+                                    .bvm-ticket-banner-wrap:hover .bvm-ticket-banner-img {
+                                        transform: scale(1.02);
+                                    }
+
+                                    .bvm-ticket-banner-overlay {
+                                        position: absolute;
+                                        inset: 0;
+                                        background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.5) 100%);
+                                        pointer-events: none;
+                                    }
+
+                                    .bvm-close-on-banner {
+                                        position: absolute !important;
+                                        top: 12px !important;
+                                        right: 12px !important;
+                                        width: 32px !important;
+                                        height: 32px !important;
+                                        border-radius: 50% !important;
+                                        background: rgba(15, 23, 42, 0.65) !important;
+                                        color: #ffffff !important;
+                                        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                                        backdrop-filter: blur(8px) !important;
+                                        -webkit-backdrop-filter: blur(8px) !important;
+                                        display: flex !important;
+                                        align-items: center !important;
+                                        justify-content: center !important;
+                                        cursor: pointer !important;
+                                        transition: all 0.2s ease !important;
+                                        z-index: 5 !important;
+                                    }
+
+                                    .bvm-close-on-banner:hover {
+                                        background: rgba(239, 68, 68, 0.9) !important;
+                                        transform: rotate(90deg) !important;
+                                    }
+
+                                    .bvm-banner-zoom-pill {
+                                        position: absolute;
+                                        bottom: 10px;
+                                        right: 12px;
+                                        background: rgba(15, 23, 42, 0.72);
+                                        color: #ffffff;
+                                        font-size: 0.72rem;
+                                        font-weight: 700;
+                                        padding: 4px 10px;
+                                        border-radius: 99px;
+                                        border: 1px solid rgba(255, 255, 255, 0.25);
+                                        backdrop-filter: blur(8px);
+                                        -webkit-backdrop-filter: blur(8px);
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 5px;
+                                        pointer-events: none;
+                                        z-index: 4;
+                                    }
+
+                                    .bvm-banner-badge {
+                                        position: absolute;
+                                        bottom: 10px;
+                                        left: 12px;
+                                        background: rgba(22, 163, 74, 0.92);
+                                        color: #ffffff;
+                                        font-size: 0.72rem;
+                                        font-weight: 700;
+                                        padding: 4px 10px;
+                                        border-radius: 6px;
+                                        backdrop-filter: blur(6px);
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 5px;
+                                        z-index: 4;
+                                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+                                    }
+
+                                    .bvm-ticket-sub-header {
+                                        padding: 0.85rem 1.25rem 0.65rem;
+                                        background: #ffffff;
+                                        border-bottom: 1px solid #f1f5f9;
+                                    }
+
+                                    /* ── CLEAN TICKET CATEGORY CARD STYLING (BUYLE TIKET - 1 KOLOM PENUH) ── */
+                                    .bvm-ticket-grid {
+                                        display: flex !important;
+                                        flex-direction: column !important;
+                                        gap: 0.65rem !important;
+                                        width: 100% !important;
                                     }
 
                                     .bvm-ticket-card {
@@ -3455,9 +3588,9 @@
                                         align-items: center !important;
                                         justify-content: space-between !important;
                                         width: 100% !important;
-                                        padding: 0.72rem 1rem !important;
-                                        min-height: 52px !important;
-                                        border-radius: 10px !important;
+                                        padding: 0.85rem 1.15rem !important;
+                                        min-height: 56px !important;
+                                        border-radius: 12px !important;
                                         border: 1.5px solid #E2E8F0 !important;
                                         background: #FFFFFF !important;
                                         color: #1e293b !important;
@@ -3471,7 +3604,7 @@
                                     .bvm-ticket-card:hover:not(:disabled) {
                                         border-color: #1eb349 !important;
                                         background: #FAFCF9 !important;
-                                        transform: translateY(-2px) !important;
+                                        transform: translateY(-1px) !important;
                                         box-shadow: 0 4px 14px rgba(30, 179, 73, 0.12) !important;
                                     }
 
@@ -3504,45 +3637,54 @@
                                     }
 
                                     .bvm-ticket-card .bvm-tix-main {
-                                        flex: 1;
-                                        min-width: 0;
+                                        flex: 1 !important;
+                                        min-width: 0 !important;
+                                        padding-right: 0.5rem !important;
                                     }
 
                                     .bvm-ticket-card .bvm-tix-name {
-                                        font-size: 1rem;
-                                        font-weight: 800;
-                                        color: #0F172A;
-                                        letter-spacing: -0.01em;
-                                        line-height: 1.2;
+                                        font-size: 0.95rem !important;
+                                        font-weight: 700 !important;
+                                        color: #0F172A !important;
+                                        letter-spacing: -0.01em !important;
+                                        line-height: 1.35 !important;
+                                        white-space: normal !important;
+                                        word-break: break-word !important;
                                     }
 
                                     .bvm-ticket-card .bvm-tix-divider {
-                                        height: 34px;
-                                        margin: 0 0.85rem;
-                                        border-left: 1.5px dashed #CBD5E1;
-                                        flex-shrink: 0;
+                                        height: 38px !important;
+                                        margin: 0 0.85rem !important;
+                                        border-left: 1.5px dashed #CBD5E1 !important;
+                                        flex-shrink: 0 !important;
                                     }
 
                                     .bvm-ticket-card .bvm-tix-stub {
-                                        text-align: right;
-                                        flex-shrink: 0;
+                                        text-align: right !important;
+                                        flex-shrink: 0 !important;
+                                        display: flex !important;
+                                        flex-direction: column !important;
+                                        align-items: flex-end !important;
+                                        justify-content: center !important;
                                     }
 
                                     .bvm-ticket-card .bvm-tix-diff {
-                                        font-size: 0.92rem;
-                                        font-weight: 800;
-                                        color: #16a34a;
-                                        line-height: 1.2;
+                                        font-size: 1.05rem !important;
+                                        font-weight: 800 !important;
+                                        color: #16a34a !important;
+                                        line-height: 1.2 !important;
+                                        font-family: 'Montserrat', sans-serif !important;
+                                        white-space: nowrap !important;
                                     }
 
                                     .bvm-ticket-card .bvm-tix-status.habis {
-                                        display: inline-block;
-                                        font-size: 0.62rem;
-                                        font-weight: 700;
-                                        text-transform: uppercase;
-                                        letter-spacing: 0.04em;
-                                        margin-top: 2px;
-                                        color: #EF4444;
+                                        display: inline-block !important;
+                                        font-size: 0.65rem !important;
+                                        font-weight: 700 !important;
+                                        text-transform: uppercase !important;
+                                        letter-spacing: 0.04em !important;
+                                        margin-top: 3px !important;
+                                        color: #EF4444 !important;
                                     }
 
                                     /* ── THUMBNAIL ZOOM BADGE ── */
@@ -3870,7 +4012,7 @@
                                             thumbImg.src = imgUrl;
                                         }
                                         if (thumbBadge) {
-                                            thumbBadge.style.display = hasCustomImg ? 'block' : 'none';
+                                            thumbBadge.style.display = hasCustomImg ? (isTicketProduct ? 'inline-flex' : 'block') : 'none';
                                         }
 
                                         // Update modal price

@@ -626,8 +626,14 @@ class SellerProductController extends Controller
 
             $imagePath = null;
             if ($request->hasFile("variants.{$index}.image") && $request->file("variants.{$index}.image")->isValid()) {
-                // Auto WebP 600x600 @82% for variant images
-                $imagePath = $this->storeWebP($request->file("variants.{$index}.image"), 'products/variants', 600, 600, 82);
+                $isTicketEvent = ($product->isTicketProduct() || $request->input('product_type') === 'ticket' || !empty($request->input('event_date')));
+                if ($isTicketEvent) {
+                    // Khusus tiket/event: simpan foto benefit/denah landscape 16:9 tanpa crop
+                    $imagePath = $this->storeWebPNoCrop($request->file("variants.{$index}.image"), 'products/variants', 1600, 900, 88);
+                } else {
+                    // Auto WebP 600x600 @82% for variant images
+                    $imagePath = $this->storeWebP($request->file("variants.{$index}.image"), 'products/variants', 600, 600, 82);
+                }
             } elseif (!empty($vData['existing_image'])) {
                 $imagePath = $vData['existing_image'];
             }
