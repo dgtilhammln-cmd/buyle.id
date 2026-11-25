@@ -2634,7 +2634,7 @@
                 </div>
 
                 <div class="popular-creators-grid">
-                    @foreach($popularCreators as $creatorUser)
+                    @foreach($popularCreators->take(10) as $creatorUser)
                         @php
                             if (!$creatorUser)
                                 continue;

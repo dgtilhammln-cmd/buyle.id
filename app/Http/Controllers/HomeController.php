@@ -141,7 +141,7 @@ class HomeController extends Controller
                     END ASC,
                     (products_count) DESC
                 ")
-                ->limit(20)
+                ->limit(10)
                 ->get()
                 ->filter(function($u) {
                     if (!$u->creatorProfile) {
