@@ -307,19 +307,11 @@
             background: #fff;
             color: #64748B;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.88rem;
+            font-size: 0.95rem;
             font-weight: 700;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-cancel:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: #334155;
         }
 
         .btn-submit {
@@ -330,20 +322,12 @@
             border: none;
             color: #fff;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.88rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(30, 179, 73, 0.25);
-        }
-
-        .btn-submit:hover {
-            opacity: 0.95;
-            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.35);
+            gap: 0.4rem;
         }
 
 
@@ -480,17 +464,14 @@
                 flex: 1;
                 justify-content: center;
                 text-align: center;
-                font-family: 'Montserrat', sans-serif;
-                font-size: 0.88rem;
-                font-weight: 700;
+                font-size: 0.85rem;
             }
 
             .btn-submit {
                 flex: 2;
                 justify-content: center;
                 text-align: center;
-                font-family: 'Montserrat', sans-serif;
-                font-size: 0.88rem;
+                font-size: 0.875rem;
                 font-weight: 700;
             }
 
@@ -565,7 +546,10 @@
     </div>
 
     <style>
-        .cr-prod-form-mob-header { display: none; }
+        .cr-prod-form-mob-header {
+            display: none;
+        }
+
         @media (max-width: 991px) {
             .cr-prod-form-mob-header {
                 display: flex !important;
@@ -574,19 +558,37 @@
                 padding: max(0.65rem, calc(0.5rem + env(safe-area-inset-top, 0px))) 0 1rem;
                 margin-bottom: 0.25rem;
             }
+
             .cr-prod-form-mob-header .prod-mobile-btn {
-                width: 40px; height: 40px; border-radius: 50%;
-                background: #ffffff; border: 1.5px solid #f1ece4;
-                display: flex; align-items: center; justify-content: center;
-                color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-                cursor: pointer; text-decoration: none; transition: all 0.2s ease;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #ffffff;
+                border: 1.5px solid #f1ece4;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #0f172a;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+                cursor: pointer;
+                text-decoration: none;
+                transition: all 0.2s ease;
                 flex-shrink: 0;
             }
-            .cr-prod-form-mob-header .prod-mobile-btn:active { transform: scale(0.92); }
+
+            .cr-prod-form-mob-header .prod-mobile-btn:active {
+                transform: scale(0.92);
+            }
+
             .cr-prod-form-mob-header .prod-mobile-title {
-                margin: 0; font-size: 1.1rem; font-weight: 800; color: #0f172a;
-                letter-spacing: -0.01em; font-family: 'Montserrat', sans-serif;
-                text-align: center; flex: 1;
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: -0.01em;
+                font-family: 'Montserrat', sans-serif;
+                text-align: center;
+                flex: 1;
             }
         }
     </style>
@@ -627,7 +629,8 @@
                 SEO & FAQ
             </button>
 
-            <div class="sidebar-settings-box" style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7; display:flex; flex-direction:column; gap:0.9rem;">
+            <div class="sidebar-settings-box"
+                style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7; display:flex; flex-direction:column; gap:0.9rem;">
                 <div
                     style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:0.1rem; text-transform:uppercase; letter-spacing:0.05em;">
                     Pengaturan Form</div>
@@ -635,7 +638,8 @@
                 <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
                     <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
                         <input type="checkbox" name="is_advanced" id="seoModeToggle" onchange="toggleSeoMode()"
-                            style="opacity:0; width:0; height:0;" {{ old('is_advanced') ? 'checked' : '' }} form="productForm">
+                            style="opacity:0; width:0; height:0;" {{ old('is_advanced') ? 'checked' : '' }}
+                            form="productForm">
                         <span class="toggle-slider-s"></span>
                     </div>
                     <div>
@@ -654,7 +658,8 @@
                     </div>
                     <div>
                         <div style="font-size:0.85rem; font-weight:700; color:#0b120c;">Status Produk Aktif</div>
-                        <div style="font-size:0.7rem; color:#64748b; line-height:1.4; margin-top:0.2rem;">Langsung tampil di toko &amp; bio link</div>
+                        <div style="font-size:0.7rem; color:#64748b; line-height:1.4; margin-top:0.2rem;">Langsung tampil di
+                            toko &amp; bio link</div>
                     </div>
                 </label>
             </div>
@@ -663,6 +668,11 @@
             <div class="sidebar-action-btns">
                 <button type="submit" form="productForm" class="btn-submit"
                     style="width:100%; justify-content:center; box-sizing:border-box;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
+                    </svg>
                     Simpan
                 </button>
                 <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
@@ -708,8 +718,15 @@
                             <div class="form-grid">
                                 <div class="form-group full">
                                     <label class="form-label">Nama Produk <span>*</span></label>
-                                    <input type="text" name="name" value="{{ old('name') }}" class="form-input"
-                                        placeholder="Contoh: Tiket Konser Musik Fest 2026" required>
+                                    <input type="text" name="name" id="productNameInput" value="{{ old('name') }}" class="form-input"
+                                        placeholder="Contoh: Tiket Konser Musik Fest 2026" required oninput="handleProductNameInput(this.value)">
+                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; font-family:'Montserrat', sans-serif;">
+                                        <span style="font-weight:600; color:#0f172a;">Slug URL:</span>
+                                        <span style="background:#f1f5f9; padding:2px 8px; border-radius:6px; font-family:monospace; color:#166534; font-weight:700;" id="productSlugPreview">
+                                            {{ old('slug', 'otomatis-mengikuti-judul') }}
+                                        </span>
+                                        <span style="color:#94a3b8; font-size:0.7rem;">(Otomatis diperbarui mengikuti judul produk)</span>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -831,7 +848,7 @@
                                         </div>
                                     </div>
                                     <div class="form-grid">
-                                        <div class="form-group {{ empty(old('event_end_date')) ? 'full' : '' }}" id="eventStartDateWrap">
+                                        <div class="form-group" id="eventStartDateWrap">
                                             <label class="form-label"
                                                 id="eventStartDateLabel">{{ !empty(old('event_end_date')) ? 'Tanggal Mulai Event' : 'Tanggal Pelaksanaan Event' }}
                                                 <span>*</span></label>
@@ -854,7 +871,7 @@
                                             <input type="text" name="event_time" value="{{ old('event_time') }}"
                                                 class="form-input" placeholder="Contoh: 19:00 - 22:00 WIB">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group full">
                                             <label class="form-label">Jenis Pelaksanaan Event <span>*</span></label>
                                             <select name="event_type" id="eventTypeSelect" class="form-input"
                                                 onchange="toggleEventTypeFields(this.value)">
@@ -894,7 +911,8 @@
                                             </label>
                                             <input type="datetime-local" name="ticket_war_start"
                                                 value="{{ old('ticket_war_start') }}" class="form-input">
-                                            <span class="form-hint">Kosongkan jika langsung bisa dibeli. Isi untuk countdown hitung mundur.</span>
+                                            <span class="form-hint">Kosongkan jika langsung bisa dibeli. Isi untuk countdown
+                                                hitung mundur.</span>
                                         </div>
 
                                         <div class="form-group full" id="onlineLocationWrap" style="display:none;">
@@ -1085,61 +1103,192 @@
                                                 'T&C' khusus tiket event di halaman produk.</span>
                                         </div>
 
-                                        {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
-                                        <div class="form-group full" id="customFieldsSection" style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
-                                            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                                        {{-- PENGATURAN PAJAK DAERAH / HIBURAN / PPN TIKET --}}
+                                        <div class="form-group full" id="ticketTaxSection"
+                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
+                                            <div
+                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
                                                 <div>
-                                                    <label class="form-label" style="font-family:'Montserrat', sans-serif; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem; font-size:0.86rem; font-weight:700; color:#166534;">
-                                                        <svg width="17" height="17" fill="none" stroke="#166534" stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <path d="M9 11l3 3L22 4"/>
-                                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                                    <div
+                                                        style="font-weight:700; font-size:0.88rem; color:#166534; display:flex; align-items:center; gap:0.4rem;">
+                                                        <svg width="17" height="17" fill="none" stroke="#166534"
+                                                            stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                                        </svg>
+                                                        <span>Pajak Daerah / Hiburan / Biaya Layanan Tiket (Opsional)</span>
+                                                    </div>
+                                                    <div style="font-size:0.74rem; color:#64748B; margin-top:0.25rem;">
+                                                        Pajak resmi daerah (PB1 / Pajak Hiburan) yang akan otomatis dihitung dan ditambahkan ke rincian checkout tiket pembeli.
+                                                    </div>
+                                                </div>
+
+                                                <label
+                                                    style="display:flex; align-items:center; gap:0.55rem; cursor:pointer; background:#F0FDF4; border:1px solid #BBF7D0; padding:0.35rem 0.8rem; border-radius:999px;">
+                                                    <input type="checkbox" name="tax_enabled" id="ticketTaxToggle" value="1"
+                                                        {{ old('tax_enabled', '0') == '1' ? 'checked' : '' }}
+                                                        onchange="toggleTicketTaxBox(this.checked)"
+                                                        style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                                                    <span style="font-size:0.8rem; font-weight:700; color:#166534;">Aktifkan Pajak Tiket</span>
+                                                </label>
+                                            </div>
+
+                                            <div id="ticketTaxBox"
+                                                style="{{ old('tax_enabled', '0') == '1' ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                                                {{-- Quick Template Pills --}}
+                                                <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap; margin-bottom:0.85rem;">
+                                                    <span style="font-size:0.75rem; font-weight:700; color:#475569;">Pilihan Template:</span>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('Pajak Hiburan / Daerah (10%)', 10)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Hiburan 10%</button>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('Pajak Hiburan / Daerah (15%)', 15)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Hiburan 15%</button>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('Pajak Daerah / PB1 (10%)', 10)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Daerah (PB1) 10%</button>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('PPN (11%)', 11)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">PPN 11%</button>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('Pajak Daerah (5%)', 5)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Daerah 5%</button>
+                                                </div>
+
+                                                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:0.85rem;">
+                                                    <div>
+                                                        <label class="form-label"
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Nama Pajak / Keterangan Tagihan</label>
+                                                        <input type="text" name="tax_name" id="ticketTaxNameInput"
+                                                            value="{{ old('tax_name', 'Pajak Hiburan / Daerah (10%)') }}"
+                                                            class="form-input" placeholder="Contoh: Pajak Hiburan / Daerah (PB1)"
+                                                            style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px;">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label"
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Tarif Pajak (%)</label>
+                                                        <div style="position:relative;">
+                                                            <input type="number" step="0.1" min="0" max="100"
+                                                                name="tax_rate" id="ticketTaxRateInput"
+                                                                value="{{ old('tax_rate', 10) }}"
+                                                                class="form-input" placeholder="10"
+                                                                style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px; padding-right:2rem;">
+                                                            <span
+                                                                style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.82rem;">%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
+                                        <div class="form-group full" id="customFieldsSection"
+                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
+                                            <div
+                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                                                <div>
+                                                    <label class="form-label"
+                                                        style="font-family:'Montserrat', sans-serif; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem; font-size:0.86rem; font-weight:700; color:#166534;">
+                                                        <svg width="17" height="17" fill="none" stroke="#166534"
+                                                            stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <path d="M9 11l3 3L22 4" />
+                                                            <path
+                                                                d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
                                                         </svg>
                                                         Formulir Tambahan Checkout / Data Peserta (Custom Fields)
                                                     </label>
-                                                    <div style="font-family:'Montserrat', sans-serif; font-size:0.75rem; color:#64748b;">
-                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout. Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal: Ukuran Jersey, Institusi, Kontak Darurat, dll).
+                                                    <div
+                                                        style="font-family:'Montserrat', sans-serif; font-size:0.75rem; color:#64748b;">
+                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout.
+                                                        Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal:
+                                                        Ukuran Jersey, Institusi, Kontak Darurat, dll).
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <button type="button" onclick="addCustomFieldRow()" style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; background:#166534; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:background 0.15s;">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                    <button type="button" onclick="addCustomFieldRow()"
+                                                        style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; background:#166534; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:background 0.15s;">
+                                                        <svg width="14" height="14" fill="none" stroke="currentColor"
+                                                            stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                                        </svg>
                                                         Tambah Form Custom
                                                     </button>
                                                 </div>
                                             </div>
 
                                             <!-- Preset Buttons: Menggunakan Clean SVG Icons, no emoji -->
-                                            <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.5rem 0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; font-family:'Montserrat', sans-serif;">
-                                                <span style="font-size:0.74rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                            <div
+                                                style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.5rem 0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; font-family:'Montserrat', sans-serif;">
+                                                <span
+                                                    style="font-size:0.74rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="#eab308"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                                    </svg>
                                                     Template Cepat:
                                                 </span>
-                                                <button type="button" onclick="applyCustomFieldPreset('run')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2 2 4"/><path d="M5 11l4-2 3 2 3-1 2 3"/><path d="M9 13l2 4"/></svg>
+                                                <button type="button" onclick="applyCustomFieldPreset('run')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <circle cx="13" cy="4" r="2" />
+                                                        <path d="M7 21l3-6 3 2 2 4" />
+                                                        <path d="M5 11l4-2 3 2 3-1 2 3" />
+                                                        <path d="M9 13l2 4" />
+                                                    </svg>
                                                     Lari / Marathon
                                                 </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('seminar')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
+                                                <button type="button" onclick="applyCustomFieldPreset('seminar')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                                                        <path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5" />
+                                                    </svg>
                                                     Seminar / Workshop
                                                 </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('sport')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                                                <button type="button" onclick="applyCustomFieldPreset('sport')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2" />
+                                                        <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2" />
+                                                        <path d="M4 22h16" />
+                                                        <path
+                                                            d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34" />
+                                                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+                                                    </svg>
                                                     Turnamen Olahraga
                                                 </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('concert')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                                <button type="button" onclick="applyCustomFieldPreset('concert')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M9 18V5l12-2v13" />
+                                                        <circle cx="6" cy="18" r="3" />
+                                                        <circle cx="18" cy="16" r="3" />
+                                                    </svg>
                                                     Konser / Festival
                                                 </button>
-                                                <button type="button" onclick="clearAllCustomFields()" style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                                                <button type="button" onclick="clearAllCustomFields()"
+                                                    style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <polyline points="1 4 1 10 7 10"></polyline>
+                                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                                    </svg>
                                                     Reset Form
                                                 </button>
                                             </div>
 
-                                            <div id="customFieldsContainer" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
+                                            <div id="customFieldsContainer"
+                                                style="display:flex; flex-direction:column; gap:0.65rem;"></div>
 
-                                            <div id="customFieldsEmptyNotice" style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.15rem; background:#fff; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
-                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap &amp; Nomor Identitas</strong> saat checkout. Klik <strong>Tambah Form Custom</strong> jika memerlukan data lain.
+                                            <div id="customFieldsEmptyNotice"
+                                                style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.15rem; background:#fff; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
+                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap
+                                                    &amp; Nomor Identitas</strong> saat checkout. Klik <strong>Tambah Form
+                                                    Custom</strong> jika memerlukan data lain.
                                             </div>
                                         </div>
                                     </div>
@@ -1311,11 +1460,11 @@
                                     </div>
                                 @endif
 
-                                <div class="form-group full" id="shortDescWrap" style="display: {{ old('product_type', $selectedType) === 'ticket' ? 'none' : 'block' }};">
+                                <div class="form-group full" id="shortDescWrap"
+                                    style="display: {{ old('product_type', $selectedType) === 'ticket' ? 'none' : 'block' }};">
                                     <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
                                     <textarea name="short_desc" id="shortDescInput" class="form-input" rows="2"
-                                        placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160"
-                                        {{ old('product_type', $selectedType) === 'ticket' ? '' : 'required' }}>{{ old('short_desc') }}</textarea>
+                                        placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160" {{ old('product_type', $selectedType) === 'ticket' ? '' : 'required' }}>{{ old('short_desc') }}</textarea>
                                     <span class="form-hint">Digunakan sebagai meta description SEO jika mode advanced
                                         dimatikan.</span>
                                 </div>
@@ -1329,387 +1478,401 @@
                     </div>
                 </div>
 
-        {{-- TAB 2: MEDIA --}}
-        <div class="tab-pane" id="tab-media">
-            <div class="prof-card">
-                <div class="prof-card-head">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                    </svg>
-                    Upload Visual Produk
-                </div>
-                <div class="form-body">
-                    {{-- THUMBNAIL UTAMA: PROPORSIONAL 1:1 SQUARE --}}
-                    <div class="form-group">
-                        <label class="form-label">Upload Thumbnail Utama <span>*</span></label>
-                        <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
-                            <div id="thumbDropzone" onclick="document.getElementById('thumb-input').click()"
-                                style="width:130px; height:130px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:16px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box;"
-                                onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
-                                onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
-                                <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8"
-                                    viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                    <circle cx="8.5" cy="8.5" r="1.5" />
-                                    <polyline points="21 15 16 10 5 21" />
-                                </svg>
-                                <div style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">
-                                    Pilih Foto</div>
-                                <div style="font-size:0.65rem; color:#94A3B8;">1:1 Proporsional</div>
-                            </div>
-
-                            <div id="thumbPreviewWrap" style="display:none;">
-                                <div
-                                    style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
-                                    <img id="thumbPreviewImg" src=""
-                                        style="width:100%; height:100%; object-fit:cover; display:block;">
-                                    <div
-                                        style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
-                                        <button type="button" onclick="document.getElementById('thumb-input').click()"
-                                            style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                            title="Ganti Foto">✎</button>
-                                        <button type="button" onclick="removeThumbnail()"
-                                            style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                            title="Hapus Foto">✕</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="file" name="image" id="thumb-input" accept="image/*"
-                            onchange="previewSingleThumb(event)" style="display:none;">
-                        <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan:
-                            Persegi (1:1), minimal 600x600 px.</span>
-                    </div>
-
-                    {{-- POSTER EVENT (KHUSUS TIKET) --}}
-                    <div class="form-group" id="posterUploadWrap"
-                        style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
-                        <label class="form-label"
-                            style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
-                            <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="2" y="4" width="20" height="16" rx="2" />
-                                <polygon points="10,9 15,12 10,15" />
+                {{-- TAB 2: MEDIA --}}
+                <div class="tab-pane" id="tab-media">
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
                             </svg>
-                            Upload Poster Event (Landscape 16:9) <span style="color:#ef4444;">*</span>
-                        </label>
-                        <span class="form-hint" style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe
-                            produk
-                            Tiket Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
-                        <div class="img-upload-area" id="posterDropzone"
-                            onclick="document.getElementById('poster-input').click()"
-                            style="margin-bottom:0.75rem; background:#fff; max-width:320px;">
-                            <div>
-                                <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6"
-                                    viewBox="0 0 24 24">
-                                    <rect x="2" y="4" width="20" height="16" rx="2" />
-                                    <circle cx="8" cy="10" r="2" />
-                                    <path d="M22 15l-5-5-8 8" />
-                                </svg>
-                                <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
-                                    Pilih Poster Event (16:9)</p>
-                            </div>
+                            Upload Visual Produk
                         </div>
-                        <div id="posterPreviewWrap" style="display:none; margin-bottom:0.5rem;">
-                            <div
-                                style="position:relative; display:inline-block; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
-                                <img id="posterPreviewImg" src=""
-                                    style="width:240px; height:135px; object-fit:cover; display:block;">
-                                <div
-                                    style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
-                                    <button type="button" onclick="document.getElementById('poster-input').click()"
-                                        style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                        title="Ganti Poster">✎</button>
-                                    <button type="button" onclick="removePoster()"
-                                        style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                        title="Hapus Poster">✕</button>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="file" name="og_image" id="poster-input" accept="image/*"
-                            onchange="previewPosterThumb(event)" style="display:none;">
-                    </div>
-
-                    {{-- FOTO GALERI: GRID PROPORSIONAL 1:1 SQUARE DENGAN TOMBOL TAMBAH TERINTEGRASI --}}
-                    <div class="form-group">
-                        <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
-                        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
-                            <div id="galleryPreview" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
-                            </div>
-
-                            <div id="galleryDropzone" onclick="document.getElementById('gallery-input').click()"
-                                style="width:110px; height:110px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:14px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box; flex-shrink:0;"
-                                onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
-                                onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
-                                <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2"
-                                    viewBox="0 0 24 24">
-                                    <line x1="12" y1="5" x2="12" y2="19" />
-                                    <line x1="5" y1="12" x2="19" y2="12" />
-                                </svg>
-                                <div style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">
-                                    + Foto</div>
-                                <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">(0/6)
-                                </div>
-                            </div>
-                        </div>
-                        <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
-                            onchange="previewGalleryList(event)" style="display:none;">
-                        <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto
-                            galeri pendukung (proporsional 1:1).</span>
-                    </div>
-
-                    {{-- LINK VIDEO OPSIONAL --}}
-                    <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
-                        <div style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
-                            <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;"
-                                onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
-                                <div
-                                    style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                    <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24">
-                                        <polygon points="5 3 19 12 5 21 5 3" />
-                                    </svg>
-                                </div>
-                                <div style="flex:1;">
-                                    <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link
-                                        Video <span
-                                            style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span>
-                                    </div>
-                                    <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok (hingga 3 video)
-                                    </div>
-                                </div>
-                                <svg id="videoLinkChevron" width="16" height="16" fill="none" stroke="#94a3b8"
-                                    stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s;">
-                                    <path d="m6 9 6 6 6-6" />
-                                </svg>
-                            </div>
-                            <div id="videoLinkPanel" style="display:none; padding:1.25rem;">
-                                {{-- Platform Selection Tabs --}}
-                                <div
-                                    style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
-                                    <button type="button" id="btnPlatformYt" onclick="setVideoPlatform('youtube')"
-                                        style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06); transition:all 0.15s;">
-                                        <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24">
-                                            <path
-                                                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-                                        </svg>
-                                        YouTube
-                                    </button>
-                                    <button type="button" id="btnPlatformTt" onclick="setVideoPlatform('tiktok')"
-                                        style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; background:transparent; color:#64748b; transition:all 0.15s;">
-                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
-                                        </svg>
-                                        TikTok
-                                    </button>
-                                </div>
-                                <input type="hidden" name="video_platform" id="videoPlatformInput" value="youtube">
-
-                                {{-- YOUTUBE INPUT (1 Link) --}}
-                                <div id="youtubeInputWrap" style="display:block;">
-                                    <input type="url" name="youtube_video_url" id="videoUrlInput"
-                                        value="{{ old('youtube_video_url') }}" class="form-input"
-                                        placeholder="Paste link YouTube atau YouTube Shorts di sini..."
-                                        oninput="debounceVideoPreview(this.value)" style="margin-bottom:0.5rem;">
-                                    <span class="form-hint" style="display:block; margin-bottom:0.75rem;">Mendukung link
-                                        video
-                                        YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
-                                </div>
-
-                                {{-- TIKTOK INPUTS (Up to 3 Links) --}}
-                                <div id="tiktokInputsWrap" style="display:none; margin-bottom:0.75rem;">
-                                    <div style="display:flex; flex-direction:column; gap:0.65rem;">
-                                        <div>
-                                            <label
-                                                style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link
-                                                TikTok 1 <span style="color:#ef4444;">*</span></label>
-                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1"
-                                                class="form-input tiktok-url-inp"
-                                                placeholder="https://www.tiktok.com/@username/video/..."
-                                                oninput="debounceTiktokPreviews()">
-                                        </div>
-                                        <div>
-                                            <label
-                                                style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
-                                                TikTok 2 (Opsional)</label>
-                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2"
-                                                class="form-input tiktok-url-inp"
-                                                placeholder="https://www.tiktok.com/@username/video/..."
-                                                oninput="debounceTiktokPreviews()">
-                                        </div>
-                                        <div>
-                                            <label
-                                                style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
-                                                TikTok 3 (Opsional)</label>
-                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3"
-                                                class="form-input tiktok-url-inp"
-                                                placeholder="https://www.tiktok.com/@username/video/..."
-                                                oninput="debounceTiktokPreviews()">
-                                        </div>
-                                    </div>
-                                    <span class="form-hint" style="margin-top:0.5rem; display:block;">Di
-                                        halaman produk pembeli, video akan tampil jejer horizontal rapi dan
-                                        pas di dalam box deskripsi.</span>
-                                </div>
-
-                                {{-- VIDEO PREVIEW BOX --}}
-                                <div id="videoPreviewBox"
-                                    style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="prof-card" id="digitalAccessCard">
-                <div class="prof-card-head">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="7 10 12 15 17 10" />
-                        <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    Akses File Digital <span>*</span>
-                </div>
-                <div class="form-body">
-                    <div class="form-group">
-                        <label class="form-label">Tautan Eksternal (Google Drive / Dropbox / Mediafire /
-                            dll)</label>
-                        <input type="url" name="digital_resource" id="externalLink" value="{{ old('digital_resource') }}"
-                            class="form-input" placeholder="https://..." required>
-                        <span id="linkStatus"
-                            style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
-                    </div>
-                </div>
-            </div>
-
-            {{-- WHITE LABEL CARD --}}
-            <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;" id="whitelabelCard">
-                <div class="prof-card-head"
-                    style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; align-items:center; gap:0.5rem;">
-                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                    </svg>
-                    <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali</span>
-                </div>
-                <div class="form-body">
-                    <div
-                        style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
-                        <label
-                            style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-weight:700; color:#15803D; font-size:0.88rem;">
-                            <input type="checkbox" name="is_whitelabel" id="isWhitelabelCheck" value="1" {{ old('is_whitelabel') ? 'checked' : '' }} onchange="toggleWhitelabelFields(this.checked)"
-                                style="width:18px; height:18px; accent-color:#1eb349; cursor:pointer;">
-                            <span>Ya Diperbolehkan</span>
-                        </label>
-                    </div>
-
-                    <div id="whitelabelOptionsWrap" style="display:none;">
-                        <div
-                            style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#92400E; line-height:1.5;">
-                            <strong
-                                style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem; font-size:0.88rem; color:#B45309;">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="16" x2="12" y2="12" />
-                                    <line x1="12" y1="8" x2="12.01" y2="8" />
-                                </svg>
-                                Ketentuan & Panduan White Label:
-                            </strong>
-                            <ul style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.25rem;">
-                                <li><strong>Aset Netral:</strong> File / link produk <u>TIDAK BOLEH</u>
-                                    mengandung
-                                    watermark, logo personal, atau nomor kontak yang mengikat.</li>
-                                <li><strong>Bebas Markup:</strong> Creator / reseller lain dapat menyalin link
-                                    produk ini ke Bio Link / Store mereka dan menaikkan harga jual sesuai
-                                    keinginan.
-                                </li>
-                                <li><strong>Harga Dasar:</strong> Menggunakan harga produk utama yang diinput
-                                    pada
-                                    Informasi Utama Produk.</li>
-                                <li><strong>Approval Tim Buyle:</strong> Setelah produk disimpan, statusnya akan
-                                    <code>Menunggu Approval Tim Buyle (Pending)</code>. Admin akan memverifikasi
-                                    file Anda sebelum muncul di katalog White Label Marketplace.
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="form-grid">
-                            <div class="form-group full">
-                                <label class="form-label">Ketentuan Lisensi / Catatan Reseller
-                                    (Opsional)</label>
-                                <textarea name="whitelabel_terms" class="form-input" rows="2"
-                                    placeholder="Contoh: Boleh ubah nama & cover produk, dilarang menjual di bawah harga normal...">{{ old('whitelabel_terms') }}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- TAB 3: SEO & FAQ --}}
-        <div class="tab-pane" id="tab-seo">
-            <div class="prof-card">
-                <div class="prof-card-head">
-                    Meta Data Custom
-                </div>
-                <div class="form-body">
-                    <div class="form-hint" style="margin-bottom:1.25rem;">Jika dikosongkan, sistem akan otomatis
-                        menggunakan Informasi Utama Produk untuk SEO.</div>
-                    <div class="form-group">
-                        <label class="form-label">Meta Title SEO</label>
-                        <input type="text" name="meta_title" value="{{ old('meta_title') }}" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Meta Description SEO</label>
-                        <textarea name="meta_description" class="form-input"
-                            rows="2">{{ old('meta_description') }}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Meta Keywords</label>
-                        <input type="text" name="meta_keywords" value="{{ old('meta_keywords') }}" class="form-input">
-                    </div>
-                </div>
-            </div>
-
-            <div class="prof-card">
-                <div class="prof-card-head" style="justify-content:space-between;">
-                    FAQ Schema
-                    <button type="button" onclick="addFaqRow()"
-                        style="background:#f0fdf4; color:#1eb349; border:none; padding:0.4rem 0.8rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">+
-                        Tambah FAQ</button>
-                </div>
-                <div class="form-body" id="faqContainer">
-                    @php $oldFaqs = old('faqs', [['question' => '', 'answer' => '']]); @endphp
-                    @foreach($oldFaqs as $idx => $faq)
-                        <div class="faq-row"
-                            style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                        <div class="form-body">
+                            {{-- THUMBNAIL UTAMA: PROPORSIONAL 1:1 SQUARE --}}
                             <div class="form-group">
-                                <label class="form-label">Pertanyaan</label>
-                                <input type="text" name="faqs[{{$idx}}][question]" value="{{ $faq['question'] ?? '' }}"
+                                <label class="form-label">Upload Thumbnail Utama <span>*</span></label>
+                                <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                                    <div id="thumbDropzone" onclick="document.getElementById('thumb-input').click()"
+                                        style="width:130px; height:130px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:16px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box;"
+                                        onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
+                                        onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
+                                        <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8"
+                                            viewBox="0 0 24 24">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                        <div style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">
+                                            Pilih Foto</div>
+                                        <div style="font-size:0.65rem; color:#94A3B8;">1:1 Proporsional</div>
+                                    </div>
+
+                                    <div id="thumbPreviewWrap" style="display:none;">
+                                        <div
+                                            style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
+                                            <img id="thumbPreviewImg" src=""
+                                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                                            <div
+                                                style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                                <button type="button"
+                                                    onclick="document.getElementById('thumb-input').click()"
+                                                    style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                    title="Ganti Foto">✎</button>
+                                                <button type="button" onclick="removeThumbnail()"
+                                                    style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                    title="Hapus Foto">✕</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="file" name="image" id="thumb-input" accept="image/*"
+                                    onchange="previewSingleThumb(event)" style="display:none;">
+                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan:
+                                    Persegi (1:1), minimal 600x600 px.</span>
+                            </div>
+
+                            {{-- POSTER EVENT (KHUSUS TIKET) --}}
+                            <div class="form-group" id="posterUploadWrap"
+                                style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
+                                <label class="form-label"
+                                    style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
+                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                                        <polygon points="10,9 15,12 10,15" />
+                                    </svg>
+                                    Upload Poster Event (Landscape 16:9) <span style="color:#ef4444;">*</span>
+                                </label>
+                                <span class="form-hint"
+                                    style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe
+                                    produk
+                                    Tiket Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
+                                <div class="img-upload-area" id="posterDropzone"
+                                    onclick="document.getElementById('poster-input').click()"
+                                    style="margin-bottom:0.75rem; background:#fff; max-width:320px;">
+                                    <div>
+                                        <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6"
+                                            viewBox="0 0 24 24">
+                                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                                            <circle cx="8" cy="10" r="2" />
+                                            <path d="M22 15l-5-5-8 8" />
+                                        </svg>
+                                        <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
+                                            Pilih Poster Event (16:9)</p>
+                                    </div>
+                                </div>
+                                <div id="posterPreviewWrap" style="display:none; margin-bottom:0.5rem;">
+                                    <div
+                                        style="position:relative; display:inline-block; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
+                                        <img id="posterPreviewImg" src=""
+                                            style="width:240px; height:135px; object-fit:cover; display:block;">
+                                        <div
+                                            style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                            <button type="button" onclick="document.getElementById('poster-input').click()"
+                                                style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                title="Ganti Poster">✎</button>
+                                            <button type="button" onclick="removePoster()"
+                                                style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                                title="Hapus Poster">✕</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="file" name="og_image" id="poster-input" accept="image/*"
+                                    onchange="previewPosterThumb(event)" style="display:none;">
+                            </div>
+
+                            {{-- FOTO GALERI: GRID PROPORSIONAL 1:1 SQUARE DENGAN TOMBOL TAMBAH TERINTEGRASI --}}
+                            <div class="form-group">
+                                <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
+                                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                                    <div id="galleryPreview"
+                                        style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+                                    </div>
+
+                                    <div id="galleryDropzone" onclick="document.getElementById('gallery-input').click()"
+                                        style="width:110px; height:110px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:14px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box; flex-shrink:0;"
+                                        onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
+                                        onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
+                                        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                            viewBox="0 0 24 24">
+                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                        </svg>
+                                        <div style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">
+                                            + Foto</div>
+                                        <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">(0/6)
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
+                                    onchange="previewGalleryList(event)" style="display:none;">
+                                <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto
+                                    galeri pendukung (proporsional 1:1).</span>
+                            </div>
+
+                            {{-- LINK VIDEO OPSIONAL --}}
+                            <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
+                                <div
+                                    style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
+                                    <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;"
+                                        onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
+                                        <div
+                                            style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24">
+                                                <polygon points="5 3 19 12 5 21 5 3" />
+                                            </svg>
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link
+                                                Video <span
+                                                    style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span>
+                                            </div>
+                                            <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok (hingga
+                                                3 video)
+                                            </div>
+                                        </div>
+                                        <svg id="videoLinkChevron" width="16" height="16" fill="none" stroke="#94a3b8"
+                                            stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s;">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </div>
+                                    <div id="videoLinkPanel" style="display:none; padding:1.25rem;">
+                                        {{-- Platform Selection Tabs --}}
+                                        <div
+                                            style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
+                                            <button type="button" id="btnPlatformYt" onclick="setVideoPlatform('youtube')"
+                                                style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06); transition:all 0.15s;">
+                                                <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                                                </svg>
+                                                YouTube
+                                            </button>
+                                            <button type="button" id="btnPlatformTt" onclick="setVideoPlatform('tiktok')"
+                                                style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; background:transparent; color:#64748b; transition:all 0.15s;">
+                                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
+                                                </svg>
+                                                TikTok
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="video_platform" id="videoPlatformInput" value="youtube">
+
+                                        {{-- YOUTUBE INPUT (1 Link) --}}
+                                        <div id="youtubeInputWrap" style="display:block;">
+                                            <input type="url" name="youtube_video_url" id="videoUrlInput"
+                                                value="{{ old('youtube_video_url') }}" class="form-input"
+                                                placeholder="Paste link YouTube atau YouTube Shorts di sini..."
+                                                oninput="debounceVideoPreview(this.value)" style="margin-bottom:0.5rem;">
+                                            <span class="form-hint" style="display:block; margin-bottom:0.75rem;">Mendukung
+                                                link
+                                                video
+                                                YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
+                                        </div>
+
+                                        {{-- TIKTOK INPUTS (Up to 3 Links) --}}
+                                        <div id="tiktokInputsWrap" style="display:none; margin-bottom:0.75rem;">
+                                            <div style="display:flex; flex-direction:column; gap:0.65rem;">
+                                                <div>
+                                                    <label
+                                                        style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link
+                                                        TikTok 1 <span style="color:#ef4444;">*</span></label>
+                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1"
+                                                        class="form-input tiktok-url-inp"
+                                                        placeholder="https://www.tiktok.com/@username/video/..."
+                                                        oninput="debounceTiktokPreviews()">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
+                                                        TikTok 2 (Opsional)</label>
+                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2"
+                                                        class="form-input tiktok-url-inp"
+                                                        placeholder="https://www.tiktok.com/@username/video/..."
+                                                        oninput="debounceTiktokPreviews()">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
+                                                        TikTok 3 (Opsional)</label>
+                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3"
+                                                        class="form-input tiktok-url-inp"
+                                                        placeholder="https://www.tiktok.com/@username/video/..."
+                                                        oninput="debounceTiktokPreviews()">
+                                                </div>
+                                            </div>
+                                            <span class="form-hint" style="margin-top:0.5rem; display:block;">Di
+                                                halaman produk pembeli, video akan tampil jejer horizontal rapi dan
+                                                pas di dalam box deskripsi.</span>
+                                        </div>
+
+                                        {{-- VIDEO PREVIEW BOX --}}
+                                        <div id="videoPreviewBox"
+                                            style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prof-card" id="digitalAccessCard">
+                        <div class="prof-card-head">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Akses File Digital <span>*</span>
+                        </div>
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="form-label">Tautan Eksternal (Google Drive / Dropbox / Mediafire /
+                                    dll)</label>
+                                <input type="url" name="digital_resource" id="externalLink"
+                                    value="{{ old('digital_resource') }}" class="form-input" placeholder="https://..."
+                                    required>
+                                <span id="linkStatus"
+                                    style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- WHITE LABEL CARD --}}
+                    <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;"
+                        id="whitelabelCard">
+                        <div class="prof-card-head"
+                            style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                            </svg>
+                            <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali</span>
+                        </div>
+                        <div class="form-body">
+                            <div
+                                style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                                <label
+                                    style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-weight:700; color:#15803D; font-size:0.88rem;">
+                                    <input type="checkbox" name="is_whitelabel" id="isWhitelabelCheck" value="1" {{ old('is_whitelabel') ? 'checked' : '' }}
+                                        onchange="toggleWhitelabelFields(this.checked)"
+                                        style="width:18px; height:18px; accent-color:#1eb349; cursor:pointer;">
+                                    <span>Ya Diperbolehkan</span>
+                                </label>
+                            </div>
+
+                            <div id="whitelabelOptionsWrap" style="display:none;">
+                                <div
+                                    style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#92400E; line-height:1.5;">
+                                    <strong
+                                        style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem; font-size:0.88rem; color:#B45309;">
+                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="16" x2="12" y2="12" />
+                                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                                        </svg>
+                                        Ketentuan & Panduan White Label:
+                                    </strong>
+                                    <ul
+                                        style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.25rem;">
+                                        <li><strong>Aset Netral:</strong> File / link produk <u>TIDAK BOLEH</u>
+                                            mengandung
+                                            watermark, logo personal, atau nomor kontak yang mengikat.</li>
+                                        <li><strong>Bebas Markup:</strong> Creator / reseller lain dapat menyalin link
+                                            produk ini ke Bio Link / Store mereka dan menaikkan harga jual sesuai
+                                            keinginan.
+                                        </li>
+                                        <li><strong>Harga Dasar:</strong> Menggunakan harga produk utama yang diinput
+                                            pada
+                                            Informasi Utama Produk.</li>
+                                        <li><strong>Approval Tim Buyle:</strong> Setelah produk disimpan, statusnya akan
+                                            <code>Menunggu Approval Tim Buyle (Pending)</code>. Admin akan memverifikasi
+                                            file Anda sebelum muncul di katalog White Label Marketplace.
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="form-grid">
+                                    <div class="form-group full">
+                                        <label class="form-label">Ketentuan Lisensi / Catatan Reseller
+                                            (Opsional)</label>
+                                        <textarea name="whitelabel_terms" class="form-input" rows="2"
+                                            placeholder="Contoh: Boleh ubah nama & cover produk, dilarang menjual di bawah harga normal...">{{ old('whitelabel_terms') }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- TAB 3: SEO & FAQ --}}
+                <div class="tab-pane" id="tab-seo">
+                    <div class="prof-card">
+                        <div class="prof-card-head">
+                            Meta Data Custom
+                        </div>
+                        <div class="form-body">
+                            <div class="form-hint" style="margin-bottom:1.25rem;">Jika dikosongkan, sistem akan otomatis
+                                menggunakan Informasi Utama Produk untuk SEO.</div>
+                            <div class="form-group">
+                                <label class="form-label">Meta Title SEO</label>
+                                <input type="text" name="meta_title" value="{{ old('meta_title') }}" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Meta Description SEO</label>
+                                <textarea name="meta_description" class="form-input"
+                                    rows="2">{{ old('meta_description') }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Meta Keywords</label>
+                                <input type="text" name="meta_keywords" value="{{ old('meta_keywords') }}"
                                     class="form-input">
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Jawaban</label>
-                                <textarea name="faqs[{{$idx}}][answer]" class="form-input"
-                                    rows="2">{{ $faq['answer'] ?? '' }}</textarea>
-                            </div>
-                            @if($idx > 0)
-                                <button type="button" onclick="this.closest('.faq-row').remove()"
-                                    style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                            @endif
                         </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+                    </div>
 
-        <div class="form-footer">
-            <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
-                class="btn-cancel">Batal</a>
-            <button type="submit" class="btn-submit">Simpan</button>
+                    <div class="prof-card">
+                        <div class="prof-card-head" style="justify-content:space-between;">
+                            FAQ Schema
+                            <button type="button" onclick="addFaqRow()"
+                                style="background:#f0fdf4; color:#1eb349; border:none; padding:0.4rem 0.8rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">+
+                                Tambah FAQ</button>
+                        </div>
+                        <div class="form-body" id="faqContainer">
+                            @php $oldFaqs = old('faqs', [['question' => '', 'answer' => '']]); @endphp
+                            @foreach($oldFaqs as $idx => $faq)
+                                <div class="faq-row"
+                                    style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                    <div class="form-group">
+                                        <label class="form-label">Pertanyaan</label>
+                                        <input type="text" name="faqs[{{$idx}}][question]" value="{{ $faq['question'] ?? '' }}"
+                                            class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Jawaban</label>
+                                        <textarea name="faqs[{{$idx}}][answer]" class="form-input"
+                                            rows="2">{{ $faq['answer'] ?? '' }}</textarea>
+                                    </div>
+                                    @if($idx > 0)
+                                        <button type="button" onclick="this.closest('.faq-row').remove()"
+                                            style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
+                        class="btn-cancel">Batal</a>
+                    <button type="submit" class="btn-submit">Simpan</button>
+                </div>
+            </form>
         </div>
-        </form>
-    </div>
     </div>
 @endsection
 
@@ -1794,17 +1957,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                                                                            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                                                                                <div class="form-group">
-                                                                                                    <label class="form-label">Pertanyaan</label>
-                                                                                                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                                                                                </div>
-                                                                                                <div class="form-group">
-                                                                                                    <label class="form-label">Jawaban</label>
-                                                                                                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                                                                                </div>
-                                                                                                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                                                                            </div>`;
+                                                                                                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                                                                    <div class="form-group">
+                                                                                                        <label class="form-label">Pertanyaan</label>
+                                                                                                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                                                                    </div>
+                                                                                                    <div class="form-group">
+                                                                                                        <label class="form-label">Jawaban</label>
+                                                                                                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                                                                    </div>
+                                                                                                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                                                                                </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -1886,14 +2049,12 @@
 
         // Event Duration Mode Toggle (Single Day vs Multi Day)
         function toggleEventDurationMode(mode) {
-            const startGroup = document.getElementById('eventStartDateWrap');
             const endGroup = document.getElementById('eventEndDateWrap');
             const startLabel = document.getElementById('eventStartDateLabel');
             const endInput = document.getElementById('eventEndDateInput');
             const startInput = document.getElementById('eventDateInput');
 
             if (mode === 'multi') {
-                if (startGroup) startGroup.classList.remove('full');
                 if (endGroup) endGroup.style.display = 'block';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Mulai Event <span>*</span>';
                 if (endInput && startInput && startInput.value) {
@@ -1901,7 +2062,6 @@
                     if (!endInput.value) endInput.value = startInput.value;
                 }
             } else {
-                if (startGroup) startGroup.classList.add('full');
                 if (endGroup) endGroup.style.display = 'none';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Pelaksanaan Event <span>*</span>';
                 if (endInput) endInput.value = '';
@@ -2274,13 +2434,13 @@
 
                 // Banner alert
                 const alertHtml = `
-                                                                                                    <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
-                                                                                                        <div style="display:flex; align-items:center; gap:0.6rem;">
-                                                                                                            <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                                                                                                            <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                                                                                                        <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.1rem 1.4rem; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:space-between; color:#0f172a; font-size:0.85rem; font-weight:700; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+                                                                                                            <div style="display:flex; align-items:center; gap:0.6rem;">
+                                                                                                                <svg width="22" height="22" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                                                                                                <span>Data berhasil diimpor otomatis via Smart Import! Silakan periksa dan sesuaikan data di bawah sebelum menyimpan.</span>
+                                                                                                            </div>
                                                                                                         </div>
-                                                                                                    </div>
-                                                                                                `;
+                                                                                                    `;
                 const formBody = document.getElementById('productForm');
                 if (formBody) {
                     formBody.insertAdjacentHTML('afterbegin', alertHtml);
@@ -2413,9 +2573,9 @@
                             const imgBox = document.createElement('div');
                             imgBox.style.cssText = 'position:relative; width:90px; height:90px; border-radius:12px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06);';
                             imgBox.innerHTML = `
-                                                                                                                <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                                                                <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
-                                                                                                            `;
+                                                                                                                    <img src="${imgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                                                                    <span style="position:absolute; bottom:4px; left:4px; background:rgba(15,23,42,0.75); color:#fff; font-size:9px; font-weight:700; padding:2px 5px; border-radius:6px; backdrop-filter:blur(4px);">Foto ${idx + 1}</span>
+                                                                                                                `;
                             galleryContainer.appendChild(imgBox);
                         });
                     }
@@ -2471,42 +2631,42 @@
             row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:\'Montserrat\', sans-serif;';
 
             row.innerHTML = `
-                <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
-                    <div>
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
-                        <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                    <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
+                        <div>
+                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
+                            <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                        </div>
+                        <div>
+                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
+                            <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                                <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
+                                <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
+                                <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
+                                <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
+                                <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
+                            <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                                <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                                <span>Wajib Diisi</span>
+                            </label>
+                        </div>
+                        <div style="padding-top:1.4rem;">
+                            <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
-                        <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                            <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
-                            <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
-                            <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
-                            <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
-                            <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
-                        <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
-                            <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
-                            <span>Wajib Diisi</span>
+                    <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
+                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
+                            Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
                         </label>
+                        <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                        <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
                     </div>
-                    <div style="padding-top:1.4rem;">
-                        <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
-                    <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
-                        Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
-                    </label>
-                    <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                    <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
-                </div>
-            `;
+                `;
 
             container.appendChild(row);
             if (emptyNotice) emptyNotice.style.display = 'none';
@@ -2709,18 +2869,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                                                                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                                                                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                                                                                style="width:100%; height:100%; border:none; display:block;"
-                                                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                                                allowfullscreen loading="lazy"></iframe>
-                                                                                        </div>`;
+                                                                                            <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                                                                <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                                                                    style="width:100%; height:100%; border:none; display:block;"
+                                                                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                                    allowfullscreen loading="lazy"></iframe>
+                                                                                            </div>`;
                 } else {
                     html += `
-                                                                                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                                                                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                                                                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                                                                        </div>`;
+                                                                                            <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                                                                <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                                                                <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                                                            </div>`;
                 }
             });
             html += '</div>';
@@ -2758,11 +2918,11 @@
                     itemDiv.id = 'newGalItem_' + fileIndex;
                     itemDiv.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
                     itemDiv.innerHTML = `
-                                                                                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                                        <button type="button" onclick="removeNewGalleryFile(${fileIndex})" title="Hapus Foto"
-                                                                                            style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
-                                                                                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
-                                                                                    `;
+                                                                                            <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                                            <button type="button" onclick="removeNewGalleryFile(${fileIndex})" title="Hapus Foto"
+                                                                                                style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
+                                                                                            <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
+                                                                                        `;
                     previewContainer.appendChild(itemDiv);
                     updateGalleryCountUI();
                 };
@@ -2790,11 +2950,11 @@
                     itemDiv.id = 'newGalItem_' + idx;
                     itemDiv.style.cssText = 'position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;';
                     itemDiv.innerHTML = `
-                                                                                        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                                                        <button type="button" onclick="removeNewGalleryFile(${idx})" title="Hapus Foto"
-                                                                                            style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
-                                                                                        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
-                                                                                    `;
+                                                                                            <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                                                                                            <button type="button" onclick="removeNewGalleryFile(${idx})" title="Hapus Foto"
+                                                                                                style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25);">✕</button>
+                                                                                            <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(30,179,73,0.85); color:#fff; font-size:9px; font-weight:700; text-align:center; padding:2px 0;">Baru</div>
+                                                                                        `;
                     previewContainer.appendChild(itemDiv);
                     updateGalleryCountUI();
                 };
@@ -2854,6 +3014,41 @@
             }
         });
 
+        // Slug Auto-generation from Product Name
+        function slugify(text) {
+            return text.toString().toLowerCase().trim()
+                .replace(/\s+/g, '-')
+                .replace(/[^\w\-]+/g, '')
+                .replace(/\-\-+/g, '-')
+                .replace(/^-+/, '')
+                .replace(/-+$/, '');
+        }
+
+        function handleProductNameInput(val) {
+            const preview = document.getElementById('productSlugPreview');
+            if (preview) {
+                const s = slugify(val);
+                preview.innerText = s || 'otomatis-mengikuti-judul';
+            }
+        }
+
+        // Ticket Tax helper functions
+        function toggleTicketTaxBox(checked) {
+            const box = document.getElementById('ticketTaxBox');
+            if (box) box.style.display = checked ? 'block' : 'none';
+        }
+
+        function applyTaxTemplate(name, rate) {
+            const nameInput = document.getElementById('ticketTaxNameInput');
+            const rateInput = document.getElementById('ticketTaxRateInput');
+            const toggle = document.getElementById('ticketTaxToggle');
+            if (nameInput) nameInput.value = name;
+            if (rateInput) rateInput.value = rate;
+            if (toggle && !toggle.checked) {
+                toggle.checked = true;
+                toggleTicketTaxBox(true);
+            }
+        }
     </script>
 
     @include('creator.products.partials.kyc_modal')

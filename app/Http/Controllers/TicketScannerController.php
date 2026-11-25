@@ -222,6 +222,21 @@ class TicketScannerController extends Controller
             $remainingStock = max(0, $totalCapacity - $totalSold);
         }
 
+        // Hitung total omzet tiket terjual
+        try {
+            $revenueQuery = \App\Models\OrderItem::whereHas('product', function ($pq) use ($sellerId, $selectedEventId) {
+                $pq->where('seller_id', $sellerId)->where('product_type', 'ticket');
+                if ($selectedEventId) {
+                    $pq->where('id', $selectedEventId);
+                }
+            })->whereHas('order', function ($oq) {
+                $oq->whereNotIn('status', ['cancelled', 'refunded', 'pending']);
+            });
+            $totalRevenue = (float) $revenueQuery->sum('subtotal');
+        } catch (\Throwable $e) {
+            $totalRevenue = 0;
+        }
+
         $stats = [
             'total'          => $totalTickets,
             'total_sold'     => $totalSold,
@@ -231,6 +246,7 @@ class TicketScannerController extends Controller
             'unchecked'      => $totalUnchecked,
             'cancelled'      => $totalCancelled,
             'rate'           => $attendanceRate,
+            'revenue'        => $totalRevenue,
         ];
 
         if ($request->wantsJson()) {
@@ -266,7 +282,22 @@ class TicketScannerController extends Controller
         $gateStaffList = \App\Models\GateStaff::where('creator_id', $sellerId)
             ->with(['product:id,name,event_date', 'user:id,name,username,avatar', 'user.creatorProfile:id,user_id'])
             ->orderBy('id', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($st) {
+                $st->avatar_url = $st->avatar_url;
+                $st->is_synced  = (bool) $st->user_id;
+                $st->scans_count = TicketPass::where('product_id', $st->product_id)
+                    ->where('status', 'used')
+                    ->where(function ($q) use ($st) {
+                        if ($st->user_id) {
+                            $q->where('checked_in_by', $st->user_id)
+                              ->orWhere('scanned_by_staff_name', $st->name);
+                        } else {
+                            $q->where('scanned_by_staff_name', $st->name);
+                        }
+                    })->count();
+                return $st;
+            });
 
         $allTicketEvents = Product::where('product_type', 'ticket')
             ->where('is_active', true)

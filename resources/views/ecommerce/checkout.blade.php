@@ -1763,6 +1763,9 @@
                                 $afRate = (float) (\App\Models\Setting::get('admin_fee_rate', 5));
                                 $pfAmt = 0;
                                 $afAmt = 0;
+                                $ticketTaxTotal = 0;
+                                $ticketTaxName = 'Pajak Daerah / Hiburan';
+                                $ticketTaxRate = 0;
                                 $hasTicketItem = false;
                                 $hasNonTicketItem = false;
                                 foreach ($summary['items'] as $ci) {
@@ -1771,6 +1774,13 @@
                                         ?? \App\Models\CreatorProfile::where('user_id', $ci->product->seller_id)->first();
                                     if ($pt === 'ticket') {
                                         $hasTicketItem = true;
+                                        $tRate = (float) ($ci->product->ticket_tax_rate ?? 0);
+                                        if ($tRate > 0) {
+                                            $itemTax = round(($ci->subtotal * $tRate) / 100);
+                                            $ticketTaxTotal += $itemTax;
+                                            $ticketTaxName = $ci->product->ticket_tax_name ?: 'Pajak Daerah / Hiburan';
+                                            $ticketTaxRate = $tRate;
+                                        }
                                         if ($sellerProfile && $sellerProfile->has_custom_fee) {
                                             $tFee = $sellerProfile->calculateTicketFees($ci->subtotal, $ci->qty);
                                             $pfAmt += $tFee['platform_fee'];
@@ -1820,6 +1830,23 @@
                                 <span id="admin-fee-val" style="color:#F59E0B;font-weight:600;">+Rp
                                     {{ number_format($afAmt, 0, ',', '.') }}</span>
                             </div>
+
+                            @if($ticketTaxTotal > 0)
+                            <div class="summary-row" id="ticket-tax-row">
+                                <span style="display:inline-flex;align-items:center;gap:4px;">
+                                    {{ $ticketTaxName }} ({{ $ticketTaxRate }}%)
+                                    <span class="fee-info-wrapper">
+                                        <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
+                                        <div class="fee-popover">
+                                            <span class="fee-popover-title">{{ $ticketTaxName }}</span>
+                                            Pajak resmi daerah / hiburan sesuai ketentuan peraturan daerah terkait tiket acara.
+                                        </div>
+                                    </span>
+                                </span>
+                                <span id="ticket-tax-val" style="color:#64748B;font-weight:600;">+Rp
+                                    {{ number_format($ticketTaxTotal, 0, ',', '.') }}</span>
+                            </div>
+                            @endif
 
                             @if($summary['has_physical_product'])
                                 <div class="summary-row" id="ongkir-row">
@@ -1885,7 +1912,7 @@
                                             style="color:#16a34a;font-size:1.3rem;font-weight:900;letter-spacing:-0.5px;">GRATIS</span>
                                     @else
                                         <span id="total-row-val">Rp
-                                            {{ number_format($summary['subtotal'] + $pfAmt + $afAmt, 0, ',', '.') }}</span>
+                                            {{ number_format($summary['subtotal'] + $pfAmt + $afAmt + $ticketTaxTotal, 0, ',', '.') }}</span>
                                     @endif
                                 </div>
                                 @if($summary['subtotal'] <= 0)
@@ -1982,7 +2009,8 @@
             // Fee sudah dihitung di PHP per item (ticket vs non-ticket) — pakai nilai yang sudah benar
             const platformFee = {{ (int) $pfAmt }};
             const adminFee = {{ (int) $afAmt }};
-            const totalFees = platformFee + adminFee;
+            const ticketTax = {{ (int) $ticketTaxTotal }};
+            const totalFees = platformFee + adminFee + ticketTax;
 
             let selectedCost = 0;
             let allProvinces = [];

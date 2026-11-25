@@ -307,19 +307,11 @@
             background: #fff;
             color: #64748B;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.88rem;
+            font-size: 0.95rem;
             font-weight: 700;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-cancel:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: #334155;
         }
 
         .btn-submit {
@@ -330,20 +322,12 @@
             border: none;
             color: #fff;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.88rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(30, 179, 73, 0.25);
-        }
-
-        .btn-submit:hover {
-            opacity: 0.95;
-            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.35);
+            gap: 0.4rem;
         }
 
         /* Sidebar Action Buttons on Desktop */
@@ -472,17 +456,14 @@
                 flex: 1;
                 justify-content: center;
                 text-align: center;
-                font-family: 'Montserrat', sans-serif;
-                font-size: 0.88rem;
-                font-weight: 700;
+                font-size: 0.85rem;
             }
 
             .btn-submit {
                 flex: 2;
                 justify-content: center;
                 text-align: center;
-                font-family: 'Montserrat', sans-serif;
-                font-size: 0.88rem;
+                font-size: 0.875rem;
                 font-weight: 700;
             }
 
@@ -655,6 +636,11 @@
             <div class="sidebar-action-btns">
                 <button type="submit" form="productForm" class="btn-submit"
                     style="width:100%; justify-content:center; box-sizing:border-box;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
+                    </svg>
                     Simpan
                 </button>
                 <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
@@ -702,8 +688,15 @@
                             <div class="form-grid">
                                 <div class="form-group full">
                                     <label class="form-label">Nama Produk <span>*</span></label>
-                                    <input type="text" name="name" value="{{ old('name', $product->name) }}"
-                                        class="form-input" placeholder="Contoh: Tiket Konser Musik Fest 2026" required>
+                                    <input type="text" name="name" id="productNameInput" value="{{ old('name', $product->name) }}"
+                                        class="form-input" placeholder="Contoh: Tiket Konser Musik Fest 2026" required oninput="handleProductNameInput(this.value)">
+                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; font-family:'Montserrat', sans-serif;">
+                                        <span style="font-weight:600; color:#0f172a;">Slug URL:</span>
+                                        <span style="background:#f1f5f9; padding:2px 8px; border-radius:6px; font-family:monospace; color:#166534; font-weight:700;" id="productSlugPreview">
+                                            {{ old('slug', $product->slug) }}
+                                        </span>
+                                        <span style="color:#94a3b8; font-size:0.7rem;">(Otomatis diperbarui mengikuti judul produk)</span>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -823,7 +816,7 @@
                                         </div>
                                     </div>
                                     <div class="form-grid">
-                                        <div class="form-group {{ !$hasEndDate ? 'full' : '' }}" id="eventStartDateWrap">
+                                        <div class="form-group" id="eventStartDateWrap">
                                             <label class="form-label"
                                                 id="eventStartDateLabel">{{ $hasEndDate ? 'Tanggal Mulai Event' : 'Tanggal Pelaksanaan Event' }}
                                                 <span>*</span></label>
@@ -848,7 +841,7 @@
                                                 value="{{ old('event_time', $product->event_time) }}" class="form-input"
                                                 placeholder="Contoh: 19:00 - 22:00 WIB">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group full">
                                             <label class="form-label">Jenis Pelaksanaan Event <span>*</span></label>
                                             <select name="event_type" id="eventTypeSelect" class="form-input"
                                                 onchange="toggleEventTypeFields(this.value)">
@@ -1081,6 +1074,83 @@
                                                 placeholder="Contoh:&#10;1. Tiket yang sudah dibeli bersifat non-refundable (tidak dapat dikembalikan/ditukar).&#10;2. Pengunjung wajib menunjukkan e-tiket dengan QR Code yang jelas pada saat check-in di gate.&#10;3. Dilarang membawa senjata tajam, obat-obatan terlarang, flare, dan kamera profesional tanpa izin penyelenggara.">{{ old('terms_conditions', $product->terms_conditions) }}</textarea>
                                             <span class="form-hint">Wajib diisi. Syarat & ketentuan ini akan tampil pada tab
                                                 'T&C' khusus tiket event di halaman produk.</span>
+                                        </div>
+
+                                        {{-- PENGATURAN PAJAK DAERAH / HIBURAN / PPN TIKET --}}
+                                        <div class="form-group full" id="ticketTaxSection"
+                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
+                                            <div
+                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                                                <div>
+                                                    <div
+                                                        style="font-weight:700; font-size:0.88rem; color:#166534; display:flex; align-items:center; gap:0.4rem;">
+                                                        <svg width="17" height="17" fill="none" stroke="#166534"
+                                                            stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                                        </svg>
+                                                        <span>Pajak Daerah / Hiburan / Biaya Layanan Tiket (Opsional)</span>
+                                                    </div>
+                                                    <div style="font-size:0.74rem; color:#64748B; margin-top:0.25rem;">
+                                                        Pajak resmi daerah (PB1 / Pajak Hiburan) yang akan otomatis dihitung dan ditambahkan ke rincian checkout tiket pembeli.
+                                                    </div>
+                                                </div>
+
+                                                <label
+                                                    style="display:flex; align-items:center; gap:0.55rem; cursor:pointer; background:#F0FDF4; border:1px solid #BBF7D0; padding:0.35rem 0.8rem; border-radius:999px;">
+                                                    <input type="checkbox" name="tax_enabled" id="ticketTaxToggle" value="1"
+                                                        {{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'checked' : '' }}
+                                                        onchange="toggleTicketTaxBox(this.checked)"
+                                                        style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                                                    <span style="font-size:0.8rem; font-weight:700; color:#166534;">Aktifkan Pajak Tiket</span>
+                                                </label>
+                                            </div>
+
+                                            <div id="ticketTaxBox"
+                                                style="{{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                                                {{-- Quick Template Pills --}}
+                                                <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap; margin-bottom:0.85rem;">
+                                                    <span style="font-size:0.75rem; font-weight:700; color:#475569;">Pilihan Template:</span>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('Pajak Hiburan / Daerah (10%)', 10)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Hiburan 10%</button>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('Pajak Hiburan / Daerah (15%)', 15)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Hiburan 15%</button>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('Pajak Daerah / PB1 (10%)', 10)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Daerah (PB1) 10%</button>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('PPN (11%)', 11)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">PPN 11%</button>
+                                                    <button type="button" class="tax-tpl-btn"
+                                                        onclick="applyTaxTemplate('Pajak Daerah (5%)', 5)"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Daerah 5%</button>
+                                                </div>
+
+                                                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:0.85rem;">
+                                                    <div>
+                                                        <label class="form-label"
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Nama Pajak / Keterangan Tagihan</label>
+                                                        <input type="text" name="tax_name" id="ticketTaxNameInput"
+                                                            value="{{ old('tax_name', $product->tax_name ?? 'Pajak Hiburan / Daerah (10%)') }}"
+                                                            class="form-input" placeholder="Contoh: Pajak Hiburan / Daerah (PB1)"
+                                                            style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px;">
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label"
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Tarif Pajak (%)</label>
+                                                        <div style="position:relative;">
+                                                            <input type="number" step="0.1" min="0" max="100"
+                                                                name="tax_rate" id="ticketTaxRateInput"
+                                                                value="{{ old('tax_rate', $product->tax_rate ?? 10) }}"
+                                                                class="form-input" placeholder="10"
+                                                                style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px; padding-right:2rem;">
+                                                            <span
+                                                                style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.82rem;">%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
@@ -2000,14 +2070,12 @@
 
         // Event Duration Mode Toggle (Single Day vs Multi Day)
         function toggleEventDurationMode(mode) {
-            const startGroup = document.getElementById('eventStartDateWrap');
             const endGroup = document.getElementById('eventEndDateWrap');
             const startLabel = document.getElementById('eventStartDateLabel');
             const endInput = document.getElementById('eventEndDateInput');
             const startInput = document.getElementById('eventDateInput');
 
             if (mode === 'multi') {
-                if (startGroup) startGroup.classList.remove('full');
                 if (endGroup) endGroup.style.display = 'block';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Mulai Event <span>*</span>';
                 if (endInput && startInput && startInput.value) {
@@ -2015,7 +2083,6 @@
                     if (!endInput.value) endInput.value = startInput.value;
                 }
             } else {
-                if (startGroup) startGroup.classList.add('full');
                 if (endGroup) endGroup.style.display = 'none';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Pelaksanaan Event <span>*</span>';
                 if (endInput) endInput.value = '';
@@ -2352,14 +2419,12 @@
 
         // Event Duration Mode Toggle (Single Day vs Multi Day)
         function toggleEventDurationMode(mode) {
-            const startGroup = document.getElementById('eventStartDateWrap');
             const endGroup = document.getElementById('eventEndDateWrap');
             const startLabel = document.getElementById('eventStartDateLabel');
             const endInput = document.getElementById('eventEndDateInput');
             const startInput = document.getElementById('eventDateInput');
 
             if (mode === 'multi') {
-                if (startGroup) startGroup.classList.remove('full');
                 if (endGroup) endGroup.style.display = 'block';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Mulai Event <span>*</span>';
                 if (endInput && startInput && startInput.value) {
@@ -2367,7 +2432,6 @@
                     if (!endInput.value) endInput.value = startInput.value;
                 }
             } else {
-                if (startGroup) startGroup.classList.add('full');
                 if (endGroup) endGroup.style.display = 'none';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Pelaksanaan Event <span>*</span>';
                 if (endInput) endInput.value = '';
@@ -2840,6 +2904,42 @@
                 renderTiktokPreviews();
             }
         });
+
+        // Slug Auto-generation from Product Name
+        function slugify(text) {
+            return text.toString().toLowerCase().trim()
+                .replace(/\s+/g, '-')
+                .replace(/[^\w\-]+/g, '')
+                .replace(/\-\-+/g, '-')
+                .replace(/^-+/, '')
+                .replace(/-+$/, '');
+        }
+
+        function handleProductNameInput(val) {
+            const preview = document.getElementById('productSlugPreview');
+            if (preview) {
+                const s = slugify(val);
+                preview.innerText = s || 'otomatis-mengikuti-judul';
+            }
+        }
+
+        // Ticket Tax helper functions
+        function toggleTicketTaxBox(checked) {
+            const box = document.getElementById('ticketTaxBox');
+            if (box) box.style.display = checked ? 'block' : 'none';
+        }
+
+        function applyTaxTemplate(name, rate) {
+            const nameInput = document.getElementById('ticketTaxNameInput');
+            const rateInput = document.getElementById('ticketTaxRateInput');
+            const toggle = document.getElementById('ticketTaxToggle');
+            if (nameInput) nameInput.value = name;
+            if (rateInput) rateInput.value = rate;
+            if (toggle && !toggle.checked) {
+                toggle.checked = true;
+                toggleTicketTaxBox(true);
+            }
+        }
     </script>
 
     @include('creator.products.partials.kyc_modal')

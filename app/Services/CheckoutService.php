@@ -114,12 +114,28 @@ class CheckoutService
         // Hitung Platform Fee & Admin Fee — per item, berbeda skema untuk ticket vs produk lain
         $platformFee = 0;
         $adminFee    = 0;
+        $ticketTaxTotal = 0;
+        $ticketTaxDetails = [];
         foreach ($items as $cartItem) {
             if (!$cartItem->product) {
                 continue;
             }
             $productType = $cartItem->product->product_type ?? $cartItem->product->type ?? '';
             if ($productType === 'ticket') {
+                // Hitung Pajak Daerah / Hiburan / PPN jika diatur pada produk event tiket
+                $taxRate = (float) ($cartItem->product->ticket_tax_rate ?? 0);
+                if ($taxRate > 0) {
+                    $itemTax = round(($cartItem->subtotal * $taxRate) / 100, 0);
+                    $ticketTaxTotal += $itemTax;
+                    $ticketTaxDetails[] = [
+                        'product_id'   => $cartItem->product_id,
+                        'product_name' => $cartItem->product->name,
+                        'tax_name'     => $cartItem->product->ticket_tax_name ?? 'Pajak Daerah / Hiburan',
+                        'tax_rate'     => $taxRate,
+                        'amount'       => $itemTax,
+                    ];
+                }
+
                 $sellerProfile = $cartItem->product->seller?->creatorProfile 
                     ?? \App\Models\CreatorProfile::where('user_id', $cartItem->product->seller_id)->first();
                 if ($sellerProfile && $sellerProfile->has_custom_fee) {
@@ -139,6 +155,9 @@ class CheckoutService
         }
         $platformFee = round($platformFee, 0);
         $adminFee    = round($adminFee, 0);
+
+        // Gabungkan Pajak Tiket ke admin fee sehingga tercakup dalam total pembayaran
+        $adminFee += $ticketTaxTotal;
 
         $total = max(0, $subtotal + $platformFee + $adminFee + $shippingCost - $discount);
 
@@ -257,6 +276,12 @@ class CheckoutService
         $ticketExtraInput = $data['ticket_extra'] ?? request()->input('ticket_extra', []);
         if (!empty($ticketExtraInput)) {
             $shippingAddressArray['ticket_extra'] = $ticketExtraInput;
+        }
+
+        // Simpan snapshot rincian pajak tiket jika ada
+        if (!empty($ticketTaxTotal) && $ticketTaxTotal > 0) {
+            $shippingAddressArray['ticket_tax_total'] = $ticketTaxTotal;
+            $shippingAddressArray['ticket_tax_details'] = $ticketTaxDetails;
         }
 
         // Simpan input Nomor Meja jika dipesan dari Link in Bio / QR Meja

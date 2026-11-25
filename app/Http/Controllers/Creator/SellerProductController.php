@@ -252,6 +252,17 @@ class SellerProductController extends Controller
             $data['community_join_url']  = null;
         }
 
+        // Pajak tiket (Pajak Daerah / Hiburan / PPN)
+        if ($data['product_type'] === 'ticket') {
+            $data['tax_enabled'] = $request->boolean('tax_enabled');
+            $data['tax_name']    = $data['tax_enabled'] ? ($request->input('tax_name') ?: 'Pajak Daerah / Hiburan') : null;
+            $data['tax_rate']    = $data['tax_enabled'] ? (float) ($request->input('tax_rate', 0)) : 0;
+        } else {
+            $data['tax_enabled'] = false;
+            $data['tax_name']    = null;
+            $data['tax_rate']    = 0;
+        }
+
         // Generate unique slug
         $slug = Str::slug($data['name']);
         $originalSlug = $slug;
@@ -370,6 +381,17 @@ class SellerProductController extends Controller
             }
         }
         $data['gallery'] = $finalGallery;
+
+        // Auto update slug jika judul/nama produk berubah
+        if (isset($data['name']) && $data['name'] !== $product->name) {
+            $slug = Str::slug($data['name']);
+            $originalSlug = $slug;
+            $counter = 1;
+            while (\App\Models\Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+                $slug = $originalSlug . '-' . $counter++;
+            }
+            $data['slug'] = $slug;
+        }
 
         $pt = $request->input('product_type');
         $validTypes = ['digital', 'physical', 'makanan', 'service', 'ticket', 'external_link'];
@@ -494,6 +516,17 @@ class SellerProductController extends Controller
         }
         if (!empty($data['short_desc']) && strlen($data['short_desc']) > 500) {
             $data['short_desc'] = substr($data['short_desc'], 0, 500);
+        }
+
+        // Pajak tiket (Pajak Daerah / Hiburan / PPN)
+        if ($data['product_type'] === 'ticket') {
+            $data['tax_enabled'] = $request->boolean('tax_enabled');
+            $data['tax_name']    = $data['tax_enabled'] ? ($request->input('tax_name') ?: 'Pajak Daerah / Hiburan') : null;
+            $data['tax_rate']    = $data['tax_enabled'] ? (float) ($request->input('tax_rate', 0)) : 0;
+        } else {
+            $data['tax_enabled'] = false;
+            $data['tax_name']    = null;
+            $data['tax_rate']    = 0;
         }
 
         $product->update($data);

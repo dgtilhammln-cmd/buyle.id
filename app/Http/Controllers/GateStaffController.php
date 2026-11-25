@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CreatorNotification;
 use App\Models\GateStaff;
 use App\Models\Product;
+use App\Models\TicketPass;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -181,6 +182,16 @@ class GateStaffController extends Controller
             ->map(function ($st) {
                 $st->avatar_url = $st->avatar_url;
                 $st->is_synced  = (bool) $st->user_id;
+                $st->scans_count = TicketPass::where('product_id', $st->product_id)
+                    ->where('status', 'used')
+                    ->where(function ($q) use ($st) {
+                        if ($st->user_id) {
+                            $q->where('checked_in_by', $st->user_id)
+                              ->orWhere('scanned_by_staff_name', $st->name);
+                        } else {
+                            $q->where('scanned_by_staff_name', $st->name);
+                        }
+                    })->count();
                 return $st;
             });
 
@@ -206,6 +217,16 @@ class GateStaffController extends Controller
             ->map(function ($st) {
                 $st->avatar_url = $st->avatar_url;
                 $st->is_synced  = (bool) $st->user_id;
+                $st->scans_count = TicketPass::where('product_id', $st->product_id)
+                    ->where('status', 'used')
+                    ->where(function ($q) use ($st) {
+                        if ($st->user_id) {
+                            $q->where('checked_in_by', $st->user_id)
+                              ->orWhere('scanned_by_staff_name', $st->name);
+                        } else {
+                            $q->where('scanned_by_staff_name', $st->name);
+                        }
+                    })->count();
                 return $st;
             });
 

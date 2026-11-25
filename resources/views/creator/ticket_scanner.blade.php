@@ -1089,12 +1089,12 @@
             color: #0f172a;
         }
 
-        /* ── DAFTAR PANITIA FORM (COMPACT DESKTOP & BALANCED MOBILE) ── */
+        /* ── DAFTAR CREW FORM (SEJAJAR & BALANCED) ── */
         .staff-add-grid {
             display: grid;
             grid-template-columns: 1.4fr 1.1fr 1.1fr auto;
             gap: 0.75rem;
-            align-items: flex-end;
+            align-items: start;
         }
 
         /* ── DESKTOP: sembunyikan bottom navbar di layar lebar ── */
@@ -1108,6 +1108,7 @@
             display: flex;
             flex-direction: column;
             min-width: 0;
+            position: relative;
         }
 
         .staff-field-label {
@@ -1116,18 +1117,21 @@
             font-weight: 700;
             color: #475569;
             margin-bottom: 0.35rem;
+            height: 18px;
+            line-height: 18px;
             font-family: 'Montserrat', sans-serif;
             white-space: nowrap;
         }
 
         .staff-btn-group {
-            /* Align button to bottom, matching the field height baseline */
-            padding-top: calc(0.74rem + 0.35rem + 2px); /* label height + margin */
+            display: flex;
+            flex-direction: column;
+            padding-top: 0;
         }
 
         .staff-form-control {
             width: 100%;
-            height: 38px;
+            height: 42px;
             padding: 0 0.75rem;
             border: 1.5px solid #cbd5e1;
             border-radius: 9px;
@@ -1138,6 +1142,8 @@
             background: #f8fafc;
             outline: none;
             transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
             box-sizing: border-box;
         }
 
@@ -1160,7 +1166,7 @@
         }
 
         .staff-submit-btn {
-            height: 38px;
+            height: 42px;
             padding: 0 1.25rem;
             background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%);
             color: #ffffff;
@@ -1197,12 +1203,31 @@
             }
         }
 
-        /* ── STATS GRID (UNIFORM THEME CARDS) ── */
+        /* ── STATS GRID (5 UNIFORM THEME CARDS) ── */
         .stat-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.85rem;
             margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .stat-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.65rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .stat-card {
@@ -4272,7 +4297,7 @@
                     {{-- Card 1: Total Tiket --}}
                     <div class="stat-card">
                         <div class="stat-head">
-                            <span class="stat-title">Total Tiket Terjual</span>
+                            <span class="stat-title">Tiket Terjual</span>
                             <div class="stat-icon-bubble">
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
                                     viewBox="0 0 24 24">
@@ -4286,14 +4311,32 @@
                             {{ number_format($stats['total_sold']) }}<span id="statRemainingVal" style="font-size: 0.55em; font-weight: 600; color: #64748b;">/{{ number_format($stats['remaining']) }}</span>
                         </div>
                         <div class="stat-sub">
-                            <span>Tiket Terjual / Sisa Stok</span>
+                            <span>Tiket Terjual / Sisa</span>
                         </div>
                     </div>
 
-                    {{-- Card 2: Checked-In --}}
+                    {{-- Card 2: Total Penjualan / Omzet (Menggantikan Tiket Dibatalkan) --}}
                     <div class="stat-card">
                         <div class="stat-head">
-                            <span class="stat-title">Checked-In (Hadir)</span>
+                            <span class="stat-title">Total Penjualan</span>
+                            <div class="stat-icon-bubble" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-val" id="statRevenueVal" style="font-size:1.15rem; color:#0f172a; letter-spacing:-0.5px;">
+                            Rp {{ number_format($stats['revenue'] ?? 0, 0, ',', '.') }}
+                        </div>
+                        <div class="stat-sub">
+                            <span style="color:#059669; font-weight:700;">Omzet Tiket Masuk</span>
+                        </div>
+                    </div>
+
+                    {{-- Card 3: Checked-In (Hadir) --}}
+                    <div class="stat-card">
+                        <div class="stat-head">
+                            <span class="stat-title">Sudah Hadir</span>
                             <div class="stat-icon-bubble">
                                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
                                     viewBox="0 0 24 24">
@@ -4304,12 +4347,11 @@
                         </div>
                         <div class="stat-val" id="statCheckedInVal">{{ number_format($stats['checked_in']) }}</div>
                         <div class="stat-sub">
-                            <span class="pill-badge" id="statCheckedInRate">Tingkat Kehadiran:
-                                {{ $stats['rate'] }}%</span>
+                            <span>Tiket Sudah Discan</span>
                         </div>
                     </div>
 
-                    {{-- Card 3: Belum Check-In --}}
+                    {{-- Card 4: Belum Check-In --}}
                     <div class="stat-card">
                         <div class="stat-head">
                             <span class="stat-title">Belum Check-In</span>
@@ -4323,27 +4365,25 @@
                         </div>
                         <div class="stat-val" id="statUncheckedVal">{{ number_format($stats['unchecked']) }}</div>
                         <div class="stat-sub">
-                            <span>Tiket Belum Dipindai</span>
+                            <span>Menunggu Masuk Gate</span>
                         </div>
                     </div>
 
-                    {{-- Card 4: Dibatalkan --}}
+                    {{-- Card 5: Tingkat Kehadiran (% Rate) --}}
                     <div class="stat-card">
                         <div class="stat-head">
-                            <span class="stat-title">Tiket Dibatalkan</span>
-                            <div class="stat-icon-bubble"
-                                style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
-                                    viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="15" y1="9" x2="9" y2="15" />
-                                    <line x1="9" y1="9" x2="15" y2="15" />
+                            <span class="stat-title">Kehadiran</span>
+                            <div class="stat-icon-bubble" style="background:#f0fdf4; color:#16a34a; border-color:#bbf7d0;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <polyline points="17 11 19 13 23 9"></polyline>
                                 </svg>
                             </div>
                         </div>
-                        <div class="stat-val" id="statCancelledVal">{{ number_format($stats['cancelled']) }}</div>
+                        <div class="stat-val" id="statAttendanceRateVal">{{ $stats['rate'] }}%</div>
                         <div class="stat-sub">
-                            <span>Refund / Cancelled</span>
+                            <span class="pill-badge" id="statCheckedInRate">Persentase Hadir</span>
                         </div>
                     </div>
                 </div>
@@ -4439,7 +4479,7 @@
                 </div>
             </div>
 
-            {{-- TAB 3: GATE SCANNER ACCESS (SIMPLIFIED: NAMA & PASSWORD PANITIA + BUYLE.ID/LOGIN-TICKETING) --}}
+            {{-- TAB 3: GATE SCANNER ACCESS (SIMPLIFIED: NAMA & PASSWORD CREW + BUYLE.ID/LOGIN-TICKETING) --}}
             <div id="tab-gate" class="payout-tab-pane" style="display: {{ $activeTab === 'gate' ? 'block' : 'none' }};">
                 <div class="prof-card">
                     <div class="prof-card-head"
@@ -4452,7 +4492,7 @@
                                 <line x1="19" y1="8" x2="19" y2="14" />
                                 <line x1="22" y1="11" x2="16" y2="11" />
                             </svg>
-                            <span>Akses Panitia Gate</span>
+                            <span>Akses Crew Gate</span>
                         </div>
                     </div>
 
@@ -4472,7 +4512,7 @@
                                     Gate Scanner.</p>
                             </div>
                         @else
-                                        {{-- FORM TAMBAH PANITIA (LOGIKA & FITUR CUKUP INPUT NAMA & INPUT PASSWORD) --}}
+                                        {{-- FORM TAMBAH CREW BARU (SEJAJAR & COMPACT) --}}
                                         <div
                                             style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:16px; padding:1.15rem; margin-bottom:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
                                             <div
@@ -4482,7 +4522,7 @@
                                                     <line x1="12" y1="5" x2="12" y2="19" />
                                                     <line x1="5" y1="12" x2="19" y2="12" />
                                                 </svg>
-                                                <span>Daftarkan Panitia Baru</span>
+                                                <span>Daftarkan Crew Baru</span>
                                             </div>
 
                                             <form id="formAddStaffSimple" onsubmit="submitSimpleAddStaff(event)">
@@ -4502,7 +4542,7 @@
                                                     {{-- Input Cari via Username --}}
                                                     <div class="staff-field-group">
                                                         <label class="staff-field-label">
-                                                            Username Panitia (@...)
+                                                            Username Crew (@...)
                                                         </label>
                                                         <div style="position:relative; display:flex; align-items:center;">
                                                             <span style="position:absolute; left:0.75rem; color:#94a3b8; font-weight:700; font-size:0.85rem; pointer-events:none;">@</span>
@@ -4516,10 +4556,10 @@
                                                                 <svg style="animation:spin 1s linear infinite; width:14px; height:14px; color:#1eb349;" fill="none" viewBox="0 0 24 24"><circle style="opacity:0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity:0.75;" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
                                                             </div>
                                                         </div>
-                                                        <div id="simpleStaffUserPreview" style="font-size:0.72rem; margin-top:0.3rem; min-height:16px;"></div>
+                                                        <div id="simpleStaffUserPreview" style="position:absolute; top:calc(100% + 2px); left:0; right:0; font-size:0.72rem; z-index:10;"></div>
                                                     </div>
 
-                                                    {{-- Input Posisi / Divisi Panitia --}}
+                                                    {{-- Input Posisi / Divisi Crew --}}
                                                     <div class="staff-field-group">
                                                         <label class="staff-field-label">
                                                             Posisi / Divisi
@@ -4534,22 +4574,23 @@
                                                         </select>
                                                     </div>
 
-                                                    {{-- Submit Button --}}
+                                                    {{-- Submit Button (Identical Height & Baseline) --}}
                                                     <div class="staff-btn-group">
+                                                        <label class="staff-field-label" style="visibility:hidden; user-select:none;">&nbsp;</label>
                                                         <button type="submit" id="btnSubmitSimpleStaff" class="staff-submit-btn">
                                                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                                                                 viewBox="0 0 24 24">
                                                                 <line x1="12" y1="5" x2="12" y2="19" />
                                                                 <line x1="5" y1="12" x2="19" y2="12" />
                                                             </svg>
-                                                            <span>Daftarkan Panitia</span>
+                                                            <span>Daftarkan Crew</span>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
 
-                            {{-- DAFTAR PANITIA TERDAFTAR --}}
+                            {{-- DAFTAR CREW TERDAFTAR --}}
                             <div>
                                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
                                     <div
@@ -4560,7 +4601,7 @@
                                             <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                                             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                         </svg>
-                                        <span>Panitia Terdaftar (<span
+                                        <span>Crew Terdaftar (<span
                                                 id="simpleStaffTotalCount">{{ isset($gateStaffList) ? $gateStaffList->count() : 0 }}</span>)</span>
                                     </div>
                                     <button type="button" onclick="loadAllStaff(true)" id="btnSyncStaff"
@@ -4589,31 +4630,22 @@
                                                     <div style="min-width:0;">
                                                         <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
                                                             <strong
-                                                                style="color:#0f172a; font-size:0.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                                                style="color:#0f172a; font-size:0.86rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                                                                 {{ $st->name }}
                                                             </strong>
                                                             @if($st->user && $st->user->username)
-                                                                <span style="font-size:0.72rem; color:#64748b; font-weight:500;">({{ '@' . $st->user->username }})</span>
+                                                                <span style="font-size:0.74rem; color:#64748b; font-weight:500;">({{ '@' . $st->user->username }})</span>
                                                             @endif
-                                                            <span style="background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px;">
-                                                                {{ $st->role_position ?? 'Gate Scanner' }}
-                                                            </span>
-                                                            @if($st->user_id)
-                                                                <span style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:3px;" title="Akun Buyle.id Terverifikasi & Tersinkron">
-                                                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-                                                                    Tersinkron
-                                                                </span>
-                                                            @else
-                                                                <span style="background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0; font-size:0.68rem; font-weight:600; padding:1px 6px; border-radius:4px;">
-                                                                    Manual
+                                                        </div>
+                                                        <div style="font-size:0.75rem; color:#64748b; margin-top:2px; display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+                                                            <span>Divisi: <strong style="color:#0f172a; font-weight:700;">{{ $st->role_position ?? 'Gate Scanner' }}</strong> | {{ $st->product ? $st->product->name : 'Event' }}</span>
+                                                            @if(stripos($st->role_position ?? 'Gate Scanner', 'scanner') !== false || stripos($st->role_position ?? '', 'gate') !== false)
+                                                                <span style="display:inline-flex; align-items:center; gap:3px; background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; padding:1px 8px; border-radius:999px; font-weight:700; font-size:0.7rem;">
+                                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                                                                    {{ number_format($st->scans_count ?? 0) }} Tiket Discan
                                                                 </span>
                                                             @endif
                                                         </div>
-                                                        <span
-                                                            style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem; margin-top:2px;">
-                                                            <span
-                                                                style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">{{ $st->product ? $st->product->name : 'Event' }}</span>
-                                                        </span>
                                                     </div>
                                                 </div>
                                                 <div style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
@@ -4624,7 +4656,7 @@
                                                     </button>
                                                     <button type="button"
                                                         onclick="deleteStaffSimple('{{ $st->product_id }}', {{ $st->id }}, '{{ addslashes($st->name) }}')"
-                                                        title="Hapus Panitia"
+                                                        title="Hapus Crew"
                                                         style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.5rem; cursor:pointer; display:inline-flex; align-items:center;">
                                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
                                                             viewBox="0 0 24 24">
@@ -4640,7 +4672,7 @@
                                     @else
                                         <div
                                             style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; padding:1.5rem; text-align:center; color:#94a3b8; font-size:0.8rem;">
-                                            Belum ada panitia gate terdaftar. Gunakan formulir di atas untuk mendaftarkan akun panitia baru.
+                                            Belum ada crew gate terdaftar. Gunakan formulir di atas untuk mendaftarkan akun crew baru.
                                         </div>
                                     @endif
                                 </div>
@@ -5502,15 +5534,15 @@
                     const preview = document.getElementById('simpleStaffUserPreview');
                     if (preview) preview.innerHTML = '';
                     loadAllStaff();
-                    alert(data.message || 'Panitia berhasil ditambahkan.');
+                    alert(data.message || 'Crew berhasil ditambahkan.');
                 } else {
-                    alert(data.message || 'Gagal menambahkan panitia.');
+                    alert(data.message || 'Gagal menambahkan crew.');
                 }
             } catch (err) {
                 alert('Terjadi kesalahan koneksi.');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Daftarkan Panitia</span>`;
+                btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Daftarkan Crew</span>`;
             }
         }
 
@@ -5532,7 +5564,7 @@
                 if (data.success && data.staff) {
                     if (countBadge) countBadge.innerText = data.staff.length;
                     if (data.staff.length === 0) {
-                        container.innerHTML = `<div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; padding:1.5rem; text-align:center; color:#94a3b8; font-size:0.8rem;">Belum ada panitia gate terdaftar. Gunakan formulir di atas untuk mendaftarkan akun panitia baru.</div>`;
+                        container.innerHTML = `<div style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:12px; padding:1.5rem; text-align:center; color:#94a3b8; font-size:0.8rem;">Belum ada crew gate terdaftar. Gunakan formulir di atas untuk mendaftarkan akun crew baru.</div>`;
                         return;
                     }
 
@@ -5543,7 +5575,10 @@
                         const evName = st.product ? st.product.name : 'Event Tiket';
                         const uHandle = st.user && st.user.username ? `(@${st.user.username})` : '';
                         const pos = st.role_position || 'Gate Scanner';
-                        const isSynced = st.is_synced || !!st.user_id;
+                        const isScanner = pos.toLowerCase().includes('scanner') || pos.toLowerCase().includes('gate');
+                        const scanBadge = isScanner
+                            ? `<span style="display:inline-flex; align-items:center; gap:3px; background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; padding:1px 8px; border-radius:999px; font-weight:700; font-size:0.7rem;"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> ${new Intl.NumberFormat('id-ID').format(st.scans_count || 0)} Tiket Discan</span>`
+                            : '';
 
                         const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(st.name || 'Staff')}&background=1eb349&color=ffffff&bold=true&size=128`;
                         const avatarSrc = st.avatar_url || (st.user && st.user.avatar 
@@ -5551,10 +5586,6 @@
                             : fallbackAvatar);
 
                         const avatarHtml = `<img src="${avatarSrc}" alt="${st.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='${fallbackAvatar}';">`;
-
-                        const syncBadge = isSynced
-                            ? `<span style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px; display:inline-flex; align-items:center; gap:3px;" title="Akun Buyle.id Terverifikasi & Tersinkron"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Tersinkron</span>`
-                            : `<span style="background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0; font-size:0.68rem; font-weight:600; padding:1px 6px; border-radius:4px;">Manual</span>`;
 
                         html += `
                             <div id="staff-row-${st.id}" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:0.75rem 1rem; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
@@ -5564,18 +5595,15 @@
                                     </div>
                                     <div style="min-width:0;">
                                         <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
-                                            <strong style="color:#0f172a; font-size:0.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                            <strong style="color:#0f172a; font-size:0.86rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                                                 ${st.name}
                                             </strong>
-                                            ${uHandle ? `<span style="font-size:0.72rem; color:#64748b; font-weight:500;">${uHandle}</span>` : ''}
-                                            <span style="background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px;">
-                                                ${pos}
-                                            </span>
-                                            ${syncBadge}
+                                            ${uHandle ? `<span style="font-size:0.74rem; color:#64748b; font-weight:500;">${uHandle}</span>` : ''}
                                         </div>
-                                        <span style="font-size:0.72rem; color:#64748b; display:inline-flex; align-items:center; gap:0.3rem; margin-top:2px;">
-                                            <span style="background:#f1f5f9; padding:1px 6px; border-radius:4px; font-weight:600; color:#334155;">${evName}</span>
-                                        </span>
+                                        <div style="font-size:0.75rem; color:#64748b; margin-top:2px; display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+                                            <span>Divisi: <strong style="color:#0f172a; font-weight:700;">${pos}</strong> | ${evName}</span>
+                                            ${scanBadge}
+                                        </div>
                                     </div>
                                 </div>
                                 <div style="display:flex; align-items:center; gap:0.6rem; flex-shrink:0;">
@@ -5585,7 +5613,7 @@
                                         ${statusText}
                                     </button>
                                     <button type="button" onclick="deleteStaffSimple('${st.product_id}', ${st.id}, '${st.name.replace(/'/g, "\\'")}')"
-                                        title="Hapus Panitia"
+                                        title="Hapus Crew"
                                         style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:0.35rem 0.5rem; cursor:pointer; display:inline-flex; align-items:center;">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                             <polyline points="3 6 5 6 21 6"></polyline>
@@ -5596,6 +5624,11 @@
                             </div>
                         `;
                     });
+                    container.innerHTML = html;
+                }
+            } catch (e) {
+                console.error('Error load all staff:', e);
+            }
                     container.innerHTML = html;
                 }
             } catch (e) {
