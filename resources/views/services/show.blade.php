@@ -5120,8 +5120,8 @@
             </div>
         @endif
 
-        {{-- 5. OTHER RELATED PRODUCTS (Produk Terkait Lainnya dari Creator Lain) --}}
-        @if(isset($otherRelated) && $otherRelated->count() > 0)
+        {{-- 5. OTHER RELATED PRODUCTS (Produk Terkait Lainnya dari Creator Lain) - Disembunyikan khusus halaman tiket /tix --}}
+        @if(!request()->routeIs('tix.show') && isset($otherRelated) && $otherRelated->count() > 0)
             <div style="max-width:1200px; margin: 0 auto 4rem; padding: 0 1rem;">
                 <div
                     style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
