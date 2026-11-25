@@ -4,10 +4,10 @@
 
     <style>
         /* ══════════════════════════════════════════════════════════════════════
-                           BUYLE TIX — DEDICATED TICKETING MARKETPLACE
-                           Theme: Plus Jakarta Sans & Montserrat, Clean Modern Aesthetic
-                           100% Exact Match to Creative Agency Reference (Image 2)
-                        ══════════════════════════════════════════════════════════════════════ */
+                               BUYLE TIX — DEDICATED TICKETING MARKETPLACE
+                               Theme: Plus Jakarta Sans & Montserrat, Clean Modern Aesthetic
+                               100% Exact Match to Creative Agency Reference (Image 2)
+                            ══════════════════════════════════════════════════════════════════════ */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
         .buyle-tix-page {
@@ -69,14 +69,14 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                           1. HERO SPLIT SECTION (EXACT MATCH TO REFERENCE IMAGE 2)
-                           Top Half: Dark Forest Green Card
-                           Bottom Half: Pure White Background with Overlapping Banner & Logos
-                        ══════════════════════════════════════════════════════════════════════ */
+                               1. HERO SPLIT SECTION (EXACT MATCH TO REFERENCE IMAGE 2)
+                               Top Half: Dark Forest Green Card
+                               Bottom Half: Pure White Background with Overlapping Banner & Logos
+                            ══════════════════════════════════════════════════════════════════════ */
         /* ══════════════════════════════════════════════════════════════════════
-                   1. 3D ORBIT / STACKED BANNER CAROUSEL (ARTATIX DECK - IMAGE 2)
-                   Stepped Card Deck: layers fan out prominently on both sides
-                ══════════════════════════════════════════════════════════════════════ */
+                       1. 3D ORBIT / STACKED BANNER CAROUSEL (ARTATIX DECK - IMAGE 2)
+                       Stepped Card Deck: layers fan out prominently on both sides
+                    ══════════════════════════════════════════════════════════════════════ */
         .tix-hero-banner-section {
             width: 100%;
             max-width: 1440px;
@@ -121,6 +121,7 @@
             .tix-hero-banner-section {
                 padding: 0 0.5rem;
             }
+
             .tix-orbit-carousel-wrap {
                 --tix-banner-w: 90vw;
             }
@@ -161,9 +162,9 @@
             overflow: hidden;
             background: #0f172a;
             transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                        opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                        filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                        box-shadow 0.45s ease;
+                opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.45s ease;
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
@@ -268,16 +269,20 @@
 
         /* Tablet adjustments (offset tetap proporsional karena pakai %) */
         @media (max-width: 991px) {
+
             .tix-orbit-card.is-prev-1,
             .tix-orbit-card.is-prev {
                 transform: translateX(calc(-50% - 6%)) scale(0.94);
             }
+
             .tix-orbit-card.is-prev-2 {
                 transform: translateX(calc(-50% - 11%)) scale(0.88);
             }
+
             .tix-orbit-card.is-prev-3 {
                 transform: translateX(calc(-50% - 15%)) scale(0.82);
             }
+
             .tix-orbit-card.is-prev-4 {
                 transform: translateX(calc(-50% - 18.5%)) scale(0.76);
             }
@@ -286,12 +291,15 @@
             .tix-orbit-card.is-next {
                 transform: translateX(calc(-50% + 6%)) scale(0.94);
             }
+
             .tix-orbit-card.is-next-2 {
                 transform: translateX(calc(-50% + 11%)) scale(0.88);
             }
+
             .tix-orbit-card.is-next-3 {
                 transform: translateX(calc(-50% + 15%)) scale(0.82);
             }
+
             .tix-orbit-card.is-next-4 {
                 transform: translateX(calc(-50% + 18.5%)) scale(0.76);
             }
@@ -299,16 +307,20 @@
 
         /* Mobile */
         @media (max-width: 768px) {
+
             .tix-orbit-card.is-prev-1,
             .tix-orbit-card.is-prev {
                 transform: translateX(calc(-50% - 4%)) scale(0.95);
             }
+
             .tix-orbit-card.is-prev-2 {
                 transform: translateX(calc(-50% - 7.5%)) scale(0.90);
             }
+
             .tix-orbit-card.is-prev-3 {
                 transform: translateX(calc(-50% - 10.5%)) scale(0.85);
             }
+
             .tix-orbit-card.is-prev-4 {
                 transform: translateX(calc(-50% - 13%)) scale(0.80);
             }
@@ -317,12 +329,15 @@
             .tix-orbit-card.is-next {
                 transform: translateX(calc(-50% + 4%)) scale(0.95);
             }
+
             .tix-orbit-card.is-next-2 {
                 transform: translateX(calc(-50% + 7.5%)) scale(0.90);
             }
+
             .tix-orbit-card.is-next-3 {
                 transform: translateX(calc(-50% + 10.5%)) scale(0.85);
             }
+
             .tix-orbit-card.is-next-4 {
                 transform: translateX(calc(-50% + 13%)) scale(0.80);
             }
@@ -530,9 +545,9 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                           2. MEDIA PARTNERS BAR (ON CLEAN WHITE BACKGROUND — 100% IMAGE 2)
-                           White background, Centered, Gray Logos, Mobile Friendly
-                        ══════════════════════════════════════════════════════════════════════ */
+                               2. MEDIA PARTNERS BAR (ON CLEAN WHITE BACKGROUND — 100% IMAGE 2)
+                               White background, Centered, Gray Logos, Mobile Friendly
+                            ══════════════════════════════════════════════════════════════════════ */
         .tix-partners-white-section {
             background: transparent;
             border: none;
@@ -639,8 +654,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                           3. SEARCH & QUICK FILTER BAR
-                        ══════════════════════════════════════════════════════════════════════ */
+                               3. SEARCH & QUICK FILTER BAR
+                            ══════════════════════════════════════════════════════════════════════ */
         .tix-search-bar-wrap {
             background: #ffffff;
             border: 1.5px solid #E2E8F0;
@@ -730,8 +745,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-           POP-UP MODAL KALENDER EVENT (BUYLE TIX THEME)
-        ══════════════════════════════════════════════════════════════════════ */
+               POP-UP MODAL KALENDER EVENT (BUYLE TIX THEME)
+            ══════════════════════════════════════════════════════════════════════ */
         .tix-cal-modal-overlay {
             position: fixed;
             inset: 0;
@@ -765,6 +780,7 @@
                 opacity: 0;
                 transform: scale(0.95) translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -1092,20 +1108,25 @@
                 max-height: 94vh;
                 border-radius: 20px;
             }
+
             .tix-cal-modal-header {
                 padding: 1rem 1rem 0.75rem;
             }
+
             .tix-cal-modal-body {
                 padding: 0.85rem 1rem;
             }
+
             .tix-cal-event-card {
                 flex-direction: column;
                 align-items: flex-start;
             }
+
             .tix-cal-event-thumb {
                 width: 100%;
                 aspect-ratio: 16/9;
             }
+
             .tix-cal-event-footer {
                 width: 100%;
             }
@@ -1179,8 +1200,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                           4. RESPONSIVE EVENT CARDS GRID (100% HOMEPAGE STYLE)
-                        ══════════════════════════════════════════════════════════════════════ */
+                               4. RESPONSIVE EVENT CARDS GRID (100% HOMEPAGE STYLE)
+                            ══════════════════════════════════════════════════════════════════════ */
         .tix-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -1224,8 +1245,8 @@
             }
 
             /* Setiap card: ukuran tetap 240px persis Image 1 buyle.id homepage */
-            .tix-grid > a.ticket-card-swipe-item,
-            .tix-grid > .tix-skeleton-card {
+            .tix-grid>a.ticket-card-swipe-item,
+            .tix-grid>.tix-skeleton-card {
                 flex: 0 0 240px !important;
                 width: 240px !important;
                 min-width: 240px !important;
@@ -1235,7 +1256,7 @@
             }
 
             /* Empty state tetap full width */
-            .tix-grid > .tix-empty-card {
+            .tix-grid>.tix-empty-card {
                 flex: 0 0 100% !important;
                 width: 100% !important;
                 min-width: 100% !important;
@@ -1300,8 +1321,8 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════════
-                           5. SKELETON SHIMMER & LAZY LOAD STYLES
-                        ══════════════════════════════════════════════════════════════════════ */
+                               5. SKELETON SHIMMER & LAZY LOAD STYLES
+                            ══════════════════════════════════════════════════════════════════════ */
         @keyframes tixShimmer {
             0% {
                 background-position: -200% 0;
@@ -1539,20 +1560,20 @@
                 <div class="tix-orbit-skel-stage">
                     {{-- Card prev (kiri, mengintip) --}}
                     <div class="tix-skeleton tix-orbit-skel-card" style="
-                                transform: translateX(calc(-50% - 72%)) scale(0.85);
-                                opacity:0.35;
-                            "></div>
+                                    transform: translateX(calc(-50% - 72%)) scale(0.85);
+                                    opacity:0.35;
+                                "></div>
                     {{-- Card aktif (tengah) --}}
                     <div class="tix-skeleton tix-orbit-skel-card active" style="
-                                transform: translateX(-50%) scale(1);
-                                z-index:2;
-                                box-shadow: 0 16px 40px rgba(0,0,0,0.08);
-                            "></div>
+                                    transform: translateX(-50%) scale(1);
+                                    z-index:2;
+                                    box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+                                "></div>
                     {{-- Card next (kanan, mengintip) --}}
                     <div class="tix-skeleton tix-orbit-skel-card" style="
-                                transform: translateX(calc(-50% + 72%)) scale(0.85);
-                                opacity:0.35;
-                            "></div>
+                                    transform: translateX(calc(-50% + 72%)) scale(0.85);
+                                    opacity:0.35;
+                                "></div>
                 </div>
                 {{-- Dots --}}
                 <div style="display:flex; justify-content:center; align-items:center; gap:6px; margin-top:14px;">
@@ -1641,18 +1662,26 @@
                                 @php
                                     $totalBanners = count($displayBanners);
                                     $cardClass = 'is-hidden';
-                                    if ($index === 0) $cardClass = 'is-active';
-                                    elseif ($index === 1) $cardClass = 'is-next-1 is-next';
-                                    elseif ($index === 2) $cardClass = 'is-next-2';
-                                    elseif ($index === 3) $cardClass = 'is-next-3';
-                                    elseif ($index === 4) $cardClass = 'is-next-4';
-                                    elseif ($totalBanners > 1 && $index === $totalBanners - 1) $cardClass = 'is-prev-1 is-prev';
-                                    elseif ($totalBanners > 2 && $index === $totalBanners - 2) $cardClass = 'is-prev-2';
-                                    elseif ($totalBanners > 3 && $index === $totalBanners - 3) $cardClass = 'is-prev-3';
-                                    elseif ($totalBanners > 4 && $index === $totalBanners - 4) $cardClass = 'is-prev-4';
+                                    if ($index === 0)
+                                        $cardClass = 'is-active';
+                                    elseif ($index === 1)
+                                        $cardClass = 'is-next-1 is-next';
+                                    elseif ($index === 2)
+                                        $cardClass = 'is-next-2';
+                                    elseif ($index === 3)
+                                        $cardClass = 'is-next-3';
+                                    elseif ($index === 4)
+                                        $cardClass = 'is-next-4';
+                                    elseif ($totalBanners > 1 && $index === $totalBanners - 1)
+                                        $cardClass = 'is-prev-1 is-prev';
+                                    elseif ($totalBanners > 2 && $index === $totalBanners - 2)
+                                        $cardClass = 'is-prev-2';
+                                    elseif ($totalBanners > 3 && $index === $totalBanners - 3)
+                                        $cardClass = 'is-prev-3';
+                                    elseif ($totalBanners > 4 && $index === $totalBanners - 4)
+                                        $cardClass = 'is-prev-4';
                                 @endphp
-                                <div class="tix-orbit-card {{ $cardClass }}"
-                                    data-index="{{ $index }}"
+                                <div class="tix-orbit-card {{ $cardClass }}" data-index="{{ $index }}"
                                     data-real-index="{{ $index % max(1, $realBannerCount) }}">
                                     <a href="{{ $banner['url'] }}" class="tix-orbit-card-inner">
                                         @if(!empty($banner['image']))
@@ -1793,9 +1822,8 @@
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <input type="text" id="tixSearchInput" name="q" value=""
-                            placeholder="Cari event atau konser..." class="tix-search-input"
-                            autocomplete="off">
+                        <input type="text" id="tixSearchInput" name="q" value="" placeholder="Cari event atau konser..."
+                            class="tix-search-input" autocomplete="off">
                         <button type="button" id="tixSearchClearBtn"
                             style="display: none; background: none; border: none; cursor: pointer; color: #94A3B8; padding: 4px; align-items: center;"
                             onclick="tixClearSearch()" title="Hapus pencarian">
@@ -1808,8 +1836,10 @@
                     </form>
 
                     {{-- Tombol Kalender Event menggantikan chip filter --}}
-                    <button type="button" class="tix-calendar-trigger-btn" onclick="tixOpenCalendarModal()" title="Buka Kalender Event">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink: 0;">
+                    <button type="button" class="tix-calendar-trigger-btn" onclick="tixOpenCalendarModal()"
+                        title="Buka Kalender Event">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"
+                            style="flex-shrink: 0;">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                             <line x1="16" y1="2" x2="16" y2="6"></line>
                             <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -1914,63 +1944,63 @@
                 {{-- ══ 5. FAQ SCHEMA JSON-LD (VISUAL DIHAPUS, SCHEMA TETAP AKTIF UNTUK SEO GOOGLE) ══ --}}
                 @php
                     $tixFaqSchema = [
-                        '@context'   => 'https://schema.org',
-                        '@type'      => 'FAQPage',
+                        '@context' => 'https://schema.org',
+                        '@type' => 'FAQPage',
                         'mainEntity' => [
                             [
-                                '@type'          => 'Question',
-                                'name'           => 'Bagaimana cara membeli tiket di Buyle TIX?',
+                                '@type' => 'Question',
+                                'name' => 'Bagaimana cara membeli tiket di Buyle TIX?',
                                 'acceptedAnswer' => [
                                     '@type' => 'Answer',
-                                    'text'  => 'Pilih event di buyle.id/tix, tentukan kategori dan jumlah tiket, klik Beli Sekarang lalu lengkapi data pemesan (KTP/identitas). Pilih metode pembayaran (QRIS instan, Virtual Account, Transfer Bank), e-tiket resmi ber-QR Code akan langsung dikirimkan ke email dan tersimpan di akun Buyle Anda.'
+                                    'text' => 'Pilih event di buyle.id/tix, tentukan kategori dan jumlah tiket, klik Beli Sekarang lalu lengkapi data pemesan (KTP/identitas). Pilih metode pembayaran (QRIS instan, Virtual Account, Transfer Bank), e-tiket resmi ber-QR Code akan langsung dikirimkan ke email dan tersimpan di akun Buyle Anda.'
                                 ]
                             ],
                             [
-                                '@type'          => 'Question',
-                                'name'           => 'Bagaimana mekanisme masuk (check-in) di hari H acara?',
+                                '@type' => 'Question',
+                                'name' => 'Bagaimana mekanisme masuk (check-in) di hari H acara?',
                                 'acceptedAnswer' => [
                                     '@type' => 'Answer',
-                                    'text'  => 'Cukup tunjukkan Barcode/QR Code E-Tiket dari layar smartphone Anda kepada panitia di gate masuk. Panitia akan scan menggunakan Buyle Gate Scanner dalam waktu kurang dari 1 detik.'
+                                    'text' => 'Cukup tunjukkan Barcode/QR Code E-Tiket dari layar smartphone Anda kepada panitia di gate masuk. Panitia akan scan menggunakan Buyle Gate Scanner dalam waktu kurang dari 1 detik.'
                                 ]
                             ],
                             [
-                                '@type'          => 'Question',
-                                'name'           => 'Bagaimana kebijakan pembatalan dan pengembalian dana (refund)?',
+                                '@type' => 'Question',
+                                'name' => 'Bagaimana kebijakan pembatalan dan pengembalian dana (refund)?',
                                 'acceptedAnswer' => [
                                     '@type' => 'Answer',
-                                    'text'  => 'Seluruh tiket yang telah berhasil dibayar bersifat non-refundable (tidak dapat dibatalkan atau diuangkan kembali), kecuali acara dibatalkan resmi oleh Event Organizer.'
+                                    'text' => 'Seluruh tiket yang telah berhasil dibayar bersifat non-refundable (tidak dapat dibatalkan atau diuangkan kembali), kecuali acara dibatalkan resmi oleh Event Organizer.'
                                 ]
                             ],
                             [
-                                '@type'          => 'Question',
-                                'name'           => 'Apakah e-tiket perlu ditukarkan menjadi tiket fisik atau gelang (wristband)?',
+                                '@type' => 'Question',
+                                'name' => 'Apakah e-tiket perlu ditukarkan menjadi tiket fisik atau gelang (wristband)?',
                                 'acceptedAnswer' => [
                                     '@type' => 'Answer',
-                                    'text'  => 'Untuk sebagian besar event di Buyle TIX tidak perlu menukar tiket fisik karena sistem check-in sudah 100% digital. Jika EO mewajibkan penukaran fisik, informasi penukaran akan diumumkan di deskripsi event.'
+                                    'text' => 'Untuk sebagian besar event di Buyle TIX tidak perlu menukar tiket fisik karena sistem check-in sudah 100% digital. Jika EO mewajibkan penukaran fisik, informasi penukaran akan diumumkan di deskripsi event.'
                                 ]
                             ],
                             [
-                                '@type'          => 'Question',
-                                'name'           => 'Apa saja metode pembayaran yang didukung di Buyle TIX?',
+                                '@type' => 'Question',
+                                'name' => 'Apa saja metode pembayaran yang didukung di Buyle TIX?',
                                 'acceptedAnswer' => [
                                     '@type' => 'Answer',
-                                    'text'  => 'Buyle TIX mendukung QRIS Realtime (semua bank & e-wallet), Virtual Account otomatis 24 jam, serta Transfer Bank terverifikasi aman.'
+                                    'text' => 'Buyle TIX mendukung QRIS Realtime (semua bank & e-wallet), Virtual Account otomatis 24 jam, serta Transfer Bank terverifikasi aman.'
                                 ]
                             ],
                             [
-                                '@type'          => 'Question',
-                                'name'           => 'Bagaimana jika email e-tiket belum diterima setelah pembayaran?',
+                                '@type' => 'Question',
+                                'name' => 'Bagaimana jika email e-tiket belum diterima setelah pembayaran?',
                                 'acceptedAnswer' => [
                                     '@type' => 'Answer',
-                                    'text'  => 'Periksa folder Spam/Promotions pada email Anda, atau langsung login ke akun Buyle.id dan buka menu Tiket Saya untuk mengunduh e-tiket PDF kapan saja.'
+                                    'text' => 'Periksa folder Spam/Promotions pada email Anda, atau langsung login ke akun Buyle.id dan buka menu Tiket Saya untuk mengunduh e-tiket PDF kapan saja.'
                                 ]
                             ]
                         ]
                     ];
                 @endphp
                 <script type="application/ld+json">
-                    {!! json_encode($tixFaqSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-                </script>
+                        {!! json_encode($tixFaqSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+                    </script>
 
                 {{-- ══ 6. PROMOTER & CREATOR CTA BANNER (LIGHT THEME) ══ --}}
                 <div class="tix-cta-box">
@@ -1979,9 +2009,8 @@
                             Punya Konser, Seminar, atau Event Sendiri?
                         </h3>
                         <p class="tix-cta-desc">
-                            Jual tiket secara mandiri di Buyle.id. Nikmati penerbitan e-tiket
-                            otomatis
-                            via Email, sistem Gate Scanner panitia live kamera, serta penarikan dana cepat.
+                            Urus tiket, pantau penjualan real-time, cairkan 100% hasil penjualan tanpa potongan 100%, dan
+                            Promosi di Media besar kami gratis (Rp0)
                         </p>
                     </div>
                     <div class="tix-cta-actions">
@@ -2009,8 +2038,10 @@
             {{-- Header: Month Year + Prev/Next Buttons + Close Button --}}
             <div class="tix-cal-modal-header">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 9px; background: #DCFCE7; color: #16A34A;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <span
+                        style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 9px; background: #DCFCE7; color: #16A34A;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                            viewBox="0 0 24 24">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                             <line x1="16" y1="2" x2="16" y2="6" />
                             <line x1="8" y1="2" x2="8" y2="6" />
@@ -2022,17 +2053,20 @@
 
                 <div style="display: flex; align-items: center; gap: 0.35rem;">
                     <button type="button" class="tix-cal-nav-btn" onclick="tixCalPrevMonth()" title="Bulan Sebelumnya">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </button>
                     <button type="button" class="tix-cal-nav-btn" onclick="tixCalNextMonth()" title="Bulan Selanjutnya">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </button>
                     <button type="button" class="tix-cal-close-btn" onclick="tixCloseCalendarModal()" title="Tutup (Esc)">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
@@ -2060,7 +2094,9 @@
                 <div class="tix-cal-detail-wrap">
                     <div class="tix-cal-detail-header">
                         <h4 id="tixCalDetailDateTitle" class="tix-cal-detail-title">Detail Jadwal Event</h4>
-                        <span id="tixCalEventCountBadge" style="font-size: 0.72rem; font-weight: 700; color: #16A34A; background: #DCFCE7; padding: 0.15rem 0.5rem; border-radius: 99px;">0 Event</span>
+                        <span id="tixCalEventCountBadge"
+                            style="font-size: 0.72rem; font-weight: 700; color: #16A34A; background: #DCFCE7; padding: 0.15rem 0.5rem; border-radius: 99px;">0
+                            Event</span>
                     </div>
                     <div id="tixCalEventDetailList" style="min-height: 140px;"></div>
                 </div>
@@ -2189,16 +2225,16 @@
                     : `<span class="tix-cal-dot" style="opacity: 0; pointer-events:none;"></span>`;
 
                 html += `
-                    <div class="${classes}"
-                         onclick="tixSelectCalDate('${dateStr}')"
-                         data-date="${dateStr}"
-                         role="button"
-                         tabindex="0"
-                         title="${hasEvents ? tixEventsByDate[dateStr].length + ' event terjadwal' : ''}">
-                        <span class="tix-cal-day-num" style="pointer-events:none;">${dNumStr}</span>
-                        ${dotHtml}
-                    </div>
-                `;
+                        <div class="${classes}"
+                             onclick="tixSelectCalDate('${dateStr}')"
+                             data-date="${dateStr}"
+                             role="button"
+                             tabindex="0"
+                             title="${hasEvents ? tixEventsByDate[dateStr].length + ' event terjadwal' : ''}">
+                            <span class="tix-cal-day-num" style="pointer-events:none;">${dNumStr}</span>
+                            ${dotHtml}
+                        </div>
+                    `;
             }
 
             grid.innerHTML = html;
@@ -2247,58 +2283,58 @@
 
             if (events.length === 0) {
                 listEl.innerHTML = `
-                    <div class="tix-cal-empty-box">
-                        <svg width="26" height="26" fill="none" stroke="#CBD5E1" stroke-width="1.8" viewBox="0 0 24 24" style="margin: 0 auto 0.4rem; display: block;">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        <span>Belum ada jadwal event pada tanggal ini.</span>
-                    </div>
-                `;
+                        <div class="tix-cal-empty-box">
+                            <svg width="26" height="26" fill="none" stroke="#CBD5E1" stroke-width="1.8" viewBox="0 0 24 24" style="margin: 0 auto 0.4rem; display: block;">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span>Belum ada jadwal event pada tanggal ini.</span>
+                        </div>
+                    `;
                 return;
             }
 
             let html = '';
             events.forEach(ev => {
                 html += `
-                    <div class="tix-cal-event-card">
-                        <div class="tix-cal-event-thumb">
-                            <img src="${ev.image}" alt="${escapeHtml(ev.title)}" loading="lazy">
-                        </div>
-                        <div class="tix-cal-event-body">
-                            <h5 class="tix-cal-event-name" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</h5>
-                            <div class="tix-cal-event-meta">
-                                <div class="tix-cal-meta-row" title="Waktu">
-                                    <svg width="12" height="12" fill="none" stroke="#16A34A" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                        <line x1="16" y1="2" x2="16" y2="6" />
-                                        <line x1="8" y1="2" x2="8" y2="6" />
-                                        <line x1="3" y1="10" x2="21" y2="10" />
-                                    </svg>
-                                    <span>${ev.date_formatted}${ev.time_formatted ? ' · ' + ev.time_formatted : ''}</span>
+                        <div class="tix-cal-event-card">
+                            <div class="tix-cal-event-thumb">
+                                <img src="${ev.image}" alt="${escapeHtml(ev.title)}" loading="lazy">
+                            </div>
+                            <div class="tix-cal-event-body">
+                                <h5 class="tix-cal-event-name" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</h5>
+                                <div class="tix-cal-event-meta">
+                                    <div class="tix-cal-meta-row" title="Waktu">
+                                        <svg width="12" height="12" fill="none" stroke="#16A34A" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                        </svg>
+                                        <span>${ev.date_formatted}${ev.time_formatted ? ' · ' + ev.time_formatted : ''}</span>
+                                    </div>
+                                    <div class="tix-cal-meta-row" title="Lokasi / Venue">
+                                        <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                            <circle cx="12" cy="10" r="3" />
+                                        </svg>
+                                        <span>${escapeHtml(ev.location)}</span>
+                                    </div>
                                 </div>
-                                <div class="tix-cal-meta-row" title="Lokasi / Venue">
-                                    <svg width="12" height="12" fill="none" stroke="#EF4444" stroke-width="2.2" viewBox="0 0 24 24" style="flex-shrink:0;">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                        <circle cx="12" cy="10" r="3" />
-                                    </svg>
-                                    <span>${escapeHtml(ev.location)}</span>
+                                <div class="tix-cal-event-footer">
+                                    <span class="tix-cal-event-price">${ev.price}</span>
+                                    <a href="${ev.url}" class="tix-cal-btn-curved">
+                                        <span>Beli Tiket</span>
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path d="M5 12h14m-7-7l7 7-7 7" />
+                                        </svg>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="tix-cal-event-footer">
-                                <span class="tix-cal-event-price">${ev.price}</span>
-                                <a href="${ev.url}" class="tix-cal-btn-curved">
-                                    <span>Beli Tiket</span>
-                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <path d="M5 12h14m-7-7l7 7-7 7" />
-                                    </svg>
-                                </a>
-                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             });
 
             listEl.innerHTML = html;
@@ -2490,14 +2526,14 @@
                         tixHasMore = false;
                         if (grid) {
                             grid.innerHTML = `
-                                            <div class="tix-empty-card">
-                                                <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
-                                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                                <div class="tix-empty-card">
+                                                    <div style="width: 52px; height: 52px; border-radius: 50%; background: #F1F5F9; display: inline-flex; align-items: center; justify-content: center; color: #94A3B8; margin-bottom: 0.75rem;">
+                                                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                                    </div>
+                                                    <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Tidak Ada Tiket Ditemukan</h4>
+                                                    <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Coba kata kunci lain atau klik kategori Semua Event.</p>
                                                 </div>
-                                                <h4 style="margin: 0 0 0.35rem; font-size: 1rem; font-weight: 700; color: #0F172A;">Tidak Ada Tiket Ditemukan</h4>
-                                                <p style="margin: 0; font-size: 0.8rem; color: #64748B;">Coba kata kunci lain atau klik kategori Semua Event.</p>
-                                            </div>
-                                        `;
+                                            `;
                         }
                     } else {
                         tixHasMore = false;

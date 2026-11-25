@@ -816,9 +816,9 @@
                                 </div>
 
                                 <div class="form-group full" id="ticketFieldsWrap"
-                                    style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
+                                    style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:18px; padding:1.5rem; width:100%; box-sizing:border-box; box-shadow:0 4px 20px rgba(0,0,0,0.02);">
                                     <h5
-                                        style="font-size:0.95rem; font-weight:800; color:#166534; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #bbf7d0; padding-bottom:0.75rem;">
+                                        style="font-size:0.95rem; font-weight:800; color:#0F172A; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #E2E8F0; padding-bottom:0.75rem;">
                                         <svg width="20" height="20" fill="none" stroke="#166534" stroke-width="2"
                                             viewBox="0 0 24 24">
                                             <path
@@ -827,7 +827,7 @@
                                             <path d="M13 9h.01" />
                                             <path d="M13 15h.01" />
                                         </svg>
-                                        Detail Informasi Event / Tiket
+                                        <span style="color:#0F172A;">Detail Informasi Event / Tiket</span>
                                     </h5>
                                     @php
                                         $hasEndDate = !empty(old('event_end_date', $product->event_end_date?->format('Y-m-d')));
@@ -1276,7 +1276,7 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Preset Buttons: Compact & Mobile Friendly -->
+                                            <!-- Preset Buttons: Compact & Mobile Friendly with Clean SVG Icons -->
                                             <div
                                                 style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.75rem; padding:0.35rem 0.6rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-family:'Montserrat', sans-serif;">
                                                 <span style="font-size:0.72rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.25rem;">
@@ -1284,24 +1284,29 @@
                                                     Preset:
                                                 </span>
                                                 <button type="button" onclick="applyCustomFieldPreset('run')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                    🏃 Marathon
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2 2 4"/><path d="M5 11l4-2 3 2 3-1 2 3"/><path d="M9 13l2 4"/></svg>
+                                                    <span>Marathon</span>
                                                 </button>
                                                 <button type="button" onclick="applyCustomFieldPreset('seminar')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                    🎓 Seminar
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
+                                                    <span>Seminar</span>
                                                 </button>
                                                 <button type="button" onclick="applyCustomFieldPreset('sport')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                    🏆 Olahraga
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                                                    <span>Olahraga</span>
                                                 </button>
                                                 <button type="button" onclick="applyCustomFieldPreset('concert')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                    🎵 Konser
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                                    <span>Konser</span>
                                                 </button>
                                                 <button type="button" onclick="clearAllCustomFields()"
-                                                    style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                    ↺ Reset
+                                                    style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                                                    <span>Reset</span>
                                                 </button>
                                             </div>
 
@@ -3033,27 +3038,80 @@
         // ── Multi-Tax System Engine ──
         let taxRowCount = 0;
 
+        function handleTaxPresetChange(sel, idx) {
+            const row = document.getElementById(`tax_row_${idx}`);
+            if (!row) return;
+            const nameInp = row.querySelector('.tax-name-input');
+            const rateInp = row.querySelector('.tax-rate-input');
+            const opt = sel.options[sel.selectedIndex];
+
+            if (sel.value === 'custom') {
+                nameInp.type = 'text';
+                nameInp.style.display = 'block';
+                nameInp.value = '';
+                nameInp.focus();
+                sel.style.marginBottom = '0.35rem';
+            } else {
+                nameInp.type = 'hidden';
+                nameInp.style.display = 'none';
+                nameInp.value = sel.value;
+                sel.style.marginBottom = '0';
+                const recRate = opt.getAttribute('data-rate');
+                if (recRate !== null && rateInp) {
+                    rateInp.value = recRate;
+                }
+            }
+            updateTaxTotalSummary();
+        }
+
         function renderTaxRowHtml(idx, name = '', rate = 10) {
+            const presets = [
+                { name: 'Pajak Hiburan / Daerah (10%)', val: 'Pajak Hiburan / Daerah', rate: 10 },
+                { name: 'Pajak Hiburan (15%)', val: 'Pajak Hiburan (15%)', rate: 15 },
+                { name: 'Pajak Daerah / PB1 (10%)', val: 'Pajak Daerah / PB1', rate: 10 },
+                { name: 'PPN (11%)', val: 'PPN', rate: 11 },
+                { name: 'Pajak Daerah (5%)', val: 'Pajak Daerah', rate: 5 }
+            ];
+
+            const trimmedName = (name || '').trim();
+            let matchedPreset = presets.find(p => p.val.toLowerCase() === trimmedName.toLowerCase() || p.name.toLowerCase().startsWith(trimmedName.toLowerCase()));
+            if (!trimmedName && rate == 10) {
+                matchedPreset = presets[0];
+            }
+
+            const isCustom = trimmedName && !matchedPreset;
+            const actualVal = matchedPreset ? matchedPreset.val : trimmedName;
+
             return `
-                                            <div class="ticket-tax-row" id="tax_row_${idx}" style="display:grid; grid-template-columns: 2fr 1fr auto; gap:0.65rem; align-items:flex-end; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.65rem 0.75rem;">
-                                                <div>
-                                                    <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Nama Pajak / Tagihan</label>
-                                                    <input type="text" name="ticket_taxes[${idx}][name]" value="${escapeHtml(name)}" class="form-input tax-name-input" placeholder="Contoh: Pajak Hiburan / Daerah (PB1)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; background:#fff;" oninput="updateTaxTotalSummary()">
-                                                </div>
-                                                <div>
-                                                    <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Tarif Pajak (%)</label>
-                                                    <div style="position:relative;">
-                                                        <input type="number" step="0.1" min="0" max="100" name="ticket_taxes[${idx}][rate]" value="${rate}" class="form-input tax-rate-input" placeholder="10" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; padding-right:1.8rem; background:#fff;" oninput="updateTaxTotalSummary()">
-                                                        <span style="position:absolute; right:8px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.78rem;">%</span>
-                                                    </div>
-                                                </div>
-                                                <div style="padding-bottom:1px;">
-                                                    <button type="button" onclick="removeTaxRow(${idx})" style="background:#FEE2E2; border:none; color:#EF4444; width:36px; height:36px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" title="Hapus Pajak Ini">
-                                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        `;
+                <div class="ticket-tax-row" id="tax_row_${idx}" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.65rem 0.85rem;">
+                    <div style="display:grid; grid-template-columns: 2fr 1.1fr auto; gap:0.65rem; align-items:end;">
+                        <div>
+                            <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Nama Pajak / Tagihan</label>
+                            <select class="form-input tax-preset-select" onchange="handleTaxPresetChange(this, ${idx})" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; background:#fff; margin-bottom:${isCustom ? '0.35rem' : '0'};">
+                                <option value="Pajak Hiburan / Daerah" data-rate="10" ${(!isCustom && actualVal === 'Pajak Hiburan / Daerah') ? 'selected' : ''}>Pajak Hiburan / Daerah (10%)</option>
+                                <option value="Pajak Hiburan (15%)" data-rate="15" ${(!isCustom && actualVal === 'Pajak Hiburan (15%)') ? 'selected' : ''}>Pajak Hiburan (15%)</option>
+                                <option value="Pajak Daerah / PB1" data-rate="10" ${(!isCustom && actualVal === 'Pajak Daerah / PB1') ? 'selected' : ''}>Pajak Daerah / PB1 (10%)</option>
+                                <option value="PPN" data-rate="11" ${(!isCustom && actualVal === 'PPN') ? 'selected' : ''}>PPN (11%)</option>
+                                <option value="Pajak Daerah" data-rate="5" ${(!isCustom && actualVal === 'Pajak Daerah') ? 'selected' : ''}>Pajak Daerah (5%)</option>
+                                <option value="custom" ${isCustom ? 'selected' : ''}>-- Ketik Nama Lainnya (Custom) --</option>
+                            </select>
+                            <input type="${isCustom ? 'text' : 'hidden'}" name="ticket_taxes[${idx}][name]" value="${escapeHtml(actualVal || 'Pajak Hiburan / Daerah')}" class="form-input tax-name-input" placeholder="Tuliskan nama pajak khusus..." style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:36px; background:#fff; ${isCustom ? '' : 'display:none;'}" oninput="updateTaxTotalSummary()">
+                        </div>
+                        <div>
+                            <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Tarif Pajak (%)</label>
+                            <div style="position:relative;">
+                                <input type="number" step="0.1" min="0" max="100" name="ticket_taxes[${idx}][rate]" value="${rate}" class="form-input tax-rate-input" placeholder="10" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; padding-right:1.8rem; background:#fff;" oninput="updateTaxTotalSummary()">
+                                <span style="position:absolute; right:8px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.78rem;">%</span>
+                            </div>
+                        </div>
+                        <div style="padding-bottom:1px;">
+                            <button type="button" onclick="removeTaxRow(${idx})" style="background:#FEE2E2; border:none; color:#EF4444; width:36px; height:36px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" title="Hapus Pajak Ini">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function addTaxRow(data = {}) {

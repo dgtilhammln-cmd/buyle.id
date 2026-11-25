@@ -124,6 +124,14 @@
             align-items: start;
         }
 
+        @media (min-width: 992px) {
+            .co-right {
+                position: sticky;
+                top: 90px;
+                z-index: 20;
+            }
+        }
+
         .co-section {
             background: var(--c-card);
             border: 1px solid var(--c-border);
@@ -797,35 +805,19 @@
                                 Data Pembeli (Langsung Checkout)
                             </div>
 
-                            {{-- Panduan & Double Check Alert --}}
-                            <div
-                                style="background:#FFFBEB; border:1px dashed #F59E0B; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1.25rem; display:flex; align-items:flex-start; gap:0.75rem;">
-                                <div
-                                    style="background:#F59E0B; color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
-                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                        viewBox="0 0 24 24">
-                                        <path
-                                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                                        <line x1="12" y1="9" x2="12" y2="13" />
-                                        <line x1="12" y1="17" x2="12.01" y2="17" />
-                                    </svg>
-                                </div>
-                                <div style="font-size:0.82rem; color:#78350F; line-height:1.45;">
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Nama (Opsional)</label>
-                                    <input type="text" name="guest_name" class="form-input" value="{{ old('guest_name') }}"
-                                        placeholder="Nama Anda (boleh dikosongkan)">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Email (Wajib) <span style="color:#EF4444;">*</span></label>
-                                    <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}"
-                                        required placeholder="emailaktif@gmail.com">
-                                    <div style="font-size:0.75rem;color:#64748B;margin-top:0.35rem;">📩 File/akses digital akan
-                                        dikirim ke email ini setelah pembayaran berhasil.</div>
-                                </div>
+                            <div class="form-group">
+                                <label class="form-label">Nama (Opsional)</label>
+                                <input type="text" name="guest_name" class="form-input" value="{{ old('guest_name') }}"
+                                    placeholder="Nama Anda (boleh dikosongkan)">
                             </div>
+                            <div class="form-group">
+                                <label class="form-label">Email (Wajib) <span style="color:#EF4444;">*</span></label>
+                                <input type="email" name="guest_email" class="form-input" value="{{ old('guest_email') }}"
+                                    required placeholder="emailaktif@gmail.com">
+                                <div style="font-size:0.75rem;color:#64748B;margin-top:0.35rem;">📩 File/akses digital akan
+                                    dikirim ke email ini setelah pembayaran berhasil.</div>
+                            </div>
+                        </div>
                     @else
                             {{-- LOGGED IN BUYER INFO --}}
                             <div class="co-section" style="margin-bottom:1.5rem;">
@@ -1152,23 +1144,6 @@
                                             <path d="M12 11v6" />
                                         </svg>
                                         Atas Nama Pemegang Tiket
-                                    </div>
-
-                                    {{-- Info bar --}}
-                                    <div
-                                        style="background:#EFF6FF;border:1px dashed #93C5FD;border-radius:10px;padding:0.75rem 1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:0.6rem;">
-                                        <svg width="15" height="15" fill="none" stroke="#2563EB" stroke-width="2.5"
-                                            viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px;">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" y1="8" x2="12" y2="12" />
-                                            <line x1="12" y1="16" x2="12.01" y2="16" />
-                                        </svg>
-                                        <span style="font-size:0.78rem;color:#1D4ED8;line-height:1.5;">
-                                            Isi nama lengkap &amp; identitas resmi (KTP, SIM, Paspor, atau Kartu Pelajar)
-                                            <strong>setiap
-                                                pemegang tiket</strong> untuk validasi di pintu masuk.
-                                            @if(auth()->check()) Tiket pertama diisi otomatis dari profil akun Anda. @endif
-                                        </span>
                                     </div>
 
                                     {{-- Loop setiap item tiket × qty --}}
