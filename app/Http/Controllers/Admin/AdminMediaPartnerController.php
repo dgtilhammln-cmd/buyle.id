@@ -108,7 +108,7 @@ class AdminMediaPartnerController extends Controller
             'notes'               => 'nullable|string|max:500',
             'target_url'          => 'nullable|string|max:1000',
             'show_on_bio'         => 'nullable|boolean',
-            'badge_image'         => 'nullable|image|max:5120',
+            'badge_image'         => 'nullable|image|max:25600', // Izinkan hingga 25MB, sistem auto-compress ke WebP
         ]);
 
         $code = !empty($validated['code'])
@@ -243,7 +243,7 @@ class AdminMediaPartnerController extends Controller
             'notes'               => 'nullable|string|max:500',
             'target_url'          => 'nullable|string|max:1000',
             'show_on_bio'         => 'nullable|boolean',
-            'badge_image'         => 'nullable|image|max:5120',
+            'badge_image'         => 'nullable|image|max:25600', // Izinkan hingga 25MB, sistem auto-compress ke WebP
         ]);
 
         $badgePath = $mediaPartner->badge_image;
