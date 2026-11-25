@@ -733,13 +733,13 @@
                                     <select name="product_category_id" id="catSelect" class="form-input" required
                                         onchange="loadSubCat(this.value)">
                                         <option value="">— Pilih Kategori —</option>
-                                        <optgroup label="--- TIKET & EVENT ---">
+                                        <optgroup label="--- TIKET & EVENT ---" data-type="event">
                                             @foreach($categories->where('tab', 'event') as $cat)
                                                 <option value="{{ $cat->id }}" data-tab="{{ $cat->tab }}" {{ old('product_category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}
                                                 </option>
                                             @endforeach
                                         </optgroup>
-                                        <optgroup label="--- PRODUK DIGITAL & LAINNYA ---">
+                                        <optgroup label="--- PRODUK DIGITAL & LAINNYA ---" data-type="other">
                                             @foreach($categories->where('tab', '!=', 'event') as $cat)
                                                 <option value="{{ $cat->id }}" data-tab="{{ $cat->tab }}" {{ old('product_category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}
                                                 </option>
@@ -2106,6 +2106,49 @@
 
             if (typeof updateVariantTypeExample === 'function') {
                 updateVariantTypeExample(val);
+            }
+
+            filterCategoriesByProductType(val);
+        }
+
+        function filterCategoriesByProductType(val) {
+            const catSelect = document.getElementById('catSelect');
+            if (!catSelect) return;
+
+            if (!catSelect._origHtml) {
+                catSelect._origHtml = catSelect.innerHTML;
+            }
+
+            const curVal = catSelect.value;
+            const temp = document.createElement('select');
+            temp.innerHTML = catSelect._origHtml;
+
+            catSelect.innerHTML = '<option value="">— Pilih Kategori —</option>';
+
+            if (val === 'ticket') {
+                const eventGroup = temp.querySelector('optgroup[data-type="event"]');
+                if (eventGroup) {
+                    const clonedGroup = eventGroup.cloneNode(true);
+                    clonedGroup.label = 'Kategori Tiket & Event';
+                    catSelect.appendChild(clonedGroup);
+                }
+            } else {
+                const otherGroup = temp.querySelector('optgroup[data-type="other"]');
+                if (otherGroup) {
+                    const clonedGroup = otherGroup.cloneNode(true);
+                    clonedGroup.label = 'Kategori Produk Digital & Lainnya';
+                    catSelect.appendChild(clonedGroup);
+                }
+            }
+
+            if (curVal && catSelect.querySelector(`option[value="${curVal}"]`)) {
+                catSelect.value = curVal;
+            } else {
+                catSelect.value = '';
+            }
+
+            if (typeof loadSubCat === 'function') {
+                loadSubCat(catSelect.value);
             }
         }
 
