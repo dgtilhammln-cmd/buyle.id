@@ -4,8 +4,18 @@
     $footerReferralUrl = url('/?ref=' . urlencode($referralParam) . '&utm_source=bio_badge&utm_medium=' . urlencode($referralParam));
     $footerLogo = \App\Models\Setting::get('logo');
 
-    // Resolusi Media Partner terkait Creator ini
+    // Resolusi Media Partner:
+    // 1. Cek apakah user ini adalah binaan Media Partner (media_partner_id pada user)
+    // 2. ATAU user ini sendiri terdaftar sebagai entitas Media Partner (user_id pada media_partners)
+    // 3. ATAU cari via kode/slug/username
     $mediaPartner = $profile->user?->mediaPartner;
+    if (!$mediaPartner && $profile->user_id) {
+        $mediaPartner = \App\Models\MediaPartner::where('user_id', $profile->user_id)->first();
+    }
+    if (!$mediaPartner && !empty($profile->store_slug)) {
+        $mediaPartner = \App\Models\MediaPartner::where('code', $profile->store_slug)->first();
+    }
+
     $hasMediaPartnerBadge = $mediaPartner 
         && $mediaPartner->is_active 
         && ($mediaPartner->show_on_bio ?? true) 
