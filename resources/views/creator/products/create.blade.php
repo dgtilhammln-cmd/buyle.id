@@ -814,49 +814,9 @@
                                             </select>
                                         </div>
 
-                                        {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
-                                        <div class="form-group full" id="customFieldsSection" style="margin-top:0.5rem; padding-top:1rem; border-top:1.5px dashed #BBF7D0;">
-                                            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
-                                                <div>
-                                                    <label class="form-label" style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem; font-size:0.92rem; font-weight:800; color:#166534;">
-                                                        <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <path d="M9 11l3 3L22 4"/>
-                                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                                                        </svg>
-                                                        Formulir Tambahan Checkout / Data Peserta (Custom Fields)
-                                                    </label>
-                                                    <div style="font-size:0.76rem; color:#64748b;">
-                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout. Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal: Ukuran Jersey, Institusi, Kontak Darurat, dll).
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <button type="button" onclick="addCustomFieldRow()" style="display:inline-flex; align-items:center; gap:0.35rem; background:#166534; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:background 0.15s;">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                                        + Tambah Form Custom
-                                                    </button>
-                                                </div>
-                                            </div>
 
-                                            <!-- Preset Buttons -->
-                                            <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.5rem 0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px;">
-                                                <span style="font-size:0.74rem; font-weight:700; color:#475569; display:flex; align-items:center; gap:0.3rem;">
-                                                    ⚡ Template Cepat:
-                                                </span>
-                                                <button type="button" onclick="applyCustomFieldPreset('run')" style="background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">🏃 Lari / Marathon</button>
-                                                <button type="button" onclick="applyCustomFieldPreset('seminar')" style="background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">🎓 Seminar / Workshop</button>
-                                                <button type="button" onclick="applyCustomFieldPreset('sport')" style="background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">⚽ Turnamen Olahraga</button>
-                                                <button type="button" onclick="applyCustomFieldPreset('concert')" style="background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">🎵 Konser / Festival</button>
-                                                <button type="button" onclick="clearAllCustomFields()" style="background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto;">Reset Form</button>
-                                            </div>
 
-                                            <div id="customFieldsContainer" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
-
-                                            <div id="customFieldsEmptyNotice" style="text-align:center; padding:1.15rem; background:#fff; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
-                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap &amp; Nomor Identitas</strong> saat checkout. Klik <strong>+ Tambah Form Custom</strong> jika memerlukan data lain.
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group full" id="offlineLocationWrap">
+                                        <div class="form-group" id="offlineLocationWrap">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
                                                 <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2"
                                                     viewBox="0 0 24 24">
@@ -870,6 +830,21 @@
                                                 placeholder="Contoh: Gedung Senayan Hall A, Jl. Asia Afrika, Jakarta Pusat">
                                             <span class="form-hint">Tuliskan nama tempat / alamat fisik tempat acara
                                                 berlangsung.</span>
+                                        </div>
+
+                                        <div class="form-group" id="ticketWarWrap">
+                                            <label class="form-label"
+                                                style="display:flex; align-items:center; gap:0.4rem; color:#b45309;">
+                                                <svg width="15" height="15" fill="none" stroke="#d97706" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="10" />
+                                                    <polyline points="12 6 12 12 16 14" />
+                                                </svg>
+                                                Jadwal War Tiket
+                                            </label>
+                                            <input type="datetime-local" name="ticket_war_start"
+                                                value="{{ old('ticket_war_start') }}" class="form-input">
+                                            <span class="form-hint">Kosongkan jika langsung bisa dibeli. Isi untuk countdown hitung mundur.</span>
                                         </div>
 
                                         <div class="form-group full" id="onlineLocationWrap" style="display:none;">
@@ -1002,21 +977,6 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="form-label"
-                                                style="display:flex; align-items:center; gap:0.4rem; color:#b45309;">
-                                                <svg width="15" height="15" fill="none" stroke="#d97706" stroke-width="2"
-                                                    viewBox="0 0 24 24">
-                                                    <circle cx="12" cy="12" r="10" />
-                                                    <polyline points="12 6 12 12 16 14" />
-                                                </svg>
-                                                Jadwal War Tiket
-                                            </label>
-                                            <input type="datetime-local" name="ticket_war_start"
-                                                value="{{ old('ticket_war_start') }}" class="form-input">
-                                            <span class="form-hint">Kosongkan jika langsung bisa dibeli. Isi untuk countdown hitung mundur.</span>
-                                        </div>
-
-                                        <div class="form-group">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
                                                 <svg width="15" height="15" fill="none" stroke="#E1306C" stroke-width="2"
                                                     viewBox="0 0 24 24">
@@ -1037,7 +997,7 @@
                                                 pelaksanaan pada halaman produk tiket.</span>
                                         </div>
 
-                                        <div class="form-group" style="margin-top:0.5rem;">
+                                        <div class="form-group">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
                                                 <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
                                                     <path
@@ -1073,6 +1033,64 @@
                                                 placeholder="Contoh:&#10;1. Tiket yang sudah dibeli bersifat non-refundable (tidak dapat dikembalikan/ditukar).&#10;2. Pengunjung wajib menunjukkan e-tiket dengan QR Code yang jelas pada saat check-in di gate.&#10;3. Dilarang membawa senjata tajam, obat-obatan terlarang, flare, dan kamera profesional tanpa izin penyelenggara.">{{ old('terms_conditions') }}</textarea>
                                             <span class="form-hint">Wajib diisi. Syarat & ketentuan ini akan tampil pada tab
                                                 'T&C' khusus tiket event di halaman produk.</span>
+                                        </div>
+
+                                        {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
+                                        <div class="form-group full" id="customFieldsSection" style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
+                                            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                                                <div>
+                                                    <label class="form-label" style="font-family:'Montserrat', sans-serif; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem; font-size:0.86rem; font-weight:700; color:#166534;">
+                                                        <svg width="17" height="17" fill="none" stroke="#166534" stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <path d="M9 11l3 3L22 4"/>
+                                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                                        </svg>
+                                                        Formulir Tambahan Checkout / Data Peserta (Custom Fields)
+                                                    </label>
+                                                    <div style="font-family:'Montserrat', sans-serif; font-size:0.75rem; color:#64748b;">
+                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout. Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal: Ukuran Jersey, Institusi, Kontak Darurat, dll).
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button type="button" onclick="addCustomFieldRow()" style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; background:#166534; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:background 0.15s;">
+                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                        Tambah Form Custom
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Preset Buttons: Menggunakan Clean SVG Icons, no emoji -->
+                                            <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.5rem 0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; font-family:'Montserrat', sans-serif;">
+                                                <span style="font-size:0.74rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                                    Template Cepat:
+                                                </span>
+                                                <button type="button" onclick="applyCustomFieldPreset('run')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2 2 4"/><path d="M5 11l4-2 3 2 3-1 2 3"/><path d="M9 13l2 4"/></svg>
+                                                    Lari / Marathon
+                                                </button>
+                                                <button type="button" onclick="applyCustomFieldPreset('seminar')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
+                                                    Seminar / Workshop
+                                                </button>
+                                                <button type="button" onclick="applyCustomFieldPreset('sport')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                                                    Turnamen Olahraga
+                                                </button>
+                                                <button type="button" onclick="applyCustomFieldPreset('concert')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                                    Konser / Festival
+                                                </button>
+                                                <button type="button" onclick="clearAllCustomFields()" style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                                                    Reset Form
+                                                </button>
+                                            </div>
+
+                                            <div id="customFieldsContainer" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
+
+                                            <div id="customFieldsEmptyNotice" style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.15rem; background:#fff; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
+                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap &amp; Nomor Identitas</strong> saat checkout. Klik <strong>Tambah Form Custom</strong> jika memerlukan data lain.
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1887,12 +1905,15 @@
         function toggleEventTypeFields(val) {
             const offWrap = document.getElementById('offlineLocationWrap');
             const onWrap = document.getElementById('onlineLocationWrap');
+            const warWrap = document.getElementById('ticketWarWrap');
             if (val === 'online') {
                 if (offWrap) offWrap.style.display = 'none';
                 if (onWrap) onWrap.style.display = 'block';
+                if (warWrap) warWrap.classList.add('full');
             } else {
                 if (offWrap) offWrap.style.display = 'block';
                 if (onWrap) onWrap.style.display = 'none';
+                if (warWrap) warWrap.classList.remove('full');
             }
         }
 
@@ -2414,17 +2435,17 @@
             const row = document.createElement('div');
             row.className = 'custom-field-row';
             row.id = `cf_row_${idx}`;
-            row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03);';
+            row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:\'Montserrat\', sans-serif;';
 
             row.innerHTML = `
-                <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start;">
+                <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
                     <div>
-                        <label style="font-size:0.73rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
-                        <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-size:0.82rem; padding:0.45rem 0.65rem;">
+                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
+                        <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
                     </div>
                     <div>
-                        <label style="font-size:0.73rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
-                        <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-size:0.82rem; padding:0.45rem 0.65rem;">
+                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
+                        <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
                             <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
                             <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
                             <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
@@ -2433,8 +2454,8 @@
                         </select>
                     </div>
                     <div>
-                        <label style="font-size:0.73rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
-                        <label style="display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
+                        <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
                             <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
                             <span>Wajib Diisi</span>
                         </label>
@@ -2445,12 +2466,12 @@
                         </button>
                     </div>
                 </div>
-                <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0;">
-                    <label style="font-size:0.73rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
+                <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
+                    <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
                         Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
                     </label>
-                    <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-size:0.82rem; padding:0.45rem 0.65rem;">
-                    <span style="font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
+                    <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                    <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
                 </div>
             `;
 

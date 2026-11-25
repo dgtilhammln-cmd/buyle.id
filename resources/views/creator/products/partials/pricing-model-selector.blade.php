@@ -242,8 +242,8 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
 
 <div class="form-group full buyle-pricing-model-wrap" id="pricing-model-wrap">
     <label class="form-label"
-        style="font-weight:800; color:#0f172a; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem; font-size:0.92rem;">
-        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+        style="font-family:'Montserrat', sans-serif; font-size:0.86rem; font-weight:700; color:#0f172a; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.5rem;">
+        <svg width="17" height="17" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <line x1="2" y1="10" x2="22" y2="10" />
         </svg>

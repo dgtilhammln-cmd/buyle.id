@@ -624,11 +624,9 @@ class SellerProductController extends Controller
             // Optional SKU (pastikan unik table-wide agar tidak pernah trigger SQL 1062 Duplicate entry)
             $valSku = !empty($vData['sku']) ? trim($vData['sku']) : null;
             if ($valSku) {
-                $skuCheck = \App\Models\ProductVariantValue::where('sku', $valSku);
-                if ($valueId) {
-                    $skuCheck->where('id', '!=', $valueId);
-                }
-                if ($skuCheck->exists()) {
+                while (\App\Models\ProductVariantValue::where('sku', $valSku)
+                    ->when($valueId, fn($q) => $q->where('id', '!=', $valueId))
+                    ->exists()) {
                     $valSku = $valSku . '-' . strtoupper(\Illuminate\Support\Str::random(3));
                 }
             }
@@ -666,13 +664,18 @@ class SellerProductController extends Controller
                 // Lookup global (bukan scoped) karena unique constraint SKU itu table-wide
                 $existingBySkuOrName = null;
                 if ($valSku) {
-                    $existingBySkuOrName = \App\Models\ProductVariantValue::where('sku', $valSku)->first();
+                    $existingBySkuOrName = $option->values()->where('sku', $valSku)->first();
                 }
                 if (!$existingBySkuOrName) {
                     $existingBySkuOrName = $option->values()->where('value', $valName)->first();
                 }
 
                 if ($existingBySkuOrName) {
+                    if ($valSku) {
+                        while (\App\Models\ProductVariantValue::where('sku', $valSku)->where('id', '!=', $existingBySkuOrName->id)->exists()) {
+                            $valSku = $valSku . '-' . strtoupper(\Illuminate\Support\Str::random(3));
+                        }
+                    }
                     $updatePayload = [
                         'value'              => $valName,
                         'price'              => $valPrice,
@@ -686,6 +689,11 @@ class SellerProductController extends Controller
                     $existingBySkuOrName->update($updatePayload);
                     $keptIds[] = $existingBySkuOrName->id;
                 } else {
+                    if ($valSku) {
+                        while (\App\Models\ProductVariantValue::where('sku', $valSku)->exists()) {
+                            $valSku = $valSku . '-' . strtoupper(\Illuminate\Support\Str::random(3));
+                        }
+                    }
                     try {
                         $newVal = $option->values()->create([
                             'value' => $valName,
