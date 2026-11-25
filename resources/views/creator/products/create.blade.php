@@ -815,7 +815,7 @@
                                 </div>
 
                                 <div class="form-group full" id="ticketFieldsWrap"
-                                    style="display:none; background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
+                                    style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
                                     <h5
                                         style="font-size:0.95rem; font-weight:800; color:#166534; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #bbf7d0; padding-bottom:0.75rem;">
                                         <svg width="20" height="20" fill="none" stroke="#166534" stroke-width="2"
@@ -1532,7 +1532,7 @@
 
                             {{-- POSTER EVENT (KHUSUS TIKET) --}}
                             <div class="form-group" id="posterUploadWrap"
-                                style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
+                                style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
                                 <label class="form-label"
                                     style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
                                     <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2"
@@ -1716,7 +1716,7 @@
                         </div>
                     </div>
 
-                    <div class="prof-card" id="digitalAccessCard">
+                    <div class="prof-card" id="digitalAccessCard" style="{{ $selectedType === 'ticket' ? 'display:none;' : '' }}">
                         <div class="prof-card-head">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
                                 viewBox="0 0 24 24">
@@ -1739,7 +1739,7 @@
                     </div>
 
                     {{-- WHITE LABEL CARD --}}
-                    <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;"
+                    <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s; {{ $selectedType === 'ticket' ? 'display:none;' : '' }}"
                         id="whitelabelCard">
                         <div class="prof-card-head"
                             style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; align-items:center; gap:0.5rem;">
@@ -2404,16 +2404,20 @@
             }
         }
 
-        const initPType = document.getElementById('productTypeSelect');
-        if (initPType) toggleProductTypeFields(initPType.value);
-        try {
-            const urlParamsTicketing = new URLSearchParams(window.location.search);
-            if (urlParamsTicketing.get('from') === 'ticketing') {
-                if (typeof switchPricingTab === 'function') {
-                    switchPricingTab('fixed');
+        function initProductTypeFields() {
+            const initPType = document.getElementById('productTypeSelect');
+            if (initPType) toggleProductTypeFields(initPType.value);
+            try {
+                const urlParamsTicketing = new URLSearchParams(window.location.search);
+                if (urlParamsTicketing.get('from') === 'ticketing') {
+                    if (typeof switchPricingTab === 'function') {
+                        switchPricingTab('fixed');
+                    }
                 }
-            }
-        } catch (e) { }
+            } catch (e) { }
+        }
+        initProductTypeFields();
+        document.addEventListener('DOMContentLoaded', initProductTypeFields);
         // Init affiliate toggle state
         const initAffToggle = document.getElementById('affiliateCommissionToggle');
         if (initAffToggle) handleAffiliateToggle(initAffToggle.checked);

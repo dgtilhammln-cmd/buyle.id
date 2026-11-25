@@ -730,8 +730,15 @@
                                 <div class="form-group">
                                     <label class="form-label">Tipe Produk <span>*</span></label>
                                     @php
-                                        $defaultType = request('from') === 'pos' ? 'makanan' : (request('from') === 'ticketing' ? 'ticket' : $product->product_type);
+                                        $isTicket = (request('from') === 'ticketing')
+                                            || (method_exists($product, 'isTicketProduct') && $product->isTicketProduct())
+                                            || in_array($product->product_type, ['ticket', 'event', 'webinar', 'workshop', 'wisata'])
+                                            || !empty($product->event_date);
+                                        $defaultType = request('from') === 'pos' ? 'makanan' : ($isTicket ? 'ticket' : $product->product_type);
                                         $selectedType = old('product_type', $defaultType);
+                                        if ($isTicket && !in_array($selectedType, ['makanan', 'physical', 'service'])) {
+                                            $selectedType = 'ticket';
+                                        }
                                     @endphp
                                     <select name="product_type" id="productTypeSelect" class="form-input"
                                         onchange="handleProductTypeSelectChange(this)">
@@ -809,7 +816,7 @@
                                 </div>
 
                                 <div class="form-group full" id="ticketFieldsWrap"
-                                    style="display:none; background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
+                                    style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
                                     <h5
                                         style="font-size:0.95rem; font-weight:800; color:#166534; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #bbf7d0; padding-bottom:0.75rem;">
                                         <svg width="20" height="20" fill="none" stroke="#166534" stroke-width="2"
@@ -1140,7 +1147,8 @@
                                             <div id="ticketTaxBox"
                                                 style="{{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
                                                 {{-- Multi-Tax Rows Container --}}
-                                                <div id="ticketTaxItemsContainer" style="display:flex; flex-direction:column; gap:0.65rem;">
+                                                <div id="ticketTaxItemsContainer"
+                                                    style="display:flex; flex-direction:column; gap:0.65rem;">
                                                     {{-- Diisi secara dinamis oleh JavaScript --}}
                                                 </div>
 
@@ -1148,7 +1156,11 @@
                                                 <div style="display:flex; align-items:center; justify-content:flex-start; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #BBF7D0;">
                                                     <button type="button" onclick="addTaxRow({name: '', rate: 10})"
                                                         style="background:#FFFFFF; border:1.5px dashed #16a34a; color:#16a34a; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:10px; cursor:pointer; font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; transition:all 0.15s;">
-                                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                        <svg width="15" height="15" fill="none" stroke="currentColor"
+                                                            stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                                        </svg>
                                                         <span>Tambah Pajak Lainnya</span>
                                                     </button>
                                                 </div>
@@ -1402,7 +1414,7 @@
                                 @include('creator.products.partials.variants-manager', ['product' => $product])
 
                                 <div id="commissionWrap" class="form-group full"
-                                    style="display: {{ old('product_type', $product->product_type) === 'ticket' ? 'none' : 'block' }}; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
+                                    style="display: {{ $selectedType === 'ticket' ? 'none' : 'block' }}; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
                                     @php $currentCommRate = old('affiliate_commission_rate', $product->affiliate_commission_rate ?? 10);
                                     $affOn = ($currentCommRate > 0); @endphp
                                     <label
@@ -1481,7 +1493,7 @@
                                 @endif
 
                                 <div class="form-group full" id="shortDescWrap"
-                                    style="display: {{ old('product_type', $product->product_type) === 'ticket' ? 'none' : 'block' }};">
+                                    style="display: {{ $selectedType === 'ticket' ? 'none' : 'block' }};">
                                     <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
                                     <textarea name="short_desc" id="shortDescInput" class="form-input" rows="2"
                                         placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160" {{ old('product_type', $product->product_type) === 'ticket' ? '' : 'required' }}>{{ old('short_desc', $product->short_desc) }}</textarea>
@@ -1555,7 +1567,7 @@
                             </div>
 
                             <div class="form-group" id="posterUploadWrap"
-                                style="display:none; background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
+                                style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
                                 <label class="form-label"
                                     style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
                                     <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2"
@@ -1770,7 +1782,7 @@
                         </div>
                     </div>
 
-                    <div class="prof-card" id="digitalAccessCard">
+                    <div class="prof-card" id="digitalAccessCard" style="{{ $selectedType === 'ticket' ? 'display:none;' : '' }}">
                         <div class="prof-card-head">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
                                 viewBox="0 0 24 24">
@@ -1793,7 +1805,7 @@
                     </div>
 
                     {{-- WHITE LABEL CARD --}}
-                    <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s;"
+                    <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s; {{ $selectedType === 'ticket' ? 'display:none;' : '' }}"
                         id="whitelabelCard">
                         <div class="prof-card-head"
                             style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; justify-content:space-between; align-items:center;">
@@ -1981,8 +1993,8 @@
 
 @section('scripts')
     <script>
-                                                                    // Tab switching      // Auto-switch tab if an invalid element exists in a hi    
-                                                                    dden tab
+                                                                                                // Tab switching      // Auto-switch tab if an invalid element exists in a hi    
+                                                                                                dden tab
         const prodForm = document.getElementById('productForm');
         if (prodForm) {
             prodForm.addEventListener('submit', function (e) {
@@ -2059,17 +2071,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                                                                                                                                    <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                                                                                                                                        <div class="form-group">
-                                                                                                                                                            <label class="form-label">Pertanyaan</label>
-                                                                                                                                                            <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                                                                                                                                        </div>
-                                                                                                                                                        <div class="form-group">
-                                                                                                                                                            <label class="form-label">Jawaban</label>
-                                                                                                                                                            <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                                                                                                                                        </div>
-                                                                                                                                                        <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                                                                                                                                    </div>`;
+                                                                                                                                                                                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                                                                                                                                                    <div class="form-group">
+                                                                                                                                                                                        <label class="form-label">Pertanyaan</label>
+                                                                                                                                                                                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                    <div class="form-group">
+                                                                                                                                                                                        <label class="form-label">Jawaban</label>
+                                                                                                                                                                                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                                                                                                                                                                </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -2390,42 +2402,42 @@
             row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:\'Montserrat\', sans-serif;';
 
             row.innerHTML = `
-                                                                                                                        <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
-                                                                                                                            <div>
-                                                                                                                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
-                                                                                                                                <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                                                                                                                            </div>
-                                                                                                                            <div>
-                                                                                                                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
-                                                                                                                                <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                                                                                                                                    <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
-                                                                                                                                    <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
-                                                                                                                                    <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
-                                                                                                                                    <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
-                                                                                                                                    <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
-                                                                                                                                </select>
-                                                                                                                            </div>
-                                                                                                                            <div>
-                                                                                                                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
-                                                                                                                                <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
-                                                                                                                                    <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
-                                                                                                                                    <span>Wajib Diisi</span>
-                                                                                                                                </label>
-                                                                                                                            </div>
-                                                                                                                            <div style="padding-top:1.4rem;">
-                                                                                                                                <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
-                                                                                                                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                                                                                                                </button>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                        <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
-                                                                                                                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
-                                                                                                                                Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
-                                                                                                                            </label>
-                                                                                                                            <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                                                                                                                            <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
-                                                                                                                        </div>
-                                                                                                                    `;
+                                                                                                                                                    <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
+                                                                                                                                                        <div>
+                                                                                                                                                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
+                                                                                                                                                            <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                                                                                                                                                        </div>
+                                                                                                                                                        <div>
+                                                                                                                                                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
+                                                                                                                                                            <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                                                                                                                                                                <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
+                                                                                                                                                                <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
+                                                                                                                                                                <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
+                                                                                                                                                                <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
+                                                                                                                                                                <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div>
+                                                                                                                                                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
+                                                                                                                                                            <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                                                                                                                                                                <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                                                                                                                                                                <span>Wajib Diisi</span>
+                                                                                                                                                            </label>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div style="padding-top:1.4rem;">
+                                                                                                                                                            <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
+                                                                                                                                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                                                                                                                            </button>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                    <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
+                                                                                                                                                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
+                                                                                                                                                            Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
+                                                                                                                                                        </label>
+                                                                                                                                                        <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                                                                                                                                                        <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
+                                                                                                                                                    </div>
+                                                                                                                                                `;
 
             container.appendChild(row);
             if (emptyNotice) emptyNotice.style.display = 'none';
@@ -2823,16 +2835,20 @@
             }
         }
 
-        const initPType = document.getElementById('productTypeSelect');
-        if (initPType) toggleProductTypeFields(initPType.value);
-        try {
-            const urlParamsTicketing = new URLSearchParams(window.location.search);
-            if (urlParamsTicketing.get('from') === 'ticketing') {
-                if (typeof switchPricingTab === 'function') {
-                    switchPricingTab('fixed');
+        function initProductTypeFields() {
+            const initPType = document.getElementById('productTypeSelect');
+            if (initPType) toggleProductTypeFields(initPType.value);
+            try {
+                const urlParamsTicketing = new URLSearchParams(window.location.search);
+                if (urlParamsTicketing.get('from') === 'ticketing') {
+                    if (typeof switchPricingTab === 'function') {
+                        switchPricingTab('fixed');
+                    }
                 }
-            }
-        } catch (e) { }
+            } catch (e) { }
+        }
+        initProductTypeFields();
+        document.addEventListener('DOMContentLoaded', initProductTypeFields);
 
         // ── Video Link Panel Toggle & Preview ──
         function toggleVideoLinkPanel() {
@@ -2954,18 +2970,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                                                                                                                                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                                                                                                                                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                                                                                                                                                style="width:100%; height:100%; border:none; display:block;"
-                                                                                                                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                                                                                                                allowfullscreen loading="lazy"></iframe>
-                                                                                                                                                        </div>`;
+                                                                                                                                                                                    <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                                                                                                                                                        <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                                                                                                                                                            style="width:100%; height:100%; border:none; display:block;"
+                                                                                                                                                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                                                                                                                            allowfullscreen loading="lazy"></iframe>
+                                                                                                                                                                                    </div>`;
                 } else {
                     html += `
-                                                                                                                                                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                                                                                                                                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                                                                                                                                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                                                                                                                                        </div>`;
+                                                                                                                                                                                    <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                                                                                                                                                        <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                                                                                                                                                        <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                                                                                                                                                    </div>`;
                 }
             });
             html += '</div>';
@@ -3019,25 +3035,25 @@
 
         function renderTaxRowHtml(idx, name = '', rate = 10) {
             return `
-                <div class="ticket-tax-row" id="tax_row_${idx}" style="display:grid; grid-template-columns: 2fr 1fr auto; gap:0.65rem; align-items:flex-end; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.65rem 0.75rem;">
-                    <div>
-                        <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Nama Pajak / Tagihan</label>
-                        <input type="text" name="ticket_taxes[${idx}][name]" value="${escapeHtml(name)}" class="form-input tax-name-input" placeholder="Contoh: Pajak Hiburan / Daerah (PB1)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; background:#fff;" oninput="updateTaxTotalSummary()">
-                    </div>
-                    <div>
-                        <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Tarif Pajak (%)</label>
-                        <div style="position:relative;">
-                            <input type="number" step="0.1" min="0" max="100" name="ticket_taxes[${idx}][rate]" value="${rate}" class="form-input tax-rate-input" placeholder="10" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; padding-right:1.8rem; background:#fff;" oninput="updateTaxTotalSummary()">
-                            <span style="position:absolute; right:8px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.78rem;">%</span>
-                        </div>
-                    </div>
-                    <div style="padding-bottom:1px;">
-                        <button type="button" onclick="removeTaxRow(${idx})" style="background:#FEE2E2; border:none; color:#EF4444; width:36px; height:36px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" title="Hapus Pajak Ini">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        </button>
-                    </div>
-                </div>
-            `;
+                                            <div class="ticket-tax-row" id="tax_row_${idx}" style="display:grid; grid-template-columns: 2fr 1fr auto; gap:0.65rem; align-items:flex-end; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.65rem 0.75rem;">
+                                                <div>
+                                                    <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Nama Pajak / Tagihan</label>
+                                                    <input type="text" name="ticket_taxes[${idx}][name]" value="${escapeHtml(name)}" class="form-input tax-name-input" placeholder="Contoh: Pajak Hiburan / Daerah (PB1)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; background:#fff;" oninput="updateTaxTotalSummary()">
+                                                </div>
+                                                <div>
+                                                    <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Tarif Pajak (%)</label>
+                                                    <div style="position:relative;">
+                                                        <input type="number" step="0.1" min="0" max="100" name="ticket_taxes[${idx}][rate]" value="${rate}" class="form-input tax-rate-input" placeholder="10" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; padding-right:1.8rem; background:#fff;" oninput="updateTaxTotalSummary()">
+                                                        <span style="position:absolute; right:8px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.78rem;">%</span>
+                                                    </div>
+                                                </div>
+                                                <div style="padding-bottom:1px;">
+                                                    <button type="button" onclick="removeTaxRow(${idx})" style="background:#FEE2E2; border:none; color:#EF4444; width:36px; height:36px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" title="Hapus Pajak Ini">
+                                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        `;
         }
 
         function addTaxRow(data = {}) {
@@ -3051,7 +3067,7 @@
             const idx = taxRowCount++;
             const name = data.name !== undefined ? data.name : '';
             const rate = data.rate !== undefined ? data.rate : 10;
-            
+
             const div = document.createElement('div');
             div.innerHTML = renderTaxRowHtml(idx, name, rate);
             container.appendChild(div.firstElementChild);
@@ -3063,7 +3079,7 @@
             if (row) row.remove();
             const container = document.getElementById('ticketTaxItemsContainer');
             if (container && container.querySelectorAll('.ticket-tax-row').length === 0) {
-                addTaxRow({name: '', rate: 0});
+                addTaxRow({ name: '', rate: 0 });
             }
             updateTaxTotalSummary();
         }
