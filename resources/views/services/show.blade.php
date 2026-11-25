@@ -2482,7 +2482,7 @@
                                                 {{ $service->ticket_war_start->isoFormat('D MMMM Y, HH:mm') }} WIB</span>
                                         </button>
                                         <div id="normalActions" style="display: none; gap:0.75rem; flex:1;">
-                                            @if(!$service->isFree() && !($service->sale_price !== null && (float) $service->sale_price <= 0))
+                                            @if(!$service->isFree() && !($service->sale_price !== null && (float) $service->sale_price <= 0) && !request()->routeIs('tix.show'))
                                                 <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
                                                     onclick="submitPdCart('cart')">
                                                     Tambah Keranjang
@@ -2990,7 +2990,7 @@
 
                                 @else
                                     <div class="pd-actions" style="margin-top:1.5rem; display:flex; gap:0.75rem;">
-                                        @if(!$service->isFree() && !($service->sale_price !== null && (float) $service->sale_price <= 0))
+                                        @if(!$service->isFree() && !($service->sale_price !== null && (float) $service->sale_price <= 0) && !request()->routeIs('tix.show'))
                                             <button type="button" id="pd-btn-cart" class="pd-btn pd-btn-outline" style="flex:1;"
                                                 @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0)
                                                 disabled @endif onclick="submitPdCart('cart')">
@@ -5110,7 +5110,7 @@
         {{-- MOBILE STICKY BAR --}}
         @if($service->price > 0 || $service->isFree() || ($service->sale_price !== null && (float)$service->sale_price <= 0))
             <div class="pd-sticky-bar">
-                @if(!$service->isFree() && !($service->sale_price !== null && (float)$service->sale_price <= 0))
+                @if(!$service->isFree() && !($service->sale_price !== null && (float)$service->sale_price <= 0) && !request()->routeIs('tix.show'))
                     <button type="button" onclick="submitPdCart('cart')" class="pd-btn pd-btn-outline" @if($service->type !== 'service' && !is_null($service->stock) && $service->stock <= 0) disabled @endif>
                         Keranjang
                     </button>
