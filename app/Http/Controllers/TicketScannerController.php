@@ -1460,6 +1460,7 @@ class TicketScannerController extends Controller
             'qty'              => 'required|integer|min:1|max:50',
             'buyer_name'       => 'required|string|max:150',
             'buyer_phone'      => 'nullable|string|max:30',
+            'buyer_email'      => 'nullable|email|max:150',
             'payment_method'   => 'required|in:cash,qris',
             'cash_received'    => 'nullable|numeric|min:0',
             'fulfillment_type' => 'required|in:auto_checkin,issue_ticket',
@@ -1525,7 +1526,7 @@ class TicketScannerController extends Controller
             $order = \App\Models\Order::create([
                 'order_number'        => $orderNumber,
                 'user_id'             => null,
-                'customer_email'      => null,
+                'customer_email'      => $request->buyer_email,
                 'status'              => \App\Enums\OrderStatus::Confirmed,
                 'subtotal'            => $subtotal,
                 'shipping_cost'       => 0,
@@ -1541,6 +1542,7 @@ class TicketScannerController extends Controller
                 'shipping_address'    => [
                     'receiver_name'   => $request->buyer_name,
                     'phone'           => $request->buyer_phone,
+                    'email'           => $request->buyer_email,
                     'payment_method'  => $request->payment_method,
                     'cash_received'   => $cashReceived,
                     'change'          => $change,
@@ -1553,11 +1555,13 @@ class TicketScannerController extends Controller
 
             // Order Item
             $orderItem = \App\Models\OrderItem::create([
-                'order_id'   => $order->id,
-                'product_id' => $product->id,
-                'qty'        => $qty,
-                'price'      => $price,
-                'subtotal'   => $subtotal,
+                'order_id'     => $order->id,
+                'product_id'   => $product->id,
+                'seller_id'    => $product->seller_id,
+                'product_name' => $product->name,
+                'qty'          => $qty,
+                'price'        => $price,
+                'subtotal'     => $subtotal,
             ]);
 
             // Terbitkan Tiket Pass
@@ -1573,7 +1577,7 @@ class TicketScannerController extends Controller
                     'seller_id'             => $product->seller_id,
                     'holder_name'           => $request->buyer_name . ($qty > 1 ? " (#" . ($i + 1) . ")" : ""),
                     'holder_phone'          => $request->buyer_phone,
-                    'holder_email'          => null,
+                    'holder_email'          => $request->buyer_email,
                     'status'                => $isAutoCheckin ? 'used' : 'valid',
                     'is_ots'                => true,
                     'cashier_user_id'       => $sellerId,
@@ -1595,6 +1599,20 @@ class TicketScannerController extends Controller
             }
 
             DB::commit();
+
+            // Kirim E-Tiket ke Email melalui SMTP Hostinger jika diisi pembeli
+            $emailSent = false;
+            if (!empty($request->buyer_email)) {
+                try {
+                    \App\Services\MailConfigService::apply();
+                    $magicLoginUrl = route('account.orders');
+                    \Illuminate\Support\Facades\Notification::route('mail', $request->buyer_email)
+                        ->notify(new \App\Notifications\OrderPaidNotification($order, $magicLoginUrl, false));
+                    $emailSent = true;
+                } catch (\Throwable $mailEx) {
+                    \Log::warning('Gagal mengirim E-Tiket OTS ke email ' . $request->buyer_email . ': ' . $mailEx->getMessage());
+                }
+            }
 
             // Format tautan WhatsApp
             $waUrl = null;
@@ -1624,6 +1642,8 @@ class TicketScannerController extends Controller
                 'event_name'     => $product->name,
                 'buyer_name'     => $request->buyer_name,
                 'buyer_phone'    => $request->buyer_phone,
+                'buyer_email'    => $request->buyer_email,
+                'email_sent'     => $emailSent,
                 'qty'            => $qty,
                 'price'          => $price,
                 'subtotal'       => $subtotal,

@@ -4,6 +4,9 @@
      ══════════════════════════════════════════════════════════════════════════ --}}
 <div id="tab-ots" class="payout-tab-pane" style="display: {{ $activeTab === 'ots' ? 'block' : 'none' }}; font-family: 'Montserrat', sans-serif;">
     
+    {{-- TOAST NOTIFICATION CONTAINER (Custom Mobile-Friendly Animated Pop-up) --}}
+    <div id="otsToastContainer" style="position: fixed; top: 1.25rem; right: 1.25rem; z-index: 999999; display: flex; flex-direction: column; gap: 0.6rem; max-width: 380px; width: calc(100% - 2.5rem); pointer-events: none;"></div>
+    
     {{-- 1. HEADER CARD (Uniform with tab=data: Filter & Ekspor Data) --}}
     <div class="prof-card" style="margin-bottom: 1.25rem;">
         <div class="prof-card-head attendance-card-head" style="background: #ffffff; padding: 0.9rem 1.25rem;">
@@ -45,24 +48,24 @@
         </div>
     </div>
 
-    {{-- 2. 4 STAT CARDS REKONSILIASI SHIFT OTS (Exact markup & sizing as tab=data) --}}
+    {{-- 2. 4 STAT CARDS REKONSILIASI SHIFT OTS (Clean Monochrome, 4 Columns, Uniform with tab=data) --}}
     <div class="stat-grid" style="margin-bottom: 1.25rem;">
         {{-- Card 1: Tiket OTS Terjual --}}
         <div class="stat-card">
             <div class="stat-head">
                 <span class="stat-title">Tiket OTS Terjual</span>
-                <div class="stat-icon-bubble" style="background: #eff6ff; color: #2563eb; border-color: #bfdbfe;">
+                <div class="stat-icon-bubble" style="background: #f0fdf4; color: #16a34a; border: 1.5px solid #bbf7d0;">
                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
                         <path d="M13 5v14" />
                     </svg>
                 </div>
             </div>
-            <div class="stat-val" id="otsStatTotalTickets">
+            <div class="stat-val" id="otsStatTotalTickets" style="color: #0f172a;">
                 {{ $otsStats['total_tickets'] ?? 0 }} <span style="font-size: 0.55em; font-weight: 600; color: #64748b;">Tiket</span>
             </div>
             <div class="stat-sub">
-                <span>Penjualan Langsung di Loket</span>
+                <span style="color: #64748b; font-weight: 500;">Penjualan Langsung</span>
             </div>
         </div>
 
@@ -70,7 +73,7 @@
         <div class="stat-card">
             <div class="stat-head">
                 <span class="stat-title">Total Penjualan OTS</span>
-                <div class="stat-icon-bubble" style="background: #ecfdf5; color: #059669; border-color: #a7f3d0;">
+                <div class="stat-icon-bubble" style="background: #f0fdf4; color: #16a34a; border: 1.5px solid #bbf7d0;">
                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                     </svg>
@@ -80,7 +83,7 @@
                 Rp {{ number_format($otsStats['total_revenue'] ?? 0, 0, ',', '.') }}
             </div>
             <div class="stat-sub">
-                <span style="color: #059669; font-weight: 700;">Omzet Kasir OTS</span>
+                <span style="color: #16a34a; font-weight: 600;">Omzet Kasir OTS</span>
             </div>
         </div>
 
@@ -88,7 +91,7 @@
         <div class="stat-card">
             <div class="stat-head">
                 <span class="stat-title">Tunai di Laci</span>
-                <div class="stat-icon-bubble" style="background: #fefce8; color: #ca8a04; border-color: #fef08a;">
+                <div class="stat-icon-bubble" style="background: #f0fdf4; color: #16a34a; border: 1.5px solid #bbf7d0;">
                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <rect x="2" y="6" width="20" height="12" rx="2" />
                         <circle cx="12" cy="12" r="2.5" />
@@ -96,11 +99,11 @@
                     </svg>
                 </div>
             </div>
-            <div class="stat-val" id="otsStatTotalCash" style="color: #854d0e;">
+            <div class="stat-val" id="otsStatTotalCash" style="color: #0f172a;">
                 Rp {{ number_format($otsStats['total_cash'] ?? 0, 0, ',', '.') }}
             </div>
             <div class="stat-sub">
-                <span style="color: #a16207; font-weight: 700;">Fisik Kas Masuk</span>
+                <span style="color: #64748b; font-weight: 500;">Fisik Kas Masuk</span>
             </div>
         </div>
 
@@ -108,7 +111,7 @@
         <div class="stat-card">
             <div class="stat-head">
                 <span class="stat-title">Penerimaan QRIS</span>
-                <div class="stat-icon-bubble" style="background: #faf5ff; color: #9333ea; border-color: #e9d5ff;">
+                <div class="stat-icon-bubble" style="background: #f0fdf4; color: #16a34a; border: 1.5px solid #bbf7d0;">
                     <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                         <rect x="3" y="3" width="7" height="7" rx="1.5" />
                         <rect x="14" y="3" width="7" height="7" rx="1.5" />
@@ -118,11 +121,11 @@
                     </svg>
                 </div>
             </div>
-            <div class="stat-val" id="otsStatTotalQris" style="color: #7e22ce;">
+            <div class="stat-val" id="otsStatTotalQris" style="color: #0f172a;">
                 Rp {{ number_format($otsStats['total_qris'] ?? 0, 0, ',', '.') }}
             </div>
             <div class="stat-sub">
-                <span style="color: #7e22ce; font-weight: 700;">Non-Tunai / Rekening</span>
+                <span style="color: #64748b; font-weight: 500;">Non-Tunai / Rekening</span>
             </div>
         </div>
     </div>
@@ -259,7 +262,7 @@
                                 Nama Lengkap Pembeli <span style="color: #ef4444;">*</span>
                             </label>
                             <div style="position: relative; display: flex; align-items: center;">
-                                <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
+                                <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                                     <circle cx="12" cy="7" r="4"/>
                                 </svg>
@@ -272,7 +275,7 @@
                                 Nomor WhatsApp (Kirim E-Tiket)
                             </label>
                             <div style="position: relative; display: flex; align-items: center;">
-                                <svg width="14" height="14" fill="none" stroke="#25D366" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
+                                <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                                 </svg>
                                 <input type="tel" id="otsBuyerPhone" placeholder="08123456789"
@@ -280,12 +283,35 @@
                             </div>
                         </div>
                     </div>
-                    <div style="margin-top: 0.65rem;">
-                        <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
-                            Catatan Meja / Khusus (Opsional)
-                        </label>
-                        <input type="text" id="otsNotes" placeholder="Misal: Rombongan Mahasiswa, Sponsor, dll"
-                            style="width: 100%; height: 36px; padding: 0.45rem 0.75rem; font-size: 0.8rem; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.65rem;">
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
+                                Email Pembeli (Kirim E-Tiket Otomatis)
+                            </label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                <input type="email" id="otsBuyerEmail" placeholder="nama@email.com"
+                                    style="width: 100%; height: 36px; padding-left: 2rem; padding-right: 0.75rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
+                                Catatan Meja / Khusus (Opsional)
+                            </label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                                <input type="text" id="otsNotes" placeholder="Misal: Rombongan, VIP, dll"
+                                    style="width: 100%; height: 36px; padding-left: 2rem; padding-right: 0.75rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -549,11 +575,17 @@
         <div style="padding: 1.15rem 1.25rem; max-height: 72vh; overflow-y: auto;">
             
             {{-- Status Badge --}}
-            <div id="otsModalStatusBadge" style="text-align: center; margin-bottom: 0.85rem;">
+            <div id="otsModalStatusBadge" style="text-align: center; margin-bottom: 0.5rem;">
                 <span style="font-size: 0.72rem; font-weight: 700; background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px;">
                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                     <span>Auto Check-In Sukses (Langsung Hadir)</span>
                 </span>
+            </div>
+
+            {{-- Email Delivery Confirmation Badge --}}
+            <div id="otsModalEmailBadge" style="display: none; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.72rem; font-weight: 700; color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 4px 10px; border-radius: 8px; margin-bottom: 0.85rem; text-align: center;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span>E-Tiket resmi telah dikirim ke email pembeli</span>
             </div>
 
             {{-- Order Summary List --}}
@@ -662,6 +694,24 @@
 
 {{-- ════ OTS THERMAL PRINT STYLING & RESPONSIVE BREAKPOINT ════ --}}
 <style>
+/* Enforce 4-Column Balanced Grid on Desktop (Tab Data Uniformity, No Empty 5th Space) */
+#tab-ots .stat-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.85rem !important;
+}
+
+@keyframes otsSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 @media print {
     body * {
         visibility: hidden !important;
@@ -686,8 +736,24 @@
     }
 }
 @media (max-width: 991px) {
+    #tab-ots .stat-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.65rem !important;
+    }
     .ots-workspace-grid {
         grid-template-columns: 1fr !important;
+    }
+}
+@media (max-width: 575px) {
+    #tab-ots .stat-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+    #tab-ots .stat-card {
+        padding: 0.75rem 0.85rem !important;
+    }
+    #tab-ots .stat-val {
+        font-size: 1.15rem !important;
     }
 }
 </style>
@@ -925,17 +991,64 @@
         }
     }
 
+    // Custom Interactive Toast Pop-up Notification (No Native Alert)
+    function showOtsToast(message, type = 'error') {
+        const container = document.getElementById('otsToastContainer');
+        if (!container) return;
+
+        const isSuccess = type === 'success';
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            pointer-events: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            padding: 0.85rem 1rem;
+            background: #ffffff;
+            border: 1.5px solid ${isSuccess ? '#86efac' : '#fca5a5'};
+            border-left: 4.5px solid ${isSuccess ? '#16a34a' : '#ef4444'};
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+            font-family: 'Montserrat', sans-serif;
+            animation: otsSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        `;
+
+        const iconSvg = isSuccess 
+            ? `<svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>`
+            : `<svg width="18" height="18" fill="none" stroke="#ef4444" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+
+        toast.innerHTML = `
+            ${iconSvg}
+            <div style="flex: 1; font-size: 0.82rem; font-weight: 600; color: #0f172a; line-height: 1.4;">
+                ${message}
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 0 0 0 4px; font-size: 1.1rem; line-height: 1;">&times;</button>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 4500);
+    }
+
     function submitOtsOrder() {
         const buyerNameInp = document.getElementById('otsBuyerName');
         const buyerName = buyerNameInp ? buyerNameInp.value.trim() : '';
         if (!buyerName) {
-            alert('Silakan masukkan Nama Lengkap Pembeli terlebih dahulu.');
+            showOtsToast('Silakan masukkan Nama Lengkap Pembeli terlebih dahulu.', 'error');
             if (buyerNameInp) buyerNameInp.focus();
             return;
         }
 
         const buyerPhoneInp = document.getElementById('otsBuyerPhone');
         const buyerPhone = buyerPhoneInp ? buyerPhoneInp.value.trim() : '';
+
+        const buyerEmailInp = document.getElementById('otsBuyerEmail');
+        const buyerEmail = buyerEmailInp ? buyerEmailInp.value.trim() : '';
 
         const notesInp = document.getElementById('otsNotes');
         const notes = notesInp ? notesInp.value.trim() : '';
@@ -945,7 +1058,7 @@
         const cashReceived = parseFloat(cashInp ? cashInp.value : 0) || 0;
 
         if (currentOtsData.paymentMethod === 'cash' && cashReceived < grandTotal) {
-            alert('Nominal uang tunai yang diterima kurang dari total tagihan (Rp ' + grandTotal.toLocaleString('id-ID') + ').');
+            showOtsToast('Nominal uang tunai yang diterima kurang dari total tagihan (Rp ' + grandTotal.toLocaleString('id-ID') + ').', 'error');
             if (cashInp) cashInp.focus();
             return;
         }
@@ -961,6 +1074,7 @@
             qty: currentOtsData.qty,
             buyer_name: buyerName,
             buyer_phone: buyerPhone,
+            buyer_email: buyerEmail,
             payment_method: currentOtsData.paymentMethod,
             cash_received: cashReceived,
             fulfillment_type: currentOtsData.fulfillment,
@@ -986,11 +1100,12 @@
 
             if (data.success) {
                 currentOtsData.lastResult = data;
+                showOtsToast(data.message || 'Transaksi Tiket OTS berhasil!', 'success');
                 showOtsSuccessModal(data);
                 prependRecentOtsRow(data);
                 updateOtsStatNumbers(data);
             } else {
-                alert('Gagal: ' + (data.message || 'Terjadi kesalahan.'));
+                showOtsToast('Gagal: ' + (data.message || 'Terjadi kesalahan.'), 'error');
             }
         })
         .catch(err => {
@@ -999,7 +1114,7 @@
                 submitBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Proses &amp; Terbitkan Tiket OTS</span>';
             }
             console.error(err);
-            alert('Terjadi kesalahan jaringan atau server. Silakan coba lagi.');
+            showOtsToast('Terjadi kesalahan jaringan atau server. Silakan coba lagi.', 'error');
         });
     }
 
@@ -1029,6 +1144,15 @@
                 statusBadge.innerHTML = '<span style="font-size:0.72rem; font-weight:700; background:#dcfce7; color:#166534; padding:3px 10px; border-radius:999px; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Auto Check-In Sukses (Langsung Hadir)</span></span>';
             } else {
                 statusBadge.innerHTML = '<span style="font-size:0.72rem; font-weight:700; background:#eff6ff; color:#1d4ed8; padding:3px 10px; border-radius:999px; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span>Tiket Valid Terbit (Scan di Gate)</span></span>';
+            }
+        }
+
+        const emailBadge = document.getElementById('otsModalEmailBadge');
+        if (emailBadge) {
+            if (data.email_sent) {
+                emailBadge.style.display = 'flex';
+            } else {
+                emailBadge.style.display = 'none';
             }
         }
 
@@ -1069,10 +1193,12 @@
         // Reset form
         const nameInp = document.getElementById('otsBuyerName');
         const phoneInp = document.getElementById('otsBuyerPhone');
+        const emailInp = document.getElementById('otsBuyerEmail');
         const notesInp = document.getElementById('otsNotes');
         const cashInp = document.getElementById('otsCashReceivedInput');
         if (nameInp) nameInp.value = '';
         if (phoneInp) phoneInp.value = '';
+        if (emailInp) emailInp.value = '';
         if (notesInp) notesInp.value = '';
         if (cashInp) cashInp.value = '';
         setOtsQty(1);
@@ -1170,7 +1296,7 @@
             </td>
             <td style="padding: 0.7rem 0.9rem;">
                 <div style="font-weight: 600; color: #1e293b;">${data.buyer_name}</div>
-                <div style="font-size: 0.7rem; color: #64748b;">${data.buyer_phone || '-'}</div>
+                <div style="font-size: 0.7rem; color: #64748b;">${data.buyer_phone || data.buyer_email || '-'}</div>
             </td>
             <td style="padding: 0.7rem 0.9rem;">
                 <div style="font-weight: 600; color: #0f172a;">${data.event_name}</div>
@@ -1208,6 +1334,26 @@
         if (totEl) {
             const cur = parseInt(totEl.innerText) || 0;
             totEl.innerHTML = (cur + data.qty) + ' <span style="font-size:0.55em; font-weight:600; color:#64748b;">Tiket</span>';
+        }
+
+        const revEl = document.getElementById('otsStatTotalRevenue');
+        if (revEl) {
+            const raw = parseInt(revEl.innerText.replace(/[^0-9]/g, '')) || 0;
+            revEl.innerText = 'Rp ' + (raw + data.total).toLocaleString('id-ID');
+        }
+
+        if (data.payment_method === 'cash') {
+            const cashEl = document.getElementById('otsStatTotalCash');
+            if (cashEl) {
+                const raw = parseInt(cashEl.innerText.replace(/[^0-9]/g, '')) || 0;
+                cashEl.innerText = 'Rp ' + (raw + data.total).toLocaleString('id-ID');
+            }
+        } else {
+            const qrisEl = document.getElementById('otsStatTotalQris');
+            if (qrisEl) {
+                const raw = parseInt(qrisEl.innerText.replace(/[^0-9]/g, '')) || 0;
+                qrisEl.innerText = 'Rp ' + (raw + data.total).toLocaleString('id-ID');
+            }
         }
     }
 
