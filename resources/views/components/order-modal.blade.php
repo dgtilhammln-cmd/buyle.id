@@ -19,6 +19,7 @@
         padding: 1rem;
         box-sizing: border-box;
     }
+
     #order-modal-overlay.active {
         opacity: 1;
         pointer-events: auto;
@@ -39,6 +40,7 @@
         transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
         font-family: 'Montserrat', sans-serif;
     }
+
     #order-modal-overlay.active .tix-modal-box {
         transform: translateY(0) scale(1);
     }
@@ -96,6 +98,7 @@
         padding: 0;
         flex-shrink: 0;
     }
+
     .tix-modal-close-btn:hover {
         background: #F1F5F9;
         color: #0F172A;
@@ -129,9 +132,11 @@
         gap: 1rem;
         box-sizing: border-box;
     }
+
     .tix-modal-body::-webkit-scrollbar {
         width: 5px;
     }
+
     .tix-modal-body::-webkit-scrollbar-thumb {
         background: #E2E8F0;
         border-radius: 10px;
@@ -184,10 +189,12 @@
         font-family: 'Montserrat', sans-serif;
         box-sizing: border-box;
     }
+
     .tix-modal-input::placeholder {
         color: #94A3B8;
         font-weight: 400;
     }
+
     .tix-modal-input:focus {
         background: #ffffff;
         border-color: #1eb349;
@@ -232,11 +239,13 @@
         font-family: 'Montserrat', sans-serif;
         margin-top: 0.25rem;
     }
+
     .tix-modal-submit-btn:hover {
         background: linear-gradient(135deg, #16a34a 0%, #65a30d 100%);
         transform: translateY(-1px);
         box-shadow: 0 8px 24px rgba(30, 179, 73, 0.38);
     }
+
     .tix-modal-submit-btn:active {
         transform: translateY(0);
     }
@@ -286,23 +295,27 @@
     }
 </style>
 
-<div id="order-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if(event.target===this)closeOrderModal()">
+<div id="order-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+    onclick="if(event.target===this)closeOrderModal()">
     <div class="tix-modal-box" onclick="event.stopPropagation()">
         {{-- Minimalist Header --}}
         <div class="tix-modal-header">
             <div class="tix-modal-top-row">
                 <div class="tix-modal-pill-tag">
                     <span class="tix-modal-pill-dot"></span>
-                    Kemitraan & Event
+                    Hubungi Tim Kami!
                 </div>
-                <button type="button" class="tix-modal-close-btn" onclick="closeOrderModal()" aria-label="Tutup Formulir">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M18 6L6 18M6 6l12 12"/>
+                <button type="button" class="tix-modal-close-btn" onclick="closeOrderModal()"
+                    aria-label="Tutup Formulir">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"
+                        viewBox="0 0 24 24">
+                        <path d="M18 6L6 18M6 6l12 12" />
                     </svg>
                 </button>
             </div>
             <h2 id="modal-title" class="tix-modal-title">Konsultasi & Kerja Sama Event</h2>
-            <p class="tix-modal-subtitle">Diskusikan kebutuhan ticketing, event organizer, atau scanner gate langsung bersama tim kami.</p>
+            <p class="tix-modal-subtitle">Diskusikan kebutuhan ticketing, event organizer, atau scanner gate langsung
+                bersama tim kami.</p>
         </div>
 
         {{-- Minimalist Form --}}
@@ -316,15 +329,15 @@
                     <label class="tix-modal-label" for="order-name">
                         Nama Lengkap <span class="tix-modal-req">*</span>
                     </label>
-                    <input class="tix-modal-input" type="text" id="order-name" name="name"
-                           placeholder="Nama Anda / PIC" required autocomplete="name">
+                    <input class="tix-modal-input" type="text" id="order-name" name="name" placeholder="Nama Anda / PIC"
+                        required autocomplete="name">
                 </div>
                 <div class="tix-modal-field">
                     <label class="tix-modal-label" for="order-phone">
                         Nomor WhatsApp <span class="tix-modal-req">*</span>
                     </label>
-                    <input class="tix-modal-input" type="tel" id="order-phone" name="phone"
-                           placeholder="08xxxxxxxxxx" required autocomplete="tel">
+                    <input class="tix-modal-input" type="tel" id="order-phone" name="phone" placeholder="08xxxxxxxxxx"
+                        required autocomplete="tel">
                 </div>
             </div>
 
@@ -334,7 +347,7 @@
                     Nama EO / Instansi / Komunitas <span class="tix-modal-opt">(Opsional)</span>
                 </label>
                 <input class="tix-modal-input" type="text" id="order-company" name="company"
-                       placeholder="Contoh: Soundfest Live / BEM Kampus / Komunitas" autocomplete="organization">
+                    placeholder="Contoh: Soundfest Live / BEM Kampus / Komunitas" autocomplete="organization">
             </div>
 
             {{-- Row: Pesan / Kebutuhan Event --}}
@@ -343,7 +356,7 @@
                     Rencana & Kebutuhan Event <span class="tix-modal-opt">(Opsional)</span>
                 </label>
                 <textarea class="tix-modal-input" id="order-message" name="message" rows="3"
-                          placeholder="Ceritakan rencana event Anda (nama acara, estimasi tiket, tanggal, atau layanan yang dibutuhkan)..."></textarea>
+                    placeholder="Ceritakan rencana event Anda (nama acara, estimasi tiket, tanggal, atau layanan yang dibutuhkan)..."></textarea>
             </div>
 
             {{-- Error Message Box --}}
@@ -353,7 +366,8 @@
             <div>
                 <button type="submit" id="order-submit" class="tix-modal-submit-btn">
                     <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
                     </svg>
                     <span>Lanjut ke WhatsApp</span>
                 </button>
@@ -370,93 +384,93 @@
 </div>
 
 <script>
-async function trackModalWaClick() {
-    try {
-        const token = document.querySelector('meta[name="csrf-token"]')?.content;
-        await fetch('/track/wa_click', {
-            method: 'POST',
-            keepalive: true,
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
-            body: JSON.stringify({ url: window.location.href })
-        });
-    } catch(e) {}
-}
-
-function openOrderModal(source = 'Buyle TIX') {
-    trackModalWaClick();
-    const o = document.getElementById('order-modal-overlay');
-    const sourceInput = document.getElementById('order-source');
-    if (sourceInput) sourceInput.value = source;
-    o.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('order-name')?.focus(), 250);
-}
-
-function closeOrderModal() {
-    const o = document.getElementById('order-modal-overlay');
-    if (o) o.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeOrderModal();
-});
-
-// Form submit handler
-document.getElementById('order-form')?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('order-submit');
-    const err = document.getElementById('order-error');
-    if (err) err.style.display = 'none';
-
-    if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<span>Menyiapkan WhatsApp...</span>';
+    async function trackModalWaClick() {
+        try {
+            const token = document.querySelector('meta[name="csrf-token"]')?.content;
+            await fetch('/track/wa_click', {
+                method: 'POST',
+                keepalive: true,
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                body: JSON.stringify({ url: window.location.href })
+            });
+        } catch (e) { }
     }
 
-    const data = new FormData(this);
+    function openOrderModal(source = 'Buyle TIX') {
+        trackModalWaClick();
+        const o = document.getElementById('order-modal-overlay');
+        const sourceInput = document.getElementById('order-source');
+        if (sourceInput) sourceInput.value = source;
+        o.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => document.getElementById('order-name')?.focus(), 250);
+    }
 
-    try {
-        const res = await fetch('/request-order', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
-                'Accept': 'application/json'
-            },
-            body: data,
-        });
-        const json = await res.json();
+    function closeOrderModal() {
+        const o = document.getElementById('order-modal-overlay');
+        if (o) o.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 
-        if (json.success && json.wa_url) {
-            closeOrderModal();
-            this.reset();
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeOrderModal();
+    });
 
-            // Gunakan URL khusus dari in-text link jika ada, jika tidak gunakan fallback JSON
-            let finalUrl = window.pendingWaUrl ? window.pendingWaUrl : json.wa_url;
-            window.pendingWaUrl = null; // reset
+    // Form submit handler
+    document.getElementById('order-form')?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const btn = document.getElementById('order-submit');
+        const err = document.getElementById('order-error');
+        if (err) err.style.display = 'none';
 
-            // Small delay so modal closes first
-            setTimeout(() => {
-                window.open(finalUrl, '_blank', 'noopener,noreferrer');
-            }, 180);
-        } else {
-            throw new Error(json.message ?? 'Terjadi kesalahan saat memproses data.');
-        }
-    } catch (ex) {
-        if (err) {
-            err.textContent = ex.message || 'Gagal mengirim data. Silakan coba lagi.';
-            err.style.display = 'block';
-        }
-    } finally {
         if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = `
+            btn.disabled = true;
+            btn.innerHTML = '<span>Menyiapkan WhatsApp...</span>';
+        }
+
+        const data = new FormData(this);
+
+        try {
+            const res = await fetch('/request-order', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    'Accept': 'application/json'
+                },
+                body: data,
+            });
+            const json = await res.json();
+
+            if (json.success && json.wa_url) {
+                closeOrderModal();
+                this.reset();
+
+                // Gunakan URL khusus dari in-text link jika ada, jika tidak gunakan fallback JSON
+                let finalUrl = window.pendingWaUrl ? window.pendingWaUrl : json.wa_url;
+                window.pendingWaUrl = null; // reset
+
+                // Small delay so modal closes first
+                setTimeout(() => {
+                    window.open(finalUrl, '_blank', 'noopener,noreferrer');
+                }, 180);
+            } else {
+                throw new Error(json.message ?? 'Terjadi kesalahan saat memproses data.');
+            }
+        } catch (ex) {
+            if (err) {
+                err.textContent = ex.message || 'Gagal mengirim data. Silakan coba lagi.';
+                err.style.display = 'block';
+            }
+        } finally {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
                 <span>Lanjut ke WhatsApp</span>
             `;
+            }
         }
-    }
-});
+    });
 </script>
