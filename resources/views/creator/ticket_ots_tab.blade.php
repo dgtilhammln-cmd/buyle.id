@@ -1,339 +1,409 @@
-{{-- ════════════════════════════════════════════════════════════════════════════════
+{{-- ══════════════════════════════════════════════════════════════════════════
      TAB 4: KASIR LOKET OTS (ON-THE-SPOT POS) - BUYLE.ID TICKETING
-     Theme: Light Minimalist, Montserrat, Brand Green, 100% Mobile Friendly
-     ════════════════════════════════════════════════════════════════════════════════ --}}
+     Theme: Light Minimalist, Montserrat, Uniform with tab=data, 100% Mobile Friendly
+     ══════════════════════════════════════════════════════════════════════════ --}}
 <div id="tab-ots" class="payout-tab-pane" style="display: {{ $activeTab === 'ots' ? 'block' : 'none' }}; font-family: 'Montserrat', sans-serif;">
     
-    {{-- 1. HEADER BANNER LOKET OTS --}}
-    <div class="prof-card" style="margin-bottom: 1.25rem; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); border: 1.5px solid #bbf7d0;">
-        <div style="padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-            <div style="display: flex; align-items: center; gap: 0.85rem;">
-                <div style="width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #1eb349, #a5cf37); display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 4px 14px rgba(30,179,73,0.3); flex-shrink: 0;">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <rect x="2" y="4" width="20" height="16" rx="3" />
-                        <line x1="2" y1="10" x2="22" y2="10" />
-                        <circle cx="7" cy="15" r="1.5" />
-                        <line x1="12" y1="15" x2="17" y2="15" />
+    {{-- 1. HEADER CARD (Uniform with tab=data: Filter & Ekspor Data) --}}
+    <div class="prof-card" style="margin-bottom: 1.25rem;">
+        <div class="prof-card-head attendance-card-head" style="background: #ffffff; padding: 0.9rem 1.25rem;">
+            <div class="att-head-left">
+                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="2" y="4" width="20" height="16" rx="3" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                    <circle cx="7" cy="15" r="1.5" />
+                    <line x1="12" y1="15" x2="17" y2="15" />
+                </svg>
+                <span class="att-head-title" style="font-size: 0.92rem; font-weight: 700; color: #0f172a;">Kasir Loket Tiket OTS</span>
+                <span class="att-head-extra" style="font-size: 0.8rem; font-weight: 500; color: #64748b;">Walk-In Point of Sale</span>
+            </div>
+
+            <div class="att-head-actions" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span style="font-size: 0.76rem; font-weight: 600; color: #64748b;">Pilih Event:</span>
+                <div style="position: relative; display: inline-flex; align-items: center;">
+                    <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <select id="otsEventSelector" class="filter-select" onchange="handleOtsEventSelect(this.value)"
+                        style="height: 34px; padding-left: 2rem; padding-right: 1.75rem; font-size: 0.8rem; font-weight: 600; min-width: 220px; max-width: 300px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #ffffff;">
+                        @foreach($events as $ev)
+                            <option value="{{ $ev->id }}" 
+                                data-name="{{ $ev->name }}"
+                                data-price="{{ $ev->price }}"
+                                data-ots-price="{{ $ev->effective_ots_price }}"
+                                data-stock="{{ $ev->stock ?? 0 }}"
+                                data-tax-rate="{{ $ev->tax_enabled ? $ev->ticket_tax_rate : 0 }}"
+                                data-tax-name="{{ $ev->tax_enabled ? $ev->ticket_tax_name : '' }}"
+                                {{ (isset($primaryEvent) && $primaryEvent && $primaryEvent->id === $ev->id) ? 'selected' : '' }}>
+                                {{ $ev->name }} (Rp {{ number_format($ev->effective_ots_price, 0, ',', '.') }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- 2. 4 STAT CARDS REKONSILIASI SHIFT OTS (Exact markup & sizing as tab=data) --}}
+    <div class="stat-grid" style="margin-bottom: 1.25rem;">
+        {{-- Card 1: Tiket OTS Terjual --}}
+        <div class="stat-card">
+            <div class="stat-head">
+                <span class="stat-title">Tiket OTS Terjual</span>
+                <div class="stat-icon-bubble" style="background: #eff6ff; color: #2563eb; border-color: #bfdbfe;">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
+                        <path d="M13 5v14" />
                     </svg>
                 </div>
-                <div>
-                    <h2 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                        Kasir Loket Tiket OTS (On-The-Spot)
-                        <span style="font-size: 0.72rem; font-weight: 700; background: #dcfce7; color: #166534; padding: 3px 9px; border-radius: 999px;">Venue Walk-In POS</span>
-                    </h2>
-                    <p style="font-size: 0.78rem; color: #64748b; margin: 0.2rem 0 0 0;">
-                        Penjualan tiket langsung di lokasi event. Transaksi kilat &lt; 10 detik, auto-check in gelang, dan struk thermal.
-                    </p>
+            </div>
+            <div class="stat-val" id="otsStatTotalTickets">
+                {{ $otsStats['total_tickets'] ?? 0 }} <span style="font-size: 0.55em; font-weight: 600; color: #64748b;">Tiket</span>
+            </div>
+            <div class="stat-sub">
+                <span>Penjualan Langsung di Loket</span>
+            </div>
+        </div>
+
+        {{-- Card 2: Total Penjualan OTS --}}
+        <div class="stat-card">
+            <div class="stat-head">
+                <span class="stat-title">Total Penjualan OTS</span>
+                <div class="stat-icon-bubble" style="background: #ecfdf5; color: #059669; border-color: #a7f3d0;">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
                 </div>
             </div>
+            <div class="stat-val" id="otsStatTotalRevenue" style="color: #0f172a;">
+                Rp {{ number_format($otsStats['total_revenue'] ?? 0, 0, ',', '.') }}
+            </div>
+            <div class="stat-sub">
+                <span style="color: #059669; font-weight: 700;">Omzet Kasir OTS</span>
+            </div>
+        </div>
 
-            {{-- Event Selector for OTS --}}
-            <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-                <label style="font-size: 0.8rem; font-weight: 700; color: #334155; white-space: nowrap;">Event Aktif:</label>
-                <select id="otsEventSelector" class="form-input" onchange="handleOtsEventSelect(this.value)" style="height: 40px; font-size: 0.82rem; font-weight: 600; min-width: 220px; max-width: 300px; border-color: #bbf7d0; background: #fff;">
-                    @foreach($events as $ev)
-                        <option value="{{ $ev->id }}" 
-                            data-name="{{ $ev->name }}"
-                            data-price="{{ $ev->price }}"
-                            data-ots-price="{{ $ev->effective_ots_price }}"
-                            data-stock="{{ $ev->stock ?? 0 }}"
-                            data-tax-rate="{{ $ev->tax_enabled ? $ev->ticket_tax_rate : 0 }}"
-                            data-tax-name="{{ $ev->tax_enabled ? $ev->ticket_tax_name : '' }}"
-                            {{ (isset($primaryEvent) && $primaryEvent && $primaryEvent->id === $ev->id) ? 'selected' : '' }}>
-                            {{ $ev->name }} (Rp {{ number_format($ev->effective_ots_price, 0, ',', '.') }})
-                        </option>
-                    @endforeach
-                </select>
+        {{-- Card 3: Tunai di Laci (Cash) --}}
+        <div class="stat-card">
+            <div class="stat-head">
+                <span class="stat-title">Tunai di Laci</span>
+                <div class="stat-icon-bubble" style="background: #fefce8; color: #ca8a04; border-color: #fef08a;">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <circle cx="12" cy="12" r="2.5" />
+                        <path d="M6 12h.01M18 12h.01" />
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-val" id="otsStatTotalCash" style="color: #854d0e;">
+                Rp {{ number_format($otsStats['total_cash'] ?? 0, 0, ',', '.') }}
+            </div>
+            <div class="stat-sub">
+                <span style="color: #a16207; font-weight: 700;">Fisik Kas Masuk</span>
+            </div>
+        </div>
+
+        {{-- Card 4: Penerimaan QRIS --}}
+        <div class="stat-card">
+            <div class="stat-head">
+                <span class="stat-title">Penerimaan QRIS</span>
+                <div class="stat-icon-bubble" style="background: #faf5ff; color: #9333ea; border-color: #e9d5ff;">
+                    <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="4" height="4" rx="1" />
+                        <line x1="20" y1="14" x2="20" y2="20" />
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-val" id="otsStatTotalQris" style="color: #7e22ce;">
+                Rp {{ number_format($otsStats['total_qris'] ?? 0, 0, ',', '.') }}
+            </div>
+            <div class="stat-sub">
+                <span style="color: #7e22ce; font-weight: 700;">Non-Tunai / Rekening</span>
             </div>
         </div>
     </div>
 
-    {{-- 2. 4 STAT CARDS REKONSILIASI SHIFT OTS --}}
-    <div class="stat-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.25rem;">
-        {{-- Tiket OTS Terjual --}}
-        <div class="stat-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 1.15rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 18px rgba(0,0,0,0.02);">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="16" rx="2" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                    <circle cx="8" cy="15" r="1.5" />
-                    <line x1="13" y1="15" x2="18" y2="15" />
-                </svg>
-            </div>
-            <div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #64748b;">Tiket OTS Terjual</div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-top: 0.15rem;" id="otsStatTotalTickets">
-                    {{ $otsStats['total_tickets'] ?? 0 }} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;">Tiket</span>
-                </div>
-            </div>
-        </div>
-
-        {{-- Total Omzet OTS --}}
-        <div class="stat-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 1.15rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 18px rgba(0,0,0,0.02);">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #f0fdf4; color: #166534; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <line x1="12" y1="1" x2="12" y2="23"/>
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                </svg>
-            </div>
-            <div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #64748b;">Total Penjualan OTS</div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: #166534; margin-top: 0.15rem;" id="otsStatTotalRevenue">
-                    Rp {{ number_format($otsStats['total_revenue'] ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
-        </div>
-
-        {{-- Tunai di Laci (Cash) --}}
-        <div class="stat-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 1.15rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 18px rgba(0,0,0,0.02);">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fefce8; color: #ca8a04; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="2" y="6" width="20" height="12" rx="2"/>
-                    <circle cx="12" cy="12" r="2.5"/>
-                    <path d="M6 12h.01M18 12h.01"/>
-                </svg>
-            </div>
-            <div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #64748b;">Tunai di Laci (Cash)</div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: #854d0e; margin-top: 0.15rem;" id="otsStatTotalCash">
-                    Rp {{ number_format($otsStats['total_cash'] ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
-        </div>
-
-        {{-- Penerimaan QRIS --}}
-        <div class="stat-card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 1.15rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 18px rgba(0,0,0,0.02);">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #faf5ff; color: #9333ea; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7"/>
-                    <rect x="14" y="3" width="7" height="7"/>
-                    <rect x="3" y="14" width="7" height="7"/>
-                    <rect x="14" y="14" width="3" height="3"/>
-                    <line x1="20" y1="14" x2="20" y2="20"/>
-                    <line x1="17" y1="20" x2="20" y2="20"/>
-                </svg>
-            </div>
-            <div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #64748b;">Penerimaan QRIS</div>
-                <div style="font-size: 1.35rem; font-weight: 800; color: #7e22ce; margin-top: 0.15rem;" id="otsStatTotalQris">
-                    Rp {{ number_format($otsStats['total_qris'] ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- 3. WORKSPACE POS KASIR 2 KOLOM --}}
-    <div class="ots-workspace-grid" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 1.25rem; align-items: start; margin-bottom: 1.5rem;">
+    {{-- 3. WORKSPACE POS KASIR 2 KOLOM (Clean, Compact, Minimalist) --}}
+    <div class="ots-workspace-grid" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 1rem; align-items: start; margin-bottom: 1.25rem;">
         
         {{-- KOLOM KIRI: TIKET, QTY, FULFILLMENT, PEMBELI --}}
-        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
             
             {{-- CARD 1: KATEGORI TIKET & JUMLAH --}}
             <div class="prof-card" style="margin-bottom: 0;">
-                <div class="prof-card-head" style="background: #fafafa;">
+                <div class="prof-card-head" style="padding: 0.8rem 1.15rem; background: #ffffff; border-bottom: 1.5px solid #f1f5f9;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                             <path d="M4 6h16M4 12h16m-7 6h7"/>
                         </svg>
-                        <span style="font-weight: 700; color: #0f172a; font-size: 0.92rem;">1. Pilih Tiket &amp; Jumlah</span>
+                        <span style="font-weight: 700; color: #0f172a; font-size: 0.88rem;">1. Pilih Tiket &amp; Jumlah</span>
                     </div>
-                    <span id="otsStockBadge" style="font-size: 0.75rem; font-weight: 700; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 999px;">
+                    <span id="otsStockBadge" class="badge-status badge-valid" style="font-size: 0.7rem; font-weight: 700; padding: 2px 8px;">
                         Tersisa: --
                     </span>
                 </div>
-                <div class="form-body" style="padding: 1.25rem;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; padding: 1rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; margin-bottom: 1.15rem;">
+                <div class="prof-card-body" style="padding: 1rem 1.15rem;">
+                    {{-- Selected Ticket Row --}}
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.65rem; padding: 0.75rem 0.9rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; margin-bottom: 0.85rem;">
                         <div>
-                            <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a;" id="otsSelectedTicketTitle">
+                            <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a;" id="otsSelectedTicketTitle">
                                 Memuat Tiket...
                             </div>
-                            <div style="display: flex; align-items: center; gap: 0.4rem; margin-top: 0.25rem;">
-                                <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through;" id="otsNormalPriceCrossed"></span>
-                                <span style="font-size: 1.1rem; font-weight: 800; color: #166534;" id="otsEffectivePriceDisplay">Rp 0</span>
-                                <span style="font-size: 0.7rem; font-weight: 700; background: #dcfce7; color: #166534; padding: 1px 6px; border-radius: 4px;">Harga OTS</span>
+                            <div style="display: flex; align-items: center; gap: 0.4rem; margin-top: 0.2rem;">
+                                <span style="font-size: 0.75rem; color: #94a3b8; text-decoration: line-through; display: none;" id="otsNormalPriceCrossed"></span>
+                                <span style="font-size: 0.98rem; font-weight: 700; color: #15803d;" id="otsEffectivePriceDisplay">Rp 0</span>
+                                <span style="font-size: 0.68rem; font-weight: 700; background: #dcfce7; color: #15803d; padding: 1px 6px; border-radius: 4px;">Harga OTS</span>
                             </div>
                         </div>
                         
-                        {{-- Quantity Stepper --}}
-                        <div style="display: flex; align-items: center; gap: 0.4rem; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 4px;">
-                            <button type="button" onclick="adjustOtsQty(-1)" style="width: 36px; height: 36px; border-radius: 8px; border: none; background: #f1f5f9; color: #334155; font-size: 1.2rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">-</button>
-                            <input type="number" id="otsQtyInput" value="1" min="1" max="50" oninput="calculateOtsTotal()" style="width: 48px; height: 36px; border: none; text-align: center; font-size: 1.05rem; font-weight: 800; color: #0f172a; outline: none;">
-                            <button type="button" onclick="adjustOtsQty(1)" style="width: 36px; height: 36px; border-radius: 8px; border: none; background: #1eb349; color: #ffffff; font-size: 1.2rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+                        {{-- Compact Quantity Stepper --}}
+                        <div style="display: flex; align-items: center; gap: 0.3rem; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 2px 4px;">
+                            <button type="button" onclick="adjustOtsQty(-1)"
+                                style="width: 30px; height: 30px; border-radius: 7px; border: none; background: #f1f5f9; color: #334155; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;">
+                                -
+                            </button>
+                            <input type="number" id="otsQtyInput" value="1" min="1" max="50" oninput="calculateOtsTotal()"
+                                style="width: 40px; height: 30px; border: none; text-align: center; font-size: 0.92rem; font-weight: 700; color: #0f172a; outline: none; background: transparent;">
+                            <button type="button" onclick="adjustOtsQty(1)"
+                                style="width: 30px; height: 30px; border-radius: 7px; border: none; background: #1eb349; color: #ffffff; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;">
+                                +
+                            </button>
                         </div>
                     </div>
 
                     {{-- Quick Qty Pills --}}
-                    <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
-                        <span style="font-size: 0.75rem; font-weight: 700; color: #64748b;">Pilihan Cepat:</span>
-                        <button type="button" class="tax-tpl-btn" onclick="setOtsQty(1)" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; font-size:0.75rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer;">1 Tiket</button>
-                        <button type="button" class="tax-tpl-btn" onclick="setOtsQty(2)" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; font-size:0.75rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer;">2 Tiket</button>
-                        <button type="button" class="tax-tpl-btn" onclick="setOtsQty(3)" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; font-size:0.75rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer;">3 Tiket</button>
-                        <button type="button" class="tax-tpl-btn" onclick="setOtsQty(5)" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; font-size:0.75rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer;">5 Tiket</button>
-                        <button type="button" class="tax-tpl-btn" onclick="setOtsQty(10)" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; font-size:0.75rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer;">10 Tiket</button>
+                    <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+                        <span style="font-size: 0.72rem; font-weight: 600; color: #64748b; margin-right: 2px;">Pilihan Cepat:</span>
+                        <button type="button" onclick="setOtsQty(1)" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 7px; cursor: pointer; transition: all 0.15s ease;">1 Tiket</button>
+                        <button type="button" onclick="setOtsQty(2)" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 7px; cursor: pointer; transition: all 0.15s ease;">2 Tiket</button>
+                        <button type="button" onclick="setOtsQty(3)" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 7px; cursor: pointer; transition: all 0.15s ease;">3 Tiket</button>
+                        <button type="button" onclick="setOtsQty(5)" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 7px; cursor: pointer; transition: all 0.15s ease;">5 Tiket</button>
+                        <button type="button" onclick="setOtsQty(10)" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 7px; cursor: pointer; transition: all 0.15s ease;">10 Tiket</button>
                     </div>
                 </div>
             </div>
 
-            {{-- CARD 2: METODE FULFILLMENT (MASUK VENUE) --}}
+            {{-- CARD 2: MODE MASUK VENUE (FULFILLMENT) --}}
             <div class="prof-card" style="margin-bottom: 0;">
-                <div class="prof-card-head" style="background: #fafafa;">
+                <div class="prof-card-head" style="padding: 0.8rem 1.15rem; background: #ffffff; border-bottom: 1.5px solid #f1f5f9;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                            <polyline points="9 11 12 14 22 4"/>
-                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <polyline points="9 12 11 14 15 10"/>
                         </svg>
-                        <span style="font-weight: 700; color: #0f172a; font-size: 0.92rem;">2. Mode Masuk Venue (Fulfillment)</span>
+                        <span style="font-weight: 700; color: #0f172a; font-size: 0.88rem;">2. Mode Masuk Venue (Fulfillment)</span>
                     </div>
                 </div>
-                <div class="form-body" style="padding: 1.25rem;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                        <label id="labelFulfillAuto" style="border: 2px solid #1eb349; background: #f0fdf4; border-radius: 14px; padding: 0.9rem; cursor: pointer; display: flex; flex-direction: column; gap: 0.35rem; transition: all 0.2s ease;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="radio" name="ots_fulfillment" value="auto_checkin" checked onchange="handleFulfillmentChange(this.value)" style="accent-color: #1eb349; width: 16px; height: 16px;">
-                                <span style="font-weight: 800; font-size: 0.85rem; color: #166534;">⚡ Auto Check-In</span>
+                <div class="prof-card-body" style="padding: 1rem 1.15rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
+                        {{-- Mode A: Auto Check-In Gelang Langsung --}}
+                        <label id="labelFulfillAuto"
+                            style="display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.75rem 0.85rem; border: 1.5px solid #1eb349; background: #f0fdf4; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+                            <input type="radio" name="ots_fulfillment" value="auto_checkin" checked onchange="handleFulfillmentChange(this.value)" style="margin-top: 3px; accent-color: #1eb349;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                    <svg width="14" height="14" fill="none" stroke="#15803d" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="9"/>
+                                        <polyline points="9 12 11 14 15 10"/>
+                                    </svg>
+                                    <strong style="font-size: 0.82rem; color: #0f172a;">Auto Check-In Gelang</strong>
+                                </div>
+                                <div style="font-size: 0.71rem; color: #64748b; margin-top: 2px; line-height: 1.35;">
+                                    Tiket langsung berstatus "Hadir", pasang gelang fisik ke pembeli.
+                                </div>
                             </div>
-                            <span style="font-size: 0.72rem; color: #475569; line-height: 1.4;">
-                                Pasang gelang di loket. Tiket langsung berstatus <strong>Hadir</strong> (Bypass antrean gate).
-                            </span>
                         </label>
 
-                        <label id="labelFulfillTicket" style="border: 2px solid #e2e8f0; background: #ffffff; border-radius: 14px; padding: 0.9rem; cursor: pointer; display: flex; flex-direction: column; gap: 0.35rem; transition: all 0.2s ease;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="radio" name="ots_fulfillment" value="issue_ticket" onchange="handleFulfillmentChange(this.value)" style="accent-color: #1eb349; width: 16px; height: 16px;">
-                                <span style="font-weight: 800; font-size: 0.85rem; color: #334155;">🎫 Cetak Struk QR</span>
+                        {{-- Mode B: Cetak Struk Tiket QR (Scan di Gate) --}}
+                        <label id="labelFulfillTicket"
+                            style="display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.75rem 0.85rem; border: 1.5px solid #e2e8f0; background: #ffffff; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+                            <input type="radio" name="ots_fulfillment" value="issue_ticket" onchange="handleFulfillmentChange(this.value)" style="margin-top: 3px; accent-color: #1eb349;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                    <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                        <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                    </svg>
+                                    <strong style="font-size: 0.82rem; color: #0f172a;">Cetak Struk Tiket QR</strong>
+                                </div>
+                                <div style="font-size: 0.71rem; color: #64748b; margin-top: 2px; line-height: 1.35;">
+                                    Tiket berstatus "Valid", pengunjung tetap pindai QR di gate masuk.
+                                </div>
                             </div>
-                            <span style="font-size: 0.72rem; color: #475569; line-height: 1.4;">
-                                Status <strong>Valid</strong>. Pembeli membawa struk QR untuk discan petugas gate.
-                            </span>
                         </label>
                     </div>
                 </div>
             </div>
 
-            {{-- CARD 3: IDENTITAS PEMBELI KILAT --}}
+            {{-- CARD 3: DATA PEMBELI (KILAT) --}}
             <div class="prof-card" style="margin-bottom: 0;">
-                <div class="prof-card-head" style="background: #fafafa;">
+                <div class="prof-card-head" style="padding: 0.8rem 1.15rem; background: #ffffff; border-bottom: 1.5px solid #f1f5f9;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="16" height="16" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                             <circle cx="12" cy="7" r="4"/>
                         </svg>
-                        <span style="font-weight: 700; color: #0f172a; font-size: 0.92rem;">3. Data Pembeli (Kilat)</span>
+                        <span style="font-weight: 700; color: #0f172a; font-size: 0.88rem;">3. Data Pembeli (Kilat)</span>
                     </div>
                 </div>
-                <div class="form-body" style="padding: 1.25rem;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+                <div class="prof-card-body" style="padding: 1rem 1.15rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                         <div>
-                            <label class="form-label" style="font-size: 0.78rem; font-weight: 700; margin-bottom: 0.35rem; color: #334155;">
-                                Nama Lengkap Pembeli <span style="color:#ef4444;">*</span>
+                            <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
+                                Nama Lengkap Pembeli <span style="color: #ef4444;">*</span>
                             </label>
-                            <input type="text" id="otsBuyerName" class="form-input" placeholder="Contoh: Rian Pratama" required style="height: 42px; font-size: 0.85rem; font-weight: 600;">
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="otsBuyerName" placeholder="Contoh: Rian Pratama" required
+                                    style="width: 100%; height: 36px; padding-left: 2rem; padding-right: 0.75rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                            </div>
                         </div>
                         <div>
-                            <label class="form-label" style="font-size: 0.78rem; font-weight: 700; margin-bottom: 0.35rem; color: #334155;">
+                            <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
                                 Nomor WhatsApp (Kirim E-Tiket)
                             </label>
-                            <input type="tel" id="otsBuyerPhone" class="form-input" placeholder="08123456789" style="height: 42px; font-size: 0.85rem; font-weight: 600;">
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <svg width="14" height="14" fill="none" stroke="#25D366" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                <input type="tel" id="otsBuyerPhone" placeholder="08123456789"
+                                    style="width: 100%; height: 36px; padding-left: 2rem; padding-right: 0.75rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
+                            </div>
                         </div>
                     </div>
-                    <div style="margin-top: 0.75rem;">
-                        <label class="form-label" style="font-size: 0.78rem; font-weight: 700; margin-bottom: 0.35rem; color: #334155;">
+                    <div style="margin-top: 0.65rem;">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
                             Catatan Meja / Khusus (Opsional)
                         </label>
-                        <input type="text" id="otsNotes" class="form-input" placeholder="Misal: Rombongan Mahasiswa, Sponsor, dll" style="height: 40px; font-size: 0.8rem;">
+                        <input type="text" id="otsNotes" placeholder="Misal: Rombongan Mahasiswa, Sponsor, dll"
+                            style="width: 100%; height: 36px; padding: 0.45rem 0.75rem; font-size: 0.8rem; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
                     </div>
                 </div>
             </div>
 
         </div>
 
-        {{-- KOLOM KANAN: RINCIAN TAGIHAN & PEMBAYARAN KASIR --}}
-        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        {{-- KOLOM KANAN: RINCIAN TAGIHAN & PEMBAYARAN KASIR (Clean White Minimalist) --}}
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
             
-            <div class="prof-card" style="margin-bottom: 0; border: 2px solid #bbf7d0; box-shadow: 0 8px 30px rgba(30,179,73,0.08);">
-                <div class="prof-card-head" style="background: linear-gradient(135deg, #1eb349, #166534); color: #fff;">
+            <div class="prof-card" style="margin-bottom: 0;">
+                <div class="prof-card-head" style="padding: 0.8rem 1.15rem; background: #ffffff; border-bottom: 1.5px solid #f1f5f9;">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
+                        <svg width="17" height="17" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                             <rect x="2" y="4" width="20" height="16" rx="2"/>
                             <line x1="2" y1="10" x2="22" y2="10"/>
                         </svg>
-                        <span style="font-weight: 800; font-size: 0.95rem; color: #fff;">4. Tagihan &amp; Pembayaran</span>
+                        <span style="font-weight: 700; font-size: 0.88rem; color: #0f172a;">4. Tagihan &amp; Pembayaran</span>
                     </div>
-                    <span style="font-size: 0.75rem; font-weight: 700; background: rgba(255,255,255,0.25); color: #fff; padding: 2px 8px; border-radius: 999px;">
+                    <span class="badge-status" style="background: #f1f5f9; color: #475569; font-size: 0.7rem; padding: 2px 8px; font-weight: 600;">
                         Kasir: {{ auth()->user()->name }}
                     </span>
                 </div>
 
-                <div class="form-body" style="padding: 1.35rem;">
+                <div class="prof-card-body" style="padding: 1rem 1.15rem;">
                     
                     {{-- Rincian Tagihan --}}
-                    <div style="border-bottom: 1.5px dashed #e2e8f0; padding-bottom: 1rem; margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #64748b; margin-bottom: 0.4rem;">
+                    <div style="border-bottom: 1.5px dashed #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-bottom: 0.35rem;">
                             <span>Subtotal (<span id="otsSummaryQty">1</span> Tiket)</span>
-                            <strong style="color: #0f172a;" id="otsSummarySubtotal">Rp 0</strong>
+                            <span style="font-weight: 600; color: #0f172a;" id="otsSummarySubtotal">Rp 0</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #64748b; margin-bottom: 0.4rem;" id="otsTaxRow">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-bottom: 0.35rem;" id="otsTaxRow">
                             <span id="otsTaxLabel">Pajak Daerah (10%)</span>
-                            <strong style="color: #0f172a;" id="otsSummaryTax">Rp 0</strong>
+                            <span style="font-weight: 600; color: #0f172a;" id="otsSummaryTax">Rp 0</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.65rem; padding-top: 0.65rem; border-top: 1px solid #f1f5f9;">
-                            <span style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Total Tagihan</span>
-                            <span style="font-size: 1.45rem; font-weight: 900; color: #166534;" id="otsGrandTotalDisplay">Rp 0</span>
-                        </div>
-                    </div>
-
-                    {{-- Pilihan Metode Pembayaran --}}
-                    <div style="margin-bottom: 1.15rem;">
-                        <label class="form-label" style="font-size: 0.78rem; font-weight: 700; margin-bottom: 0.4rem; color: #334155;">
-                            Metode Pembayaran
-                        </label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
-                            <button type="button" id="btnPayCash" onclick="selectOtsPayment('cash')" style="height: 42px; border-radius: 12px; border: 2px solid #1eb349; background: #f0fdf4; color: #166534; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family:'Montserrat', sans-serif;">
-                                💵 Tunai (Cash)
-                            </button>
-                            <button type="button" id="btnPayQris" onclick="selectOtsPayment('qris')" style="height: 42px; border-radius: 12px; border: 2px solid #e2e8f0; background: #ffffff; color: #64748b; font-weight: 800; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family:'Montserrat', sans-serif;">
-                                📱 QRIS Dinamis
-                            </button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #f1f5f9;">
+                            <span style="font-size: 0.88rem; font-weight: 700; color: #0f172a;">Total Tagihan</span>
+                            <strong style="font-size: 1.15rem; font-weight: 800; color: #15803d; letter-spacing: -0.3px;" id="otsGrandTotalDisplay">
+                                Rp 0
+                            </strong>
                         </div>
                     </div>
 
-                    {{-- Panel Tunai (Input Cash & Kembalian) --}}
-                    <div id="otsCashPanel" style="display: block; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem; margin-bottom: 1.25rem;">
-                        <label class="form-label" style="font-size: 0.78rem; font-weight: 700; margin-bottom: 0.35rem; color: #334155;">
-                            Uang Tunai Diterima (Rp)
+                    {{-- Pilihan Metode Pembayaran (Clean Buttons without Emojis) --}}
+                    <div style="margin-bottom: 0.85rem;">
+                        <label style="display: block; font-size: 0.74rem; font-weight: 700; color: #475569; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.04em;">
+                            Metode Pembayaran:
                         </label>
-                        <div style="position: relative; margin-bottom: 0.5rem;">
-                            <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-weight: 800; color: #64748b; font-size: 0.85rem;">Rp</span>
-                            <input type="number" id="otsCashReceivedInput" class="form-input" placeholder="0" oninput="calculateOtsChange()" style="height: 42px; padding-left: 2.5rem; font-size: 1.1rem; font-weight: 800; color: #0f172a;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                            {{-- Button Cash --}}
+                            <button type="button" id="btnPayCash" onclick="selectOtsPayment('cash')"
+                                style="height: 38px; border-radius: 9px; border: 1.5px solid #1eb349; background: #f0fdf4; color: #15803d; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: all 0.15s ease;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                                    <circle cx="12" cy="12" r="2.5" />
+                                    <path d="M6 12h.01M18 12h.01" />
+                                </svg>
+                                <span>Tunai (Cash)</span>
+                            </button>
+
+                            {{-- Button QRIS --}}
+                            <button type="button" id="btnPayQris" onclick="selectOtsPayment('qris')"
+                                style="height: 38px; border-radius: 9px; border: 1.5px solid #e2e8f0; background: #ffffff; color: #64748b; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: all 0.15s ease;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                                    <rect x="14" y="14" width="4" height="4" rx="1" />
+                                    <line x1="20" y1="14" x2="20" y2="20" />
+                                </svg>
+                                <span>QRIS Dinamis</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Panel Cash / Uang Tunai --}}
+                    <div id="otsCashPanel" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.85rem; margin-bottom: 0.85rem;">
+                        <label style="display: block; font-size: 0.74rem; font-weight: 600; color: #475569; margin-bottom: 0.3rem;">
+                            Nominal Uang Tunai Diterima:
+                        </label>
+                        <div style="position: relative; display: flex; align-items: center; margin-bottom: 0.45rem;">
+                            <span style="position: absolute; left: 0.75rem; font-size: 0.8rem; font-weight: 700; color: #94a3b8; pointer-events: none;">Rp</span>
+                            <input type="number" id="otsCashReceivedInput" placeholder="0" oninput="calculateOtsChange()"
+                                style="width: 100%; height: 36px; padding-left: 2.2rem; padding-right: 0.75rem; font-size: 0.92rem; font-weight: 700; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none; background: #ffffff;">
                         </div>
 
-                        {{-- Quick Cash Pills --}}
-                        <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
-                            <button type="button" onclick="setExactCash()" style="background:#e2e8f0; border:none; color:#1e293b; font-size:0.72rem; font-weight:700; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer;">Uang Pas</button>
-                            <button type="button" onclick="setQuickCash(50000)" style="background:#ffffff; border:1px solid #cbd5e1; color:#334155; font-size:0.72rem; font-weight:700; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer;">50rb</button>
-                            <button type="button" onclick="setQuickCash(100000)" style="background:#ffffff; border:1px solid #cbd5e1; color:#334155; font-size:0.72rem; font-weight:700; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer;">100rb</button>
-                            <button type="button" onclick="setQuickCash(150000)" style="background:#ffffff; border:1px solid #cbd5e1; color:#334155; font-size:0.72rem; font-weight:700; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer;">150rb</button>
-                            <button type="button" onclick="setQuickCash(200000)" style="background:#ffffff; border:1px solid #cbd5e1; color:#334155; font-size:0.72rem; font-weight:700; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer;">200rb</button>
-                            <button type="button" onclick="setQuickCash(500000)" style="background:#ffffff; border:1px solid #cbd5e1; color:#334155; font-size:0.72rem; font-weight:700; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer;">500rb</button>
+                        {{-- Quick Cash Buttons --}}
+                        <div style="display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 0.6rem;">
+                            <button type="button" onclick="setExactCash()" style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; cursor: pointer;">Uang Pas</button>
+                            <button type="button" onclick="setQuickCash(50000)" style="background: #ffffff; border: 1px solid #e2e8f0; color: #475569; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px; cursor: pointer;">50rb</button>
+                            <button type="button" onclick="setQuickCash(100000)" style="background: #ffffff; border: 1px solid #e2e8f0; color: #475569; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px; cursor: pointer;">100rb</button>
+                            <button type="button" onclick="setQuickCash(150000)" style="background: #ffffff; border: 1px solid #e2e8f0; color: #475569; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px; cursor: pointer;">150rb</button>
+                            <button type="button" onclick="setQuickCash(200000)" style="background: #ffffff; border: 1px solid #e2e8f0; color: #475569; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px; cursor: pointer;">200rb</button>
                         </div>
 
-                        {{-- Kembalian Box --}}
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.8rem; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 10px;">
-                            <span style="font-size: 0.82rem; font-weight: 700; color: #475569;">Kembalian:</span>
-                            <span id="otsChangeDisplay" style="font-size: 1.15rem; font-weight: 800; color: #166534;">Rp 0</span>
+                        {{-- Kembalian Display Box --}}
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.65rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <span style="font-size: 0.78rem; font-weight: 600; color: #475569;">Kembalian:</span>
+                            <span id="otsChangeDisplay" style="font-size: 0.98rem; font-weight: 700; color: #15803d;">Rp 0</span>
                         </div>
                     </div>
 
                     {{-- Panel QRIS --}}
-                    <div id="otsQrisPanel" style="display: none; background: #faf5ff; border: 1.5px solid #e9d5ff; border-radius: 14px; padding: 1.1rem; text-align: center; margin-bottom: 1.25rem;">
-                        <div style="font-size: 0.82rem; font-weight: 700; color: #6b21a8; margin-bottom: 0.25rem;">
-                            📱 Scan QRIS Pembeli
+                    <div id="otsQrisPanel" style="display: none; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 10px; padding: 0.85rem; text-align: center; margin-bottom: 0.85rem;">
+                        <div style="font-size: 0.78rem; font-weight: 700; color: #6b21a8; margin-bottom: 0.2rem; display: flex; align-items: center; justify-content: center; gap: 0.35rem;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                                <rect x="14" y="14" width="4" height="4" rx="1" />
+                            </svg>
+                            <span>Pindai QRIS Pembeli</span>
                         </div>
-                        <div style="font-size: 0.74rem; color: #7e22ce; margin-bottom: 0.85rem;">
-                            Tunjukkan kode QRIS event kepada pembeli. Pastikan bukti bayar telah tertera di m-Banking/E-Wallet.
+                        <div style="font-size: 0.71rem; color: #7e22ce; margin-bottom: 0.6rem;">
+                            Tunjukkan kode QRIS event ke pembeli. Pastikan bukti bayar tertera di aplikasi m-Banking.
                         </div>
-                        <div style="display: inline-block; padding: 8px; background: #fff; border: 1px solid #d8b4fe; border-radius: 12px; margin-bottom: 0.4rem;">
-                            <svg width="64" height="64" fill="none" stroke="#6b21a8" stroke-width="1.8" viewBox="0 0 24 24">
+                        <div style="display: inline-block; padding: 6px; background: #ffffff; border: 1px solid #d8b4fe; border-radius: 8px; margin-bottom: 0.35rem;">
+                            <svg width="52" height="52" fill="none" stroke="#6b21a8" stroke-width="1.8" viewBox="0 0 24 24">
                                 <rect x="3" y="3" width="7" height="7"/>
                                 <rect x="14" y="3" width="7" height="7"/>
                                 <rect x="3" y="14" width="7" height="7"/>
@@ -342,17 +412,20 @@
                                 <line x1="17" y1="20" x2="20" y2="20"/>
                             </svg>
                         </div>
-                        <div style="font-size: 0.72rem; font-weight: 700; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 999px; display: inline-block;">
-                            Lunas Otomatis / Dikonfirmasi Kasir
+                        <div>
+                            <span style="font-size: 0.68rem; font-weight: 700; color: #166534; background: #dcfce7; padding: 2px 8px; border-radius: 999px;">
+                                Dikonfirmasi Kasir Loket
+                            </span>
                         </div>
                     </div>
 
                     {{-- Tombol Proses Transaksi OTS --}}
-                    <button type="button" id="otsSubmitBtn" onclick="submitOtsOrder()" style="width: 100%; height: 50px; border-radius: 999px; border: none; background: linear-gradient(135deg, #1eb349, #a5cf37); color: #ffffff; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 4px 18px rgba(30,179,73,0.35); font-family:'Montserrat', sans-serif; transition: all 0.2s ease;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    <button type="button" id="otsSubmitBtn" onclick="submitOtsOrder()"
+                        style="width: 100%; height: 42px; border-radius: 10px; border: none; background: linear-gradient(135deg, #1eb349 0%, #a5cf37 100%); color: #ffffff; font-size: 0.84rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.45rem; box-shadow: 0 3px 12px rgba(30,179,73,0.25); font-family: 'Montserrat', sans-serif; transition: all 0.2s ease;">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12" />
                         </svg>
-                        <span>⚡ Proses &amp; Terbitkan Tiket OTS</span>
+                        <span>Proses &amp; Terbitkan Tiket OTS</span>
                     </button>
                 </div>
             </div>
@@ -360,29 +433,29 @@
         </div>
     </div>
 
-    {{-- 4. TABEL 15 TRANSAKSI OTS TERAKHIR --}}
+    {{-- 4. TABEL 15 TRANSAKSI OTS TERAKHIR (Uniform Table Styling as tab=data) --}}
     <div class="prof-card" style="margin-bottom: 1.5rem;">
-        <div class="prof-card-head" style="background: #ffffff; border-bottom: 1.5px solid #f1f5f9;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
+        <div class="prof-card-head attendance-card-head" style="background: #ffffff; padding: 0.85rem 1.25rem;">
+            <div class="att-head-left">
+                <svg width="17" height="17" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
                 </svg>
-                <span style="font-weight: 800; color: #0f172a; font-size: 0.92rem;">Riwayat Transaksi Loket OTS (Hari Ini)</span>
+                <span class="att-head-title" style="font-size: 0.88rem; font-weight: 700; color: #0f172a;">Riwayat Transaksi Loket OTS</span>
+                <span class="att-head-extra" style="font-size: 0.8rem; font-weight: 500; color: #64748b;">15 Transaksi Terakhir Hari Ini</span>
             </div>
-            <span style="font-size: 0.74rem; color: #64748b;">15 Transaksi Terakhir</span>
         </div>
 
         <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left;">
+            <table class="payout-table" style="width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left;">
                 <thead>
                     <tr style="background: #f8fafc; border-bottom: 1.5px solid #e2e8f0; color: #475569; font-weight: 700;">
-                        <th style="padding: 0.75rem 1rem;">Waktu / ID Pesanan</th>
-                        <th style="padding: 0.75rem 1rem;">Nama Pembeli</th>
-                        <th style="padding: 0.75rem 1rem;">Event &amp; Qty</th>
-                        <th style="padding: 0.75rem 1rem;">Metode Bayar</th>
-                        <th style="padding: 0.75rem 1rem;">Total Tagihan</th>
-                        <th style="padding: 0.75rem 1rem; text-align: right;">Aksi Cepat</th>
+                        <th style="padding: 0.7rem 0.9rem;">Waktu &amp; ID Pesanan</th>
+                        <th style="padding: 0.7rem 0.9rem;">Nama Pembeli</th>
+                        <th style="padding: 0.7rem 0.9rem;">Event &amp; Qty</th>
+                        <th style="padding: 0.7rem 0.9rem;">Metode Bayar</th>
+                        <th style="padding: 0.7rem 0.9rem;">Total Tagihan</th>
+                        <th style="padding: 0.7rem 0.9rem; text-align: right;">Aksi Cepat</th>
                     </tr>
                 </thead>
                 <tbody id="otsRecentTableBody">
@@ -392,36 +465,46 @@
                             $firstItem = $ord->items->first();
                         @endphp
                         <tr style="border-bottom: 1px solid #f1f5f9;">
-                            <td style="padding: 0.75rem 1rem;">
-                                <div style="font-weight: 800; color: #0f172a;">{{ $ord->order_number }}</div>
+                            <td style="padding: 0.7rem 0.9rem;">
+                                <div style="font-weight: 700; color: #0f172a;">{{ $ord->order_number }}</div>
                                 <div style="font-size: 0.7rem; color: #94a3b8;">{{ $ord->created_at->format('H:i · d M Y') }}</div>
                             </td>
-                            <td style="padding: 0.75rem 1rem;">
-                                <div style="font-weight: 700; color: #1e293b;">{{ $addr['receiver_name'] ?? 'Pembeli OTS' }}</div>
+                            <td style="padding: 0.7rem 0.9rem;">
+                                <div style="font-weight: 600; color: #1e293b;">{{ $addr['receiver_name'] ?? 'Pembeli OTS' }}</div>
                                 <div style="font-size: 0.7rem; color: #64748b;">{{ $addr['phone'] ?? '-' }}</div>
                             </td>
-                            <td style="padding: 0.75rem 1rem;">
-                                <div style="font-weight: 700; color: #0f172a;">{{ $firstItem?->product?->name ?? 'Tiket Event' }}</div>
-                                <div style="font-size: 0.7rem; color: #166534; font-weight: 700;">{{ $firstItem?->qty ?? 1 }} Tiket</div>
+                            <td style="padding: 0.7rem 0.9rem;">
+                                <div style="font-weight: 600; color: #0f172a;">{{ $firstItem?->product?->name ?? 'Tiket Event' }}</div>
+                                <div style="font-size: 0.7rem; color: #15803d; font-weight: 700;">{{ $firstItem?->qty ?? 1 }} Tiket</div>
                             </td>
-                            <td style="padding: 0.75rem 1rem;">
+                            <td style="padding: 0.7rem 0.9rem;">
                                 @if(($addr['payment_method'] ?? 'cash') === 'cash')
-                                    <span style="background: #fefce8; color: #854d0e; font-size: 0.72rem; font-weight: 700; padding: 2px 7px; border-radius: 6px;">💵 Cash</span>
+                                    <span class="badge-status" style="background: #fefce8; color: #854d0e; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+                                        <span>Cash</span>
+                                    </span>
                                 @else
-                                    <span style="background: #faf5ff; color: #7e22ce; font-size: 0.72rem; font-weight: 700; padding: 2px 7px; border-radius: 6px;">📱 QRIS</span>
+                                    <span class="badge-status" style="background: #faf5ff; color: #7e22ce; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                        <span>QRIS</span>
+                                    </span>
                                 @endif
                             </td>
-                            <td style="padding: 0.75rem 1rem;">
-                                <strong style="color: #166534; font-size: 0.88rem;">Rp {{ number_format($ord->total, 0, ',', '.') }}</strong>
+                            <td style="padding: 0.7rem 0.9rem;">
+                                <strong style="color: #15803d; font-size: 0.84rem;">Rp {{ number_format($ord->total, 0, ',', '.') }}</strong>
                             </td>
-                            <td style="padding: 0.75rem 1rem; text-align: right;">
-                                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.4rem;">
-                                    <button type="button" onclick="reprintOtsOrder('{{ $ord->order_number }}', '{{ addslashes($firstItem?->product?->name ?? '') }}', '{{ addslashes($addr['receiver_name'] ?? '') }}', {{ $firstItem?->qty ?? 1 }}, {{ $ord->total }}, '{{ $addr['payment_method'] ?? 'cash' }}')" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.55rem; border-radius: 6px; cursor: pointer;">
-                                        🖨️ Struk
+                            <td style="padding: 0.7rem 0.9rem; text-align: right;">
+                                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.35rem;">
+                                    <button type="button" onclick="reprintOtsOrder('{{ $ord->order_number }}', '{{ addslashes($firstItem?->product?->name ?? '') }}', '{{ addslashes($addr['receiver_name'] ?? '') }}', {{ $firstItem?->qty ?? 1 }}, {{ $ord->total }}, '{{ $addr['payment_method'] ?? 'cash' }}')"
+                                        style="background: #f8fafc; border: 1px solid #e2e8f0; color: #334155; font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.55rem; border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                        <span>Struk</span>
                                     </button>
                                     @if(!empty($addr['phone']))
-                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $addr['phone']) }}?text={{ rawurlencode('Halo ' . ($addr['receiver_name'] ?? '') . ', ini tiket pesanan OTS Anda: ' . $ord->order_number) }}" target="_blank" rel="noopener" style="background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.55rem; border-radius: 6px; text-decoration: none;">
-                                            💬 WA
+                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $addr['phone']) }}?text={{ rawurlencode('Halo ' . ($addr['receiver_name'] ?? '') . ', ini e-tiket resmi OTS BuyleTix Anda untuk pesanan ' . $ord->order_number) }}" target="_blank" rel="noopener"
+                                            style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.55rem; border-radius: 7px; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
+                                            <svg width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                            <span>WA</span>
                                         </a>
                                     @endif
                                 </div>
@@ -429,8 +512,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.8rem;">
-                                Belum ada transaksi tiket OTS hari ini. Layani pembeli walk-in pertama menggunakan form di atas!
+                            <td colspan="6" style="padding: 1.75rem; text-align: center; color: #94a3b8; font-size: 0.8rem;">
+                                Belum ada transaksi tiket OTS hari ini. Layani pembeli walk-in pertama melalui form di atas.
                             </td>
                         </tr>
                     @endforelse
@@ -441,50 +524,55 @@
 
 </div>
 
-{{-- ══ MODAL SUKSES TRANSAKSI OTS ══ --}}
+{{-- ════ MODAL SUKSES TRANSAKSI OTS (Clean, Minimalist, Light Theme) ════ --}}
 <div id="otsReceiptModal" class="scanner-modal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 99999; align-items: center; justify-content: center; padding: 1rem; box-sizing: border-box;">
-    <div style="background: #ffffff; border-radius: 20px; max-width: 480px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; border: 1.5px solid #e2e8f0; animation: modalPop 0.25s ease;">
+    <div style="background: #ffffff; border-radius: 18px; max-width: 440px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.18); overflow: hidden; border: 1.5px solid #e2e8f0; animation: modalPop 0.25s ease;">
         
         {{-- Modal Head --}}
-        <div style="background: linear-gradient(135deg, #1eb349, #166534); padding: 1.25rem 1.5rem; color: #fff; text-align: center; position: relative;">
-            <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.6rem; border: 2px solid rgba(255,255,255,0.4);">
-                <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>
+        <div style="background: #ffffff; padding: 1.15rem 1.25rem; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <div style="width: 34px; height: 34px; border-radius: 50%; background: #f0fdf4; border: 1.5px solid #bbf7d0; display: flex; align-items: center; justify-content: center; color: #16a34a; flex-shrink: 0;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 style="font-size: 0.95rem; font-weight: 700; margin: 0; color: #0f172a;">Transaksi Berhasil</h3>
+                    <p style="font-size: 0.72rem; color: #64748b; margin: 1px 0 0 0;" id="otsModalOrderNumber">OTS-XXXXXX</p>
+                </div>
             </div>
-            <h3 style="font-size: 1.15rem; font-weight: 800; margin: 0; color: #fff;">Transaksi OTS Berhasil!</h3>
-            <p style="font-size: 0.78rem; color: rgba(255,255,255,0.9); margin: 0.25rem 0 0 0;" id="otsModalOrderNumber">OTS-XXXXXX</p>
             
-            <button type="button" onclick="closeOtsModal()" style="position: absolute; right: 1rem; top: 1rem; background: rgba(0,0,0,0.15); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">&times;</button>
+            <button type="button" onclick="closeOtsModal()" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem;">&times;</button>
         </div>
 
         {{-- Modal Body --}}
-        <div style="padding: 1.25rem 1.5rem; max-height: 70vh; overflow-y: auto;">
+        <div style="padding: 1.15rem 1.25rem; max-height: 72vh; overflow-y: auto;">
             
             {{-- Status Badge --}}
-            <div id="otsModalStatusBadge" style="text-align: center; margin-bottom: 1rem;">
-                <span style="font-size: 0.75rem; font-weight: 800; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px;">
-                    ⚡ Auto Check-In Sukses (Langsung Hadir)
+            <div id="otsModalStatusBadge" style="text-align: center; margin-bottom: 0.85rem;">
+                <span style="font-size: 0.72rem; font-weight: 700; background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Auto Check-In Sukses (Langsung Hadir)</span>
                 </span>
             </div>
 
             {{-- Order Summary List --}}
-            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.82rem;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.75rem 0.85rem; margin-bottom: 0.85rem; font-size: 0.78rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
                     <span style="color: #64748b;">Event:</span>
                     <strong style="color: #0f172a;" id="otsModalEventName">-</strong>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
                     <span style="color: #64748b;">Pembeli:</span>
                     <strong style="color: #0f172a;" id="otsModalBuyerName">-</strong>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
                     <span style="color: #64748b;">Jumlah:</span>
-                    <strong style="color: #166534;" id="otsModalQty">1 Tiket</strong>
+                    <strong style="color: #15803d;" id="otsModalQty">1 Tiket</strong>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem; border-top: 1px dashed #cbd5e1; padding-top: 0.35rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem; border-top: 1px dashed #cbd5e1; padding-top: 0.3rem;">
                     <span style="color: #64748b;">Total Bayar:</span>
-                    <strong style="color: #166534; font-size: 0.95rem;" id="otsModalTotal">Rp 0</strong>
+                    <strong style="color: #15803d; font-size: 0.88rem;" id="otsModalTotal">Rp 0</strong>
                 </div>
                 <div style="display: flex; justify-content: space-between;" id="otsModalChangeRow">
                     <span style="color: #64748b;">Kembalian:</span>
@@ -493,34 +581,40 @@
             </div>
 
             {{-- Ticket Passes QR List --}}
-            <div style="margin-bottom: 1rem;">
-                <div style="font-size: 0.78rem; font-weight: 800; color: #334155; margin-bottom: 0.5rem;">
+            <div style="margin-bottom: 0.85rem;">
+                <div style="font-size: 0.75rem; font-weight: 700; color: #334155; margin-bottom: 0.45rem;">
                     Daftar Kode &amp; QR Tiket Terbit:
                 </div>
-                <div id="otsModalTicketList" style="display: flex; flex-direction: column; gap: 0.6rem;">
+                <div id="otsModalTicketList" style="display: flex; flex-direction: column; gap: 0.5rem;">
                     {{-- Injected via JS --}}
                 </div>
             </div>
 
             {{-- Action Buttons --}}
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <button type="button" onclick="printThermalReceipt()" style="width: 100%; height: 44px; border-radius: 999px; border: 1.5px solid #1eb349; background: #f0fdf4; color: #166534; font-size: 0.88rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family:'Montserrat', sans-serif;">
-                    🖨️ Cetak Struk Thermal (58mm/80mm)
+            <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+                <button type="button" onclick="printThermalReceipt()"
+                    style="width: 100%; height: 38px; border-radius: 9px; border: 1.5px solid #1eb349; background: #f0fdf4; color: #166534; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-family: 'Montserrat', sans-serif;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                    <span>Cetak Struk Thermal (58mm/80mm)</span>
                 </button>
 
-                <a id="otsModalWaBtn" href="#" target="_blank" rel="noopener" style="display: none; width: 100%; height: 44px; border-radius: 999px; border: none; background: #25D366; color: #ffffff; font-size: 0.88rem; font-weight: 800; text-decoration: none; align-items: center; justify-content: center; gap: 0.4rem; font-family:'Montserrat', sans-serif; box-sizing: border-box;">
-                    💬 Kirim E-Tiket ke WhatsApp Pembeli
+                <a id="otsModalWaBtn" href="#" target="_blank" rel="noopener"
+                    style="display: none; width: 100%; height: 38px; border-radius: 9px; border: none; background: #25D366; color: #ffffff; font-size: 0.82rem; font-weight: 700; text-decoration: none; align-items: center; justify-content: center; gap: 0.4rem; font-family: 'Montserrat', sans-serif; box-sizing: border-box;">
+                    <svg width="15" height="15" fill="none" stroke="#ffffff" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <span>Kirim E-Tiket ke WhatsApp Pembeli</span>
                 </a>
 
-                <button type="button" onclick="closeOtsModal()" style="width: 100%; height: 44px; border-radius: 999px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #475569; font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family:'Montserrat', sans-serif;">
-                    🔄 Layani Pembeli Berikutnya (Transaksi Baru)
+                <button type="button" onclick="closeOtsModal()"
+                    style="width: 100%; height: 38px; border-radius: 9px; border: 1px solid #e2e8f0; background: #ffffff; color: #475569; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-family: 'Montserrat', sans-serif;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                    <span>Layani Pembeli Berikutnya</span>
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-{{-- ══ PRINTABLE THERMAL RECEIPT TEMPLATE (Hidden from screen, visible on window.print) ══ --}}
+{{-- ════ PRINTABLE THERMAL RECEIPT TEMPLATE (Hidden from screen, visible on window.print) ════ --}}
 <div id="thermalReceiptPrint" style="display: none;">
     <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 6px; margin-bottom: 6px;">
         <div style="font-weight: bold; font-size: 13px;">{{ config('app.name', 'BuyleTix') }}</div>
@@ -566,7 +660,7 @@
     </div>
 </div>
 
-{{-- ══ OTS THERMAL PRINT STYLING ══ --}}
+{{-- ════ OTS THERMAL PRINT STYLING & RESPONSIVE BREAKPOINT ════ --}}
 <style>
 @media print {
     body * {
@@ -598,7 +692,7 @@
 }
 </style>
 
-{{-- ══ OTS JAVASCRIPT ENGINE ══ --}}
+{{-- ════ OTS JAVASCRIPT ENGINE ════ --}}
 <script>
     let currentOtsData = {
         productId: null,
@@ -713,12 +807,14 @@
             if (btnCash) {
                 btnCash.style.borderColor = '#1eb349';
                 btnCash.style.backgroundColor = '#f0fdf4';
-                btnCash.style.color = '#166534';
+                btnCash.style.color = '#15803d';
+                btnCash.style.fontWeight = '700';
             }
             if (btnQris) {
                 btnQris.style.borderColor = '#e2e8f0';
                 btnQris.style.backgroundColor = '#ffffff';
                 btnQris.style.color = '#64748b';
+                btnQris.style.fontWeight = '600';
             }
             if (cashPanel) cashPanel.style.display = 'block';
             if (qrisPanel) qrisPanel.style.display = 'none';
@@ -728,11 +824,13 @@
                 btnQris.style.borderColor = '#9333ea';
                 btnQris.style.backgroundColor = '#faf5ff';
                 btnQris.style.color = '#7e22ce';
+                btnQris.style.fontWeight = '700';
             }
             if (btnCash) {
                 btnCash.style.borderColor = '#e2e8f0';
                 btnCash.style.backgroundColor = '#ffffff';
                 btnCash.style.color = '#64748b';
+                btnCash.style.fontWeight = '600';
             }
             if (cashPanel) cashPanel.style.display = 'none';
             if (qrisPanel) qrisPanel.style.display = 'block';
@@ -801,7 +899,7 @@
                     changeDisplay.style.color = '#64748b';
                 } else if (change >= 0) {
                     changeDisplay.innerText = 'Rp ' + change.toLocaleString('id-ID');
-                    changeDisplay.style.color = '#166534';
+                    changeDisplay.style.color = '#15803d';
                 } else {
                     changeDisplay.innerText = 'Kurang Rp ' + Math.abs(change).toLocaleString('id-ID');
                     changeDisplay.style.color = '#ef4444';
@@ -855,7 +953,7 @@
         const submitBtn = document.getElementById('otsSubmitBtn');
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>⏳ Memproses Tiket OTS...</span>';
+            submitBtn.innerHTML = '<span>Memproses Tiket OTS...</span>';
         }
 
         const payload = {
@@ -883,7 +981,7 @@
         .then(data => {
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span>⚡ Proses &amp; Terbitkan Tiket OTS</span>';
+                submitBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Proses &amp; Terbitkan Tiket OTS</span>';
             }
 
             if (data.success) {
@@ -898,7 +996,7 @@
         .catch(err => {
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span>⚡ Proses &amp; Terbitkan Tiket OTS</span>';
+                submitBtn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Proses &amp; Terbitkan Tiket OTS</span>';
             }
             console.error(err);
             alert('Terjadi kesalahan jaringan atau server. Silakan coba lagi.');
@@ -928,27 +1026,27 @@
         const statusBadge = document.getElementById('otsModalStatusBadge');
         if (statusBadge) {
             if (data.fulfillment === 'auto_checkin') {
-                statusBadge.innerHTML = '<span style="font-size:0.75rem; font-weight:800; background:#dcfce7; color:#166534; padding:4px 12px; border-radius:999px;">⚡ Auto Check-In Sukses (Langsung Hadir)</span>';
+                statusBadge.innerHTML = '<span style="font-size:0.72rem; font-weight:700; background:#dcfce7; color:#166534; padding:3px 10px; border-radius:999px; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Auto Check-In Sukses (Langsung Hadir)</span></span>';
             } else {
-                statusBadge.innerHTML = '<span style="font-size:0.75rem; font-weight:800; background:#eff6ff; color:#1d4ed8; padding:4px 12px; border-radius:999px;">🎫 Tiket Valid Terbit (Scan di Gate)</span>';
+                statusBadge.innerHTML = '<span style="font-size:0.72rem; font-weight:700; background:#eff6ff; color:#1d4ed8; padding:3px 10px; border-radius:999px; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span>Tiket Valid Terbit (Scan di Gate)</span></span>';
             }
         }
 
-        const ticketContainer = document.getElementById('otsModalTicketList');
-        if (ticketContainer) {
+        const ticketList = document.getElementById('otsModalTicketList');
+        if (ticketList) {
             let html = '';
-            (data.tickets || []).forEach(t => {
+            (data.tickets || []).forEach((t, i) => {
                 html += `
-                    <div style="display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid #cbd5e1; border-radius:10px; padding:0.6rem 0.8rem;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0.65rem; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px;">
                         <div>
-                            <div style="font-weight:800; font-size:0.85rem; color:#0f172a; font-family:monospace;">${t.ticket_code}</div>
-                            <div style="font-size:0.72rem; color:#64748b;">${t.holder_name}</div>
+                            <div style="font-size:0.78rem; font-weight:700; color:#0f172a; font-family:monospace;">${t.ticket_code}</div>
+                            <div style="font-size:0.68rem; color:#64748b;">Tiket #${i+1} · ${t.holder_name}</div>
                         </div>
-                        <img src="${t.qr_url}" alt="QR" style="width:40px; height:40px; border-radius:4px; border:1px solid #e2e8f0;">
+                        <img src="${t.qr_url}" alt="QR" style="width:36px; height:36px; border-radius:4px; border:1px solid #e2e8f0;">
                     </div>
                 `;
             });
-            ticketContainer.innerHTML = html;
+            ticketList.innerHTML = html;
         }
 
         const waBtn = document.getElementById('otsModalWaBtn');
@@ -968,44 +1066,39 @@
         const modal = document.getElementById('otsReceiptModal');
         if (modal) modal.style.display = 'none';
 
-        // Reset form for next customer
-        const buyerNameInp = document.getElementById('otsBuyerName');
-        if (buyerNameInp) {
-            buyerNameInp.value = '';
-            buyerNameInp.focus();
-        }
-        const buyerPhoneInp = document.getElementById('otsBuyerPhone');
-        if (buyerPhoneInp) buyerPhoneInp.value = '';
-
+        // Reset form
+        const nameInp = document.getElementById('otsBuyerName');
+        const phoneInp = document.getElementById('otsBuyerPhone');
         const notesInp = document.getElementById('otsNotes');
-        if (notesInp) notesInp.value = '';
-
         const cashInp = document.getElementById('otsCashReceivedInput');
+        if (nameInp) nameInp.value = '';
+        if (phoneInp) phoneInp.value = '';
+        if (notesInp) notesInp.value = '';
         if (cashInp) cashInp.value = '';
-
         setOtsQty(1);
     }
 
     function printThermalReceipt() {
         const data = currentOtsData.lastResult;
-        if (!data) return;
+        if (!data) {
+            window.print();
+            return;
+        }
 
         document.getElementById('thPrintEventName').innerText = data.event_name;
-        document.getElementById('thPrintDate').innerText = data.created_at;
+        document.getElementById('thPrintDate').innerText = data.created_at || new Date().toLocaleString('id-ID');
         document.getElementById('thPrintOrder').innerText = data.order_number;
         document.getElementById('thPrintBuyer').innerText = data.buyer_name;
         document.getElementById('thPrintPayment').innerText = data.payment_method.toUpperCase();
         document.getElementById('thPrintQty').innerText = data.qty;
-        document.getElementById('thPrintSubtotal').innerText = 'Rp ' + data.subtotal.toLocaleString('id-ID');
+        document.getElementById('thPrintSubtotal').innerText = 'Rp ' + (data.subtotal || data.total).toLocaleString('id-ID');
 
         const taxRow = document.getElementById('thPrintTaxRow');
-        if (taxRow) {
-            if (data.tax_total > 0) {
-                taxRow.style.display = 'flex';
-                document.getElementById('thPrintTax').innerText = 'Rp ' + data.tax_total.toLocaleString('id-ID');
-            } else {
-                taxRow.style.display = 'none';
-            }
+        if (data.tax_total > 0) {
+            if (taxRow) taxRow.style.display = 'flex';
+            document.getElementById('thPrintTax').innerText = 'Rp ' + data.tax_total.toLocaleString('id-ID');
+        } else {
+            if (taxRow) taxRow.style.display = 'none';
         }
 
         document.getElementById('thPrintTotal').innerText = 'Rp ' + data.total.toLocaleString('id-ID');
@@ -1015,7 +1108,7 @@
         if (data.payment_method === 'cash') {
             if (cashRow) cashRow.style.display = 'flex';
             if (changeRow) changeRow.style.display = 'flex';
-            document.getElementById('thPrintCash').innerText = 'Rp ' + (data.cash_received || 0).toLocaleString('id-ID');
+            document.getElementById('thPrintCash').innerText = 'Rp ' + (data.cash_received || data.total).toLocaleString('id-ID');
             document.getElementById('thPrintChange').innerText = 'Rp ' + (data.change || 0).toLocaleString('id-ID');
         } else {
             if (cashRow) cashRow.style.display = 'none';
@@ -1071,30 +1164,33 @@
         const tr = document.createElement('tr');
         tr.style.borderBottom = '1px solid #f1f5f9';
         tr.innerHTML = `
-            <td style="padding: 0.75rem 1rem;">
-                <div style="font-weight: 800; color: #0f172a;">${data.order_number}</div>
+            <td style="padding: 0.7rem 0.9rem;">
+                <div style="font-weight: 700; color: #0f172a;">${data.order_number}</div>
                 <div style="font-size: 0.7rem; color: #94a3b8;">Baru saja</div>
             </td>
-            <td style="padding: 0.75rem 1rem;">
-                <div style="font-weight: 700; color: #1e293b;">${data.buyer_name}</div>
+            <td style="padding: 0.7rem 0.9rem;">
+                <div style="font-weight: 600; color: #1e293b;">${data.buyer_name}</div>
                 <div style="font-size: 0.7rem; color: #64748b;">${data.buyer_phone || '-'}</div>
             </td>
-            <td style="padding: 0.75rem 1rem;">
-                <div style="font-weight: 700; color: #0f172a;">${data.event_name}</div>
-                <div style="font-size: 0.7rem; color: #166534; font-weight: 700;">${data.qty} Tiket</div>
+            <td style="padding: 0.7rem 0.9rem;">
+                <div style="font-weight: 600; color: #0f172a;">${data.event_name}</div>
+                <div style="font-size: 0.7rem; color: #15803d; font-weight: 700;">${data.qty} Tiket</div>
             </td>
-            <td style="padding: 0.75rem 1rem;">
-                <span style="background:${data.payment_method === 'cash' ? '#fefce8' : '#faf5ff'}; color:${data.payment_method === 'cash' ? '#854d0e' : '#7e22ce'}; font-size:0.72rem; font-weight:700; padding:2px 7px; border-radius:6px;">
-                    ${data.payment_method === 'cash' ? '💵 Cash' : '📱 QRIS'}
+            <td style="padding: 0.7rem 0.9rem;">
+                <span class="badge-status" style="background:${data.payment_method === 'cash' ? '#fefce8' : '#faf5ff'}; color:${data.payment_method === 'cash' ? '#854d0e' : '#7e22ce'}; font-size:0.7rem; font-weight:700; padding:2px 7px; border-radius:6px; display:inline-flex; align-items:center; gap:3px;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+                    <span>${data.payment_method === 'cash' ? 'Cash' : 'QRIS'}</span>
                 </span>
             </td>
-            <td style="padding: 0.75rem 1rem;">
-                <strong style="color: #166534; font-size: 0.88rem;">Rp ${data.total.toLocaleString('id-ID')}</strong>
+            <td style="padding: 0.7rem 0.9rem;">
+                <strong style="color: #15803d; font-size: 0.84rem;">Rp ${data.total.toLocaleString('id-ID')}</strong>
             </td>
-            <td style="padding: 0.75rem 1rem; text-align: right;">
-                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.4rem;">
-                    <button type="button" onclick="printThermalReceipt()" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; font-size:0.72rem; font-weight:700; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">
-                        🖨️ Struk
+            <td style="padding: 0.7rem 0.9rem; text-align: right;">
+                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.35rem;">
+                    <button type="button" onclick="printThermalReceipt()"
+                        style="background: #f8fafc; border: 1px solid #e2e8f0; color: #334155; font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.55rem; border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        <span>Struk</span>
                     </button>
                 </div>
             </td>
@@ -1111,7 +1207,7 @@
         const totEl = document.getElementById('otsStatTotalTickets');
         if (totEl) {
             const cur = parseInt(totEl.innerText) || 0;
-            totEl.innerHTML = (cur + data.qty) + ' <span style="font-size:0.85rem; font-weight:600; color:#64748b;">Tiket</span>';
+            totEl.innerHTML = (cur + data.qty) + ' <span style="font-size:0.55em; font-weight:600; color:#64748b;">Tiket</span>';
         }
     }
 
