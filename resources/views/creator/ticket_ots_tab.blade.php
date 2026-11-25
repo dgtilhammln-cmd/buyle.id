@@ -259,56 +259,27 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                         <div>
                             <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
-                                Nama Lengkap Pembeli <span style="color: #ef4444;">*</span>
+                                Nama Lengkap Pembeli <span style="font-size: 0.7rem; color: #94a3b8; font-weight: normal;">(Opsional)</span>
                             </label>
                             <div style="position: relative; display: flex; align-items: center;">
                                 <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                                     <circle cx="12" cy="7" r="4"/>
                                 </svg>
-                                <input type="text" id="otsBuyerName" placeholder="Contoh: Rian Pratama" required
+                                <input type="text" id="otsBuyerName" placeholder="Nama Pembeli / Tamu Walk-in"
                                     style="width: 100%; height: 36px; padding-left: 2rem; padding-right: 0.75rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
                             </div>
                         </div>
                         <div>
                             <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
-                                Nomor WhatsApp (Kirim E-Tiket)
-                            </label>
-                            <div style="position: relative; display: flex; align-items: center;">
-                                <svg width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
-                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                                </svg>
-                                <input type="tel" id="otsBuyerPhone" placeholder="08123456789"
-                                    style="width: 100%; height: 36px; padding-left: 2rem; padding-right: 0.75rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.65rem;">
-                        <div>
-                            <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
-                                Email Pembeli (Kirim E-Tiket Otomatis)
+                                Email Pembeli <span style="font-size: 0.7rem; color: #94a3b8; font-weight: normal;">(Kirim E-Tiket Otomatis)</span>
                             </label>
                             <div style="position: relative; display: flex; align-items: center;">
                                 <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                                     <polyline points="22,6 12,13 2,6"/>
                                 </svg>
-                                <input type="email" id="otsBuyerEmail" placeholder="nama@email.com"
-                                    style="width: 100%; height: 36px; padding-left: 2rem; padding-right: 0.75rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
-                            </div>
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.3rem; color: #334155;">
-                                Catatan Meja / Khusus (Opsional)
-                            </label>
-                            <div style="position: relative; display: flex; align-items: center;">
-                                <svg width="14" height="14" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 0.65rem; pointer-events: none;">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                    <polyline points="14 2 14 8 20 8"/>
-                                    <line x1="16" y1="13" x2="8" y2="13"/>
-                                    <line x1="16" y1="17" x2="8" y2="17"/>
-                                </svg>
-                                <input type="text" id="otsNotes" placeholder="Misal: Rombongan, VIP, dll"
+                                <input type="email" id="otsBuyerEmail" placeholder="nama@email.com (Opsional)"
                                     style="width: 100%; height: 36px; padding-left: 2rem; padding-right: 0.75rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid #e2e8f0; border-radius: 9px; outline: none; box-sizing: border-box; font-family: 'Montserrat', sans-serif;">
                             </div>
                         </div>
@@ -459,7 +430,7 @@
         </div>
     </div>
 
-    {{-- 4. TABEL 15 TRANSAKSI OTS TERAKHIR (Uniform Table Styling as tab=data) --}}
+    {{-- 4. TABEL TRANSAKSI OTS (Uniform Table Styling as tab=data, Infinite Scroll Ready) --}}
     <div class="prof-card" style="margin-bottom: 1.5rem;">
         <div class="prof-card-head attendance-card-head" style="background: #ffffff; padding: 0.85rem 1.25rem;">
             <div class="att-head-left">
@@ -468,11 +439,13 @@
                     <polyline points="12 6 12 12 16 14"/>
                 </svg>
                 <span class="att-head-title" style="font-size: 0.88rem; font-weight: 700; color: #0f172a;">Riwayat Transaksi Loket OTS</span>
-                <span class="att-head-extra" style="font-size: 0.8rem; font-weight: 500; color: #64748b;">15 Transaksi Terakhir Hari Ini</span>
+                <span class="att-head-extra" id="otsHistoryTotalSubtitle" style="font-size: 0.8rem; font-weight: 500; color: #64748b;">
+                    {{ count($otsOrders) }} Transaksi Terakhir (Scroll untuk memuat riwayat)
+                </span>
             </div>
         </div>
 
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto;" id="otsTableScrollWrap">
             <table class="payout-table" style="width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left;">
                 <thead>
                     <tr style="background: #f8fafc; border-bottom: 1.5px solid #e2e8f0; color: #475569; font-weight: 700;">
@@ -497,7 +470,7 @@
                             </td>
                             <td style="padding: 0.7rem 0.9rem;">
                                 <div style="font-weight: 600; color: #1e293b;">{{ $addr['receiver_name'] ?? 'Pembeli OTS' }}</div>
-                                <div style="font-size: 0.7rem; color: #64748b;">{{ $addr['phone'] ?? '-' }}</div>
+                                <div style="font-size: 0.7rem; color: #64748b;">{{ !empty($addr['phone']) && $addr['phone'] !== '-' ? $addr['phone'] : (!empty($addr['email']) ? $addr['email'] : '-') }}</div>
                             </td>
                             <td style="padding: 0.7rem 0.9rem;">
                                 <div style="font-weight: 600; color: #0f172a;">{{ $firstItem?->product?->name ?? 'Tiket Event' }}</div>
@@ -526,18 +499,11 @@
                                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                                         <span>Struk</span>
                                     </button>
-                                    @if(!empty($addr['phone']))
-                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $addr['phone']) }}?text={{ rawurlencode('Halo ' . ($addr['receiver_name'] ?? '') . ', ini e-tiket resmi OTS BuyleTix Anda untuk pesanan ' . $ord->order_number) }}" target="_blank" rel="noopener"
-                                            style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.55rem; border-radius: 7px; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;">
-                                            <svg width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                                            <span>WA</span>
-                                        </a>
-                                    @endif
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        <tr>
+                        <tr id="otsEmptyRow">
                             <td colspan="6" style="padding: 1.75rem; text-align: center; color: #94a3b8; font-size: 0.8rem;">
                                 Belum ada transaksi tiket OTS hari ini. Layani pembeli walk-in pertama melalui form di atas.
                             </td>
@@ -545,6 +511,14 @@
                     @endforelse
                 </tbody>
             </table>
+
+            {{-- Infinite Scroll Sentinel --}}
+            <div id="otsScrollSentinel" style="height: 15px; width: 100%;"></div>
+
+            {{-- End of Data Notice --}}
+            <div id="otsInfiniteEndMarker" style="display: none; padding: 0.75rem 1rem; text-align: center; font-size: 0.74rem; font-weight: 600; color: #94a3b8; border-top: 1px solid #f1f5f9; background: #fafbfc;">
+                ✓ Semua riwayat transaksi loket telah dimuat
+            </div>
         </div>
     </div>
 
@@ -755,6 +729,17 @@
     #tab-ots .stat-val {
         font-size: 1.15rem !important;
     }
+}
+@keyframes otsShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.ots-skeleton-line {
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    animation: otsShimmer 1.5s infinite;
+    border-radius: 4px;
+    height: 12px;
 }
 </style>
 
@@ -1037,21 +1022,10 @@
 
     function submitOtsOrder() {
         const buyerNameInp = document.getElementById('otsBuyerName');
-        const buyerName = buyerNameInp ? buyerNameInp.value.trim() : '';
-        if (!buyerName) {
-            showOtsToast('Silakan masukkan Nama Lengkap Pembeli terlebih dahulu.', 'error');
-            if (buyerNameInp) buyerNameInp.focus();
-            return;
-        }
-
-        const buyerPhoneInp = document.getElementById('otsBuyerPhone');
-        const buyerPhone = buyerPhoneInp ? buyerPhoneInp.value.trim() : '';
+        const buyerName = (buyerNameInp ? buyerNameInp.value.trim() : '') || 'Pengunjung OTS';
 
         const buyerEmailInp = document.getElementById('otsBuyerEmail');
         const buyerEmail = buyerEmailInp ? buyerEmailInp.value.trim() : '';
-
-        const notesInp = document.getElementById('otsNotes');
-        const notes = notesInp ? notesInp.value.trim() : '';
 
         const grandTotal = calculateOtsGrandTotalRaw();
         const cashInp = document.getElementById('otsCashReceivedInput');
@@ -1073,12 +1047,12 @@
             product_id: currentOtsData.productId,
             qty: currentOtsData.qty,
             buyer_name: buyerName,
-            buyer_phone: buyerPhone,
+            buyer_phone: '',
             buyer_email: buyerEmail,
             payment_method: currentOtsData.paymentMethod,
             cash_received: cashReceived,
             fulfillment_type: currentOtsData.fulfillment,
-            notes: notes,
+            notes: '',
             _token: '{{ csrf_token() }}'
         };
 
@@ -1192,14 +1166,10 @@
 
         // Reset form
         const nameInp = document.getElementById('otsBuyerName');
-        const phoneInp = document.getElementById('otsBuyerPhone');
         const emailInp = document.getElementById('otsBuyerEmail');
-        const notesInp = document.getElementById('otsNotes');
         const cashInp = document.getElementById('otsCashReceivedInput');
         if (nameInp) nameInp.value = '';
-        if (phoneInp) phoneInp.value = '';
         if (emailInp) emailInp.value = '';
-        if (notesInp) notesInp.value = '';
         if (cashInp) cashInp.value = '';
         setOtsQty(1);
     }
@@ -1357,7 +1327,167 @@
         }
     }
 
+    // ════ INFINITE SCROLL & SKELETON LOADER UNTUK RIWAYAT OTS ════
+    let otsCurrentPage = 1;
+    let otsHasMore = {{ count($otsOrders) >= 15 ? 'true' : 'false' }};
+    let otsIsLoadingMore = false;
+    let otsObserver = null;
+
+    function renderOtsSkeletonRows(count = 3) {
+        let html = '';
+        for (let i = 0; i < count; i++) {
+            html += `
+                <tr class="ots-skeleton-tr" style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 0.7rem 0.9rem;">
+                        <div class="ots-skeleton-line" style="width: 95px; margin-bottom: 5px;"></div>
+                        <div class="ots-skeleton-line" style="width: 65px; height: 9px;"></div>
+                    </td>
+                    <td style="padding: 0.7rem 0.9rem;">
+                        <div class="ots-skeleton-line" style="width: 110px; margin-bottom: 5px;"></div>
+                        <div class="ots-skeleton-line" style="width: 80px; height: 9px;"></div>
+                    </td>
+                    <td style="padding: 0.7rem 0.9rem;">
+                        <div class="ots-skeleton-line" style="width: 120px; margin-bottom: 5px;"></div>
+                        <div class="ots-skeleton-line" style="width: 45px; height: 9px;"></div>
+                    </td>
+                    <td style="padding: 0.7rem 0.9rem;">
+                        <div class="ots-skeleton-line" style="width: 55px; height: 18px; border-radius: 6px;"></div>
+                    </td>
+                    <td style="padding: 0.7rem 0.9rem;">
+                        <div class="ots-skeleton-line" style="width: 75px; height: 14px;"></div>
+                    </td>
+                    <td style="padding: 0.7rem 0.9rem; text-align: right;">
+                        <div class="ots-skeleton-line" style="width: 58px; height: 24px; border-radius: 7px; margin-left: auto;"></div>
+                    </td>
+                </tr>
+            `;
+        }
+        return html;
+    }
+
+    function loadMoreOtsOrders() {
+        if (!otsHasMore || otsIsLoadingMore) return;
+        otsIsLoadingMore = true;
+
+        const tbody = document.getElementById('otsRecentTableBody');
+        if (!tbody) return;
+
+        // Buat baris skeleton sementara
+        const tempSkeleton = document.createElement('tbody');
+        tempSkeleton.id = 'otsTempSkeletonTbody';
+        tempSkeleton.innerHTML = renderOtsSkeletonRows(3);
+        tbody.parentElement.appendChild(tempSkeleton);
+
+        const nextPage = otsCurrentPage + 1;
+        fetch(`{{ route("creator.ticket.scanner.ots.orders") }}?page=${nextPage}`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            // Hapus skeleton
+            const tempSk = document.getElementById('otsTempSkeletonTbody');
+            if (tempSk) tempSk.remove();
+
+            if (data.success && data.orders && data.orders.length > 0) {
+                otsCurrentPage = data.page;
+                otsHasMore = data.has_more;
+
+                data.orders.forEach(ord => {
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid #f1f5f9';
+                    const isCash = ord.payment_method === 'cash';
+                    const safeEvent = (ord.event_name || '').replace(/'/g, "\\'");
+                    const safeBuyer = (ord.buyer_name || '').replace(/'/g, "\\'");
+
+                    tr.innerHTML = `
+                        <td style="padding: 0.7rem 0.9rem;">
+                            <div style="font-weight: 700; color: #0f172a;">${ord.order_number}</div>
+                            <div style="font-size: 0.7rem; color: #94a3b8;">${ord.created_at}</div>
+                        </td>
+                        <td style="padding: 0.7rem 0.9rem;">
+                            <div style="font-weight: 600; color: #1e293b;">${ord.buyer_name}</div>
+                            <div style="font-size: 0.7rem; color: #64748b;">${ord.buyer_contact}</div>
+                        </td>
+                        <td style="padding: 0.7rem 0.9rem;">
+                            <div style="font-weight: 600; color: #0f172a;">${ord.event_name}</div>
+                            <div style="font-size: 0.7rem; color: #15803d; font-weight: 700;">${ord.qty} Tiket</div>
+                        </td>
+                        <td style="padding: 0.7rem 0.9rem;">
+                            <span class="badge-status" style="background: ${isCash ? '#fefce8' : '#faf5ff'}; color: ${isCash ? '#854d0e' : '#7e22ce'}; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px;">
+                                ${isCash 
+                                    ? '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg><span>Cash</span>' 
+                                    : '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span>QRIS</span>'}
+                            </span>
+                        </td>
+                        <td style="padding: 0.7rem 0.9rem;">
+                            <strong style="color: #15803d; font-size: 0.84rem;">${ord.total_formatted}</strong>
+                        </td>
+                        <td style="padding: 0.7rem 0.9rem; text-align: right;">
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.35rem;">
+                                <button type="button" onclick="reprintOtsOrder('${ord.order_number}', '${safeEvent}', '${safeBuyer}', ${ord.qty}, ${ord.total}, '${ord.payment_method}')"
+                                    style="background: #f8fafc; border: 1px solid #e2e8f0; color: #334155; font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.55rem; border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                    <span>Struk</span>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                const subEl = document.getElementById('otsHistoryTotalSubtitle');
+                if (subEl && data.total) {
+                    subEl.innerText = `${tbody.querySelectorAll('tr').length} dari ${data.total} Transaksi (Scroll untuk lainnya)`;
+                }
+
+                if (!otsHasMore) {
+                    const endMarker = document.getElementById('otsInfiniteEndMarker');
+                    if (endMarker) endMarker.style.display = 'block';
+                    if (otsObserver) otsObserver.disconnect();
+                }
+            } else {
+                otsHasMore = false;
+                const endMarker = document.getElementById('otsInfiniteEndMarker');
+                if (endMarker) endMarker.style.display = 'block';
+                if (otsObserver) otsObserver.disconnect();
+            }
+        })
+        .catch(err => {
+            console.error('[OTS Infinite Scroll] Error:', err);
+            const tempSk = document.getElementById('otsTempSkeletonTbody');
+            if (tempSk) tempSk.remove();
+        })
+        .finally(() => {
+            otsIsLoadingMore = false;
+        });
+    }
+
+    function initOtsInfiniteScroll() {
+        const sentinel = document.getElementById('otsScrollSentinel');
+        if (!sentinel) return;
+
+        if ('IntersectionObserver' in window) {
+            otsObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && otsHasMore && !otsIsLoadingMore) {
+                    loadMoreOtsOrders();
+                }
+            }, { rootMargin: '200px' });
+            otsObserver.observe(sentinel);
+        } else {
+            window.addEventListener('scroll', () => {
+                const rect = sentinel.getBoundingClientRect();
+                if (rect.top <= window.innerHeight + 200 && otsHasMore && !otsIsLoadingMore) {
+                    loadMoreOtsOrders();
+                }
+            });
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initOtsEngine();
+        initOtsInfiniteScroll();
     });
 </script>

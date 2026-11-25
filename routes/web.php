@@ -1150,6 +1150,7 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/scanner/update-pin/{product}', [\App\Http\Controllers\TicketScannerController::class, 'updateGatePin'])->name('ticket.scanner.update-pin');
     // Tiket OTS (On-The-Spot / Kasir Loket)
     Route::post('/scanner/ots-order', [\App\Http\Controllers\TicketScannerController::class, 'storeOtsOrder'])->name('ticket.scanner.ots.order');
+    Route::get('/scanner/ots-orders', [\App\Http\Controllers\TicketScannerController::class, 'getOtsOrders'])->name('ticket.scanner.ots.orders');
     // Bank / Payout Account (dari halaman event-attendance)
     Route::post('/event-attendance/bank', [\App\Http\Controllers\TicketScannerController::class, 'updateBankAccount'])->name('ticket.bank.update');
     // Ticket Detail JSON (untuk modal)

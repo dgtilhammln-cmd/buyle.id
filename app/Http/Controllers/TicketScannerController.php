@@ -1458,7 +1458,7 @@ class TicketScannerController extends Controller
         $request->validate([
             'product_id'       => 'required|exists:products,id',
             'qty'              => 'required|integer|min:1|max:50',
-            'buyer_name'       => 'required|string|max:150',
+            'buyer_name'       => 'nullable|string|max:150',
             'buyer_phone'      => 'nullable|string|max:30',
             'buyer_email'      => 'nullable|email|max:150',
             'payment_method'   => 'required|in:cash,qris',
@@ -1466,6 +1466,8 @@ class TicketScannerController extends Controller
             'fulfillment_type' => 'required|in:auto_checkin,issue_ticket',
             'notes'            => 'nullable|string|max:500',
         ]);
+
+        $buyerName = trim((string)$request->input('buyer_name', '')) ?: 'Pengunjung OTS';
 
         $product = Product::findOrFail($request->product_id);
 
@@ -1540,8 +1542,8 @@ class TicketScannerController extends Controller
                 'cashier_name'        => $user->name,
                 'notes'               => $request->notes,
                 'shipping_address'    => [
-                    'receiver_name'   => $request->buyer_name,
-                    'phone'           => $request->buyer_phone,
+                    'receiver_name'   => $buyerName,
+                    'phone'           => $request->buyer_phone ?: '-',
                     'email'           => $request->buyer_email,
                     'payment_method'  => $request->payment_method,
                     'cash_received'   => $cashReceived,
@@ -1576,7 +1578,7 @@ class TicketScannerController extends Controller
                     'product_id'            => $product->id,
                     'user_id'               => null,
                     'seller_id'             => $product->seller_id,
-                    'holder_name'           => $request->buyer_name . ($qty > 1 ? " (#" . ($i + 1) . ")" : ""),
+                    'holder_name'           => $buyerName . ($qty > 1 ? " (#" . ($i + 1) . ")" : ""),
                     'holder_phone'          => $request->buyer_phone,
                     'holder_email'          => $request->buyer_email,
                     'status'                => $isAutoCheckin ? 'used' : 'valid',
@@ -1586,7 +1588,7 @@ class TicketScannerController extends Controller
                     'checked_in_at'         => $isAutoCheckin ? now() : null,
                     'checked_in_by'         => $isAutoCheckin ? $sellerId : null,
                     'scanned_by_staff_name' => $isAutoCheckin ? ($user->name . ' (Kasir Loket OTS)') : null,
-                    'scanned_at_gate'       => $isAutoCheckin ? 'Loket OTS' : null,
+                    'scanned_at_gate'       => $isAutoCheckin ? 0 : null,
                 ]);
 
                 $createdTickets[] = [
@@ -1641,7 +1643,7 @@ class TicketScannerController extends Controller
                 'message'        => 'Transaksi Tiket OTS berhasil diproses!',
                 'order_number'   => $orderNumber,
                 'event_name'     => $product->name,
-                'buyer_name'     => $request->buyer_name,
+                'buyer_name'     => $buyerName,
                 'buyer_phone'    => $request->buyer_phone,
                 'buyer_email'    => $request->buyer_email,
                 'email_sent'     => $emailSent,
@@ -1668,5 +1670,80 @@ class TicketScannerController extends Controller
                 'message' => 'Terjadi kesalahan saat memproses tiket OTS: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Infinite scroll pagination data riwayat transaksi tiket OTS.
+     */
+    public function getOtsOrders(Request $request): JsonResponse
+    {
+        $sellerId = auth()->id();
+        $isCrewMode = false;
+        $staffProductIds = [];
+
+        $myEventsCount = Product::where('seller_id', $sellerId)->where('type', 'ticket')->count();
+        if ($myEventsCount === 0) {
+            $staffProductIds = \App\Models\GateStaff::where('user_id', $sellerId)
+                ->where('is_active', true)
+                ->pluck('product_id')
+                ->toArray();
+            $isCrewMode = count($staffProductIds) > 0;
+        }
+
+        $eventsQuery = Product::where('type', 'ticket');
+        if ($isCrewMode) {
+            $eventsQuery->whereIn('id', $staffProductIds);
+        } else {
+            $eventsQuery->where('seller_id', $sellerId);
+        }
+        $eventIds = $eventsQuery->pluck('id');
+
+        $page = max(1, (int)$request->input('page', 1));
+        $perPage = 15;
+
+        $otsOrderQuery = \App\Models\Order::where('source', 'ots')
+            ->whereHas('items', function ($q) use ($eventIds) {
+                $q->whereIn('product_id', $eventIds);
+            })
+            ->with(['items.product'])
+            ->orderBy('id', 'desc');
+
+        $totalCount = (clone $otsOrderQuery)->count();
+        $orders = (clone $otsOrderQuery)
+            ->skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        $formattedOrders = $orders->map(function ($order) {
+            $item = $order->items->first();
+            $shipping = is_array($order->shipping_address) ? $order->shipping_address : (json_decode($order->shipping_address, true) ?? []);
+            $buyerName = $shipping['receiver_name'] ?? ($order->customer_name ?? 'Pengunjung OTS');
+            $buyerContact = !empty($shipping['phone']) && $shipping['phone'] !== '-' ? $shipping['phone'] : (!empty($shipping['email']) ? $shipping['email'] : '-');
+            $paymentMethod = strtolower($shipping['payment_method'] ?? 'cash');
+
+            return [
+                'id'             => $order->id,
+                'order_number'   => $order->order_number,
+                'created_at'     => $order->created_at ? $order->created_at->format('H:i · d M Y') : '-',
+                'buyer_name'     => $buyerName,
+                'buyer_contact'  => $buyerContact,
+                'buyer_phone'    => $shipping['phone'] ?? '',
+                'event_name'     => $item?->product?->name ?? 'Tiket Event',
+                'qty'            => (int)($item?->qty ?? 1),
+                'payment_method' => $paymentMethod,
+                'total'          => (float)$order->total,
+                'total_formatted'=> 'Rp ' . number_format($order->total, 0, ',', '.'),
+            ];
+        });
+
+        $hasMore = ($page * $perPage) < $totalCount;
+
+        return response()->json([
+            'success'   => true,
+            'orders'    => $formattedOrders,
+            'page'      => $page,
+            'has_more'  => $hasMore,
+            'total'     => $totalCount,
+        ]);
     }
 }
