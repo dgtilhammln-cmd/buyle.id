@@ -107,16 +107,39 @@
             font-family: 'Montserrat', sans-serif !important;
         }
 
-        .bio-sidebar {
-            width: 260px;
+        .bio-sidebar-wrapper {
+            width: 68px;
             flex-shrink: 0;
+            position: relative;
+        }
+
+        .bio-sidebar {
+            width: 68px;
             background: #ffffff;
             border-radius: 20px;
-            padding: 1.25rem;
+            padding: 0.9rem 0.5rem;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
             border: 1.5px solid #e2e8f0;
             position: sticky;
             top: 1.5rem;
+            z-index: 100;
+            transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s ease, border-color 0.2s ease;
+            overflow: hidden;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+
+        .bio-sidebar:hover {
+            width: 250px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+            border-color: #cbd5e1;
+        }
+
+        .bio-tabs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            width: 100%;
         }
 
         .bio-content {
@@ -125,25 +148,68 @@
             max-width: 100%;
         }
 
-        /* ── TAB BUTTONS (Matching Bio Light Theme) ── */
+        /* ── TAB BUTTONS (Dynamic Collapsible Sidebar) ── */
         .tab-btn {
             width: 100%;
+            height: 46px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.85rem 1.1rem;
             border: 1.5px solid transparent;
             background: transparent;
             color: #64748b;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.83rem;
+            font-size: 0.84rem;
             font-weight: 600;
             border-radius: 14px;
             cursor: pointer;
             text-align: left;
             transition: all 0.2s ease;
-            margin-bottom: 0.35rem;
             text-decoration: none;
+            padding: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .tab-icon-wrap {
+            width: 48px;
+            min-width: 48px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tab-text-full {
+            opacity: 0;
+            max-width: 0;
+            overflow: hidden;
+            pointer-events: none;
+            transition: opacity 0.2s ease, max-width 0.25s ease;
+            font-size: 0.84rem;
+            white-space: nowrap;
+        }
+
+        .tab-badge {
+            opacity: 0;
+            max-width: 0;
+            overflow: hidden;
+            pointer-events: none;
+            transition: opacity 0.2s ease, max-width 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .bio-sidebar:hover .tab-text-full {
+            opacity: 1;
+            max-width: 160px;
+            pointer-events: auto;
+        }
+
+        .bio-sidebar:hover .tab-badge {
+            opacity: 1;
+            max-width: 70px;
+            margin-right: 0.6rem;
+            pointer-events: auto;
         }
 
         .tab-btn:hover {
@@ -153,9 +219,13 @@
 
         .tab-btn.active {
             background: linear-gradient(135deg, #1eb349, #a5cf37);
-            color: #ffffff;
+            color: #ffffff !important;
             font-weight: 700;
             box-shadow: 0 4px 14px rgba(30, 179, 73, 0.3);
+        }
+
+        .tab-btn.active svg {
+            stroke: #ffffff !important;
         }
 
         /* ── UNIFORM LIGHT CARDS ── */
@@ -1448,7 +1518,8 @@
                 gap: 0.75rem;
             }
 
-            .bio-sidebar {
+            .bio-sidebar,
+            .bio-sidebar-wrapper {
                 display: none !important;
             }
 
@@ -3135,103 +3206,78 @@
     <div class="bio-layout">
 
         {{-- SUB SIDEBAR NAV --}}
-        <div class="bio-sidebar">
-            <div class="sidebar-info-card"
-                style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 1.1rem; margin-bottom: 1.25rem;">
-                <div
-                    style="font-size: 0.85rem; font-weight: 700; color: #0f172a; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                    <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path
-                            d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
-                        <rect x="7" y="7" width="10" height="10" rx="1" />
-                    </svg>
-                    Gatekeeper Studio
-                </div>
-                <div style="font-size: 0.78rem; color: #64748b; line-height: 1.5; font-weight: 500;">
-                    Pemindaian live kamera & pemantauan data kehadiran pengunjung event secara real-time.
-                </div>
-            </div>
-
-            <div class="bio-tabs-list">
-                <button type="button" class="tab-btn {{ $activeTab === 'home' ? 'active' : '' }}"
-                    onclick="switchTab('tab-home', this)">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
-                    <span class="tab-text-full">Home Event</span>
-                    <small class="tab-text-mob">Home</small>
-                </button>
-                @if(!($isCrewMode ?? false) && ($isKycVerified ?? false))
-                <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}"
-                    onclick="switchTab('tab-data', this)">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    <span class="tab-text-full">Data Pengunjung</span>
-                    <small class="tab-text-mob">Pengunjung</small>
-                </button>
-                @endif
-                <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}"
-                    onclick="switchTab('tab-scanner', this)">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path
-                            d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
-                        <rect x="7" y="7" width="10" height="10" rx="1" />
-                    </svg>
-                    <span class="tab-text-full">Quick Scanner</span>
-                    <small class="tab-text-mob">Scanner</small>
-                </button>
-                @if(!($isCrewMode ?? false) && ($isKycVerified ?? false))
-                <button type="button" class="tab-btn {{ $activeTab === 'gate' ? 'active' : '' }}"
-                    onclick="switchTab('tab-gate', this)">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <line x1="19" y1="8" x2="19" y2="14" />
-                        <line x1="22" y1="11" x2="16" y2="11" />
-                    </svg>
-                    <span class="tab-text-full">Akses Gate Panitia</span>
-                    <small class="tab-text-mob">Gate Staff</small>
-                </button>
-                @endif
-                <a href="{{ route('creator.ticket.profile') }}" class="tab-btn" title="Menu & Profil">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
-                    <span class="tab-text-full">Menu & Profil</span>
-                    <small class="tab-text-mob">Profil</small>
-                    @if(isset($kyc) && $kyc->status === 'verified')
-                        <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#dcfce7; color:#166534; padding:2px 7px; border-radius:999px;">Verified</span>
-                    @elseif(isset($kyc) && $kyc->status === 'pending')
-                        <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#fef3c7; color:#92400e; padding:2px 7px; border-radius:999px;">Review</span>
-                    @else
-                        <span
-                            style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:999px;">KYC</span>
+        <div class="bio-sidebar-wrapper">
+            <div class="bio-sidebar">
+                <div class="bio-tabs-list">
+                    <button type="button" class="tab-btn {{ $activeTab === 'home' ? 'active' : '' }}"
+                        onclick="switchTab('tab-home', this)" title="Home Event">
+                        <span class="tab-icon-wrap">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
+                        </span>
+                        <span class="tab-text-full">Home Event</span>
+                    </button>
+                    @if(!($isCrewMode ?? false) && ($isKycVerified ?? false))
+                    <button type="button" class="tab-btn {{ $activeTab === 'data' ? 'active' : '' }}"
+                        onclick="switchTab('tab-data', this)" title="Data Pengunjung">
+                        <span class="tab-icon-wrap">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </span>
+                        <span class="tab-text-full">Data Pengunjung</span>
+                    </button>
                     @endif
-                </a>
-            </div>
-
-            <div class="sidebar-tips-card"
-                style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1rem; font-size: 0.78rem; color: #64748b; margin-top: 1.25rem;">
-                <strong style="color: #0f172a; display: flex; align-items: center; gap: 5px; margin-bottom: 0.4rem;">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1eb349" stroke-width="2">
-                        <path
-                            d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.7 1.3 1.5 1.5 2.5" />
-                        <path d="M9 18h6" />
-                        <path d="M10 22h4" />
-                    </svg>
-                    Tips Verifikasi:
-                </strong>
-                • Izinkan akses kamera browser saat diminta.<br>
-                • Pastikan pencahayaan layar pengunjung cukup.<br>
-                • Anda dapat menandai check-in manual pada tab Data Kehadiran jika pengunjung tidak membawa QR Code.
+                    <button type="button" class="tab-btn {{ $activeTab === 'scanner' ? 'active' : '' }}"
+                        onclick="switchTab('tab-scanner', this)" title="Quick Scanner">
+                        <span class="tab-icon-wrap">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path
+                                    d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                                <rect x="7" y="7" width="10" height="10" rx="1" />
+                            </svg>
+                        </span>
+                        <span class="tab-text-full">Quick Scanner</span>
+                    </button>
+                    @if(!($isCrewMode ?? false) && ($isKycVerified ?? false))
+                    <button type="button" class="tab-btn {{ $activeTab === 'gate' ? 'active' : '' }}"
+                        onclick="switchTab('tab-gate', this)" title="Akses Gate Crew">
+                        <span class="tab-icon-wrap">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <line x1="19" y1="8" x2="19" y2="14" />
+                                <line x1="22" y1="11" x2="16" y2="11" />
+                            </svg>
+                        </span>
+                        <span class="tab-text-full">Akses Gate Crew</span>
+                    </button>
+                    @endif
+                    <a href="{{ route('creator.ticket.profile') }}" class="tab-btn" title="Menu & Profil">
+                        <span class="tab-icon-wrap">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </span>
+                        <span class="tab-text-full">Menu & Profil</span>
+                        @if(isset($kyc) && $kyc->status === 'verified')
+                            <span class="tab-badge"
+                                style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#dcfce7; color:#166534; padding:2px 7px; border-radius:999px;">Verified</span>
+                        @elseif(isset($kyc) && $kyc->status === 'pending')
+                            <span class="tab-badge"
+                                style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#fef3c7; color:#92400e; padding:2px 7px; border-radius:999px;">Review</span>
+                        @else
+                            <span class="tab-badge"
+                                style="margin-left:auto; font-size:0.68rem; font-weight:700; background:#f1f5f9; color:#475569; padding:2px 7px; border-radius:999px;">KYC</span>
+                        @endif
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -4159,11 +4205,6 @@
                             <span class="att-head-extra">Presensi & Percetakan</span>
                         </div>
                         <div class="att-head-actions">
-                            <span id="cacheStatusBadge" class="att-cache-pill" title="Cache Cepat Aktif">
-                                <span class="cache-green-dot"></span>
-                                <span class="cache-pill-text">Cache Aktif</span>
-                            </span>
-
                             {{-- Dropdown Export Modern --}}
                             <div class="export-dropdown-wrap">
                                 <button type="button" class="btn-export-sm" onclick="toggleExportMenu(event)" title="Pilihan Ekspor Data">
