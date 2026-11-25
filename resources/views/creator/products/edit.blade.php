@@ -1144,54 +1144,44 @@
                                                 {{-- Quick Template Pills --}}
                                                 <div
                                                     style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap; margin-bottom:0.85rem;">
-                                                    <span style="font-size:0.75rem; font-weight:700; color:#475569;">Pilihan
-                                                        Template:</span>
+                                                    <span style="font-size:0.75rem; font-weight:700; color:#475569;">+ Tambah dari Template:</span>
                                                     <button type="button" class="tax-tpl-btn"
-                                                        onclick="applyTaxTemplate('Pajak Hiburan / Daerah (10%)', 10)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak
+                                                        onclick="addTaxRow({name: 'Pajak Hiburan / Daerah', rate: 10})"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ Pajak
                                                         Hiburan 10%</button>
                                                     <button type="button" class="tax-tpl-btn"
-                                                        onclick="applyTaxTemplate('Pajak Hiburan / Daerah (15%)', 15)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak
+                                                        onclick="addTaxRow({name: 'Pajak Hiburan / Daerah', rate: 15})"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ Pajak
                                                         Hiburan 15%</button>
                                                     <button type="button" class="tax-tpl-btn"
-                                                        onclick="applyTaxTemplate('Pajak Daerah / PB1 (10%)', 10)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak
-                                                        Daerah (PB1) 10%</button>
+                                                        onclick="addTaxRow({name: 'Pajak Daerah / PB1', rate: 10})"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ PB1
+                                                        10%</button>
                                                     <button type="button" class="tax-tpl-btn"
-                                                        onclick="applyTaxTemplate('PPN (11%)', 11)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">PPN
+                                                        onclick="addTaxRow({name: 'PPN', rate: 11})"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ PPN
                                                         11%</button>
                                                     <button type="button" class="tax-tpl-btn"
-                                                        onclick="applyTaxTemplate('Pajak Daerah (5%)', 5)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak
+                                                        onclick="addTaxRow({name: 'Pajak Daerah', rate: 5})"
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ Pajak
                                                         Daerah 5%</button>
                                                 </div>
 
-                                                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:0.85rem;">
-                                                    <div>
-                                                        <label class="form-label"
-                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Nama
-                                                            Pajak / Keterangan Tagihan</label>
-                                                        <input type="text" name="tax_name" id="ticketTaxNameInput"
-                                                            value="{{ old('tax_name', $product->tax_name ?? 'Pajak Hiburan / Daerah (10%)') }}"
-                                                            class="form-input"
-                                                            placeholder="Contoh: Pajak Hiburan / Daerah (PB1)"
-                                                            style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px;">
-                                                    </div>
-                                                    <div>
-                                                        <label class="form-label"
-                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Tarif
-                                                            Pajak (%)</label>
-                                                        <div style="position:relative;">
-                                                            <input type="number" step="0.1" min="0" max="100"
-                                                                name="tax_rate" id="ticketTaxRateInput"
-                                                                value="{{ old('tax_rate', $product->tax_rate ?? 10) }}"
-                                                                class="form-input" placeholder="10"
-                                                                style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px; padding-right:2rem;">
-                                                            <span
-                                                                style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.82rem;">%</span>
-                                                        </div>
+                                                {{-- Multi-Tax Rows Container --}}
+                                                <div id="ticketTaxItemsContainer" style="display:flex; flex-direction:column; gap:0.65rem;">
+                                                    {{-- Diisi secara dinamis oleh JavaScript --}}
+                                                </div>
+
+                                                {{-- Action & Total Summary Row --}}
+                                                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #BBF7D0;">
+                                                    <button type="button" onclick="addTaxRow({name: '', rate: 10})"
+                                                        style="background:#FFFFFF; border:1.5px dashed #16a34a; color:#16a34a; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:10px; cursor:pointer; font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; transition:all 0.15s;">
+                                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                        <span>Tambah Pajak Lainnya</span>
+                                                    </button>
+
+                                                    <div id="ticketTaxTotalSummary" style="font-size:0.82rem; font-weight:700; color:#166534; background:#F0FDF4; padding:0.35rem 0.85rem; border-radius:999px; border:1px solid #BBF7D0;">
+                                                        Total Tarif Pajak: <span id="ticketTaxTotalRateDisplay">0%</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1855,7 +1845,7 @@
                                 <label class="form-label">Tautan Eksternal (G-Drive / Notion / Website)</label>
                                 <input type="url" name="digital_resource" id="externalLink"
                                     value="{{ old('digital_resource', $product->digital_resource) }}" class="form-input"
-                                    placeholder="https://..." required>
+                                    placeholder="https://...">
                                 <span id="linkStatus"
                                     style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
                             </div>
@@ -3086,6 +3076,78 @@
             }
         }
 
+        // ── Multi-Tax System Engine ──
+        let taxRowCount = 0;
+
+        function renderTaxRowHtml(idx, name = '', rate = 10) {
+            return `
+                <div class="ticket-tax-row" id="tax_row_${idx}" style="display:grid; grid-template-columns: 2fr 1fr auto; gap:0.65rem; align-items:flex-end; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.65rem 0.75rem;">
+                    <div>
+                        <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Nama Pajak / Tagihan</label>
+                        <input type="text" name="ticket_taxes[${idx}][name]" value="${escapeHtml(name)}" class="form-input tax-name-input" placeholder="Contoh: Pajak Hiburan / Daerah (PB1)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; background:#fff;" oninput="updateTaxTotalSummary()">
+                    </div>
+                    <div>
+                        <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Tarif Pajak (%)</label>
+                        <div style="position:relative;">
+                            <input type="number" step="0.1" min="0" max="100" name="ticket_taxes[${idx}][rate]" value="${rate}" class="form-input tax-rate-input" placeholder="10" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; padding-right:1.8rem; background:#fff;" oninput="updateTaxTotalSummary()">
+                            <span style="position:absolute; right:8px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.78rem;">%</span>
+                        </div>
+                    </div>
+                    <div style="padding-bottom:1px;">
+                        <button type="button" onclick="removeTaxRow(${idx})" style="background:#FEE2E2; border:none; color:#EF4444; width:36px; height:36px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" title="Hapus Pajak Ini">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addTaxRow(data = {}) {
+            const container = document.getElementById('ticketTaxItemsContainer');
+            if (!container) return;
+            const toggle = document.getElementById('ticketTaxToggle');
+            if (toggle && !toggle.checked) {
+                toggle.checked = true;
+                toggleTicketTaxBox(true);
+            }
+            const idx = taxRowCount++;
+            const name = data.name !== undefined ? data.name : '';
+            const rate = data.rate !== undefined ? data.rate : 10;
+            
+            const div = document.createElement('div');
+            div.innerHTML = renderTaxRowHtml(idx, name, rate);
+            container.appendChild(div.firstElementChild);
+            updateTaxTotalSummary();
+        }
+
+        function removeTaxRow(idx) {
+            const row = document.getElementById(`tax_row_${idx}`);
+            if (row) row.remove();
+            const container = document.getElementById('ticketTaxItemsContainer');
+            if (container && container.querySelectorAll('.ticket-tax-row').length === 0) {
+                addTaxRow({name: '', rate: 0});
+            }
+            updateTaxTotalSummary();
+        }
+
+        function updateTaxTotalSummary() {
+            let total = 0;
+            const names = [];
+            document.querySelectorAll('#ticketTaxItemsContainer .ticket-tax-row').forEach(row => {
+                const rateInp = row.querySelector('.tax-rate-input');
+                const nameInp = row.querySelector('.tax-name-input');
+                const r = parseFloat(rateInp?.value || 0) || 0;
+                const n = nameInp?.value.trim() || '';
+                total += r;
+                if (n && r > 0) names.push(`${n} (${r}%)`);
+            });
+            total = Math.round(total * 10) / 10;
+            const display = document.getElementById('ticketTaxTotalRateDisplay');
+            if (display) {
+                display.textContent = total + '%' + (names.length > 0 ? ` (${names.join(' + ')})` : '');
+            }
+        }
+
         // Ticket Tax helper functions
         function toggleTicketTaxBox(checked) {
             const box = document.getElementById('ticketTaxBox');
@@ -3098,16 +3160,20 @@
         }
 
         function applyTaxTemplate(name, rate) {
-            const nameInput = document.getElementById('ticketTaxNameInput');
-            const rateInput = document.getElementById('ticketTaxRateInput');
-            const toggle = document.getElementById('ticketTaxToggle');
-            if (nameInput) nameInput.value = name;
-            if (rateInput) rateInput.value = rate;
-            if (toggle && !toggle.checked) {
-                toggle.checked = true;
-                toggleTicketTaxBox(true);
-            }
+            addTaxRow({ name: name, rate: rate });
         }
+
+        // Initialize Taxes from PHP dataset on load
+        document.addEventListener('DOMContentLoaded', function () {
+            const initialTaxes = @json(old('ticket_taxes', $product->ticket_taxes_list ?? []));
+            if (Array.isArray(initialTaxes) && initialTaxes.length > 0) {
+                initialTaxes.forEach(t => {
+                    addTaxRow(t);
+                });
+            } else {
+                addTaxRow({ name: 'Pajak Hiburan / Daerah', rate: 10 });
+            }
+        });
     </script>
 
     @include('creator.products.partials.kyc_modal')

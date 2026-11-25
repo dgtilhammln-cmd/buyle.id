@@ -252,23 +252,66 @@ class SellerProductController extends Controller
             $data['community_join_url']  = null;
         }
 
-        // Pajak tiket (Pajak Daerah / Hiburan / PPN)
+        // Pajak tiket (Pajak Daerah / Hiburan / PPN / Multi-Pajak)
         if ($data['product_type'] === 'ticket') {
             $data['tax_enabled'] = $request->boolean('tax_enabled');
-            $data['tax_name']    = $data['tax_enabled'] ? ($request->input('tax_name') ?: 'Pajak Daerah / Hiburan') : null;
-            $data['tax_rate']    = $data['tax_enabled'] ? (float) ($request->input('tax_rate', 0)) : 0;
+
+            // Multi-tax list parsing
+            $rawTaxes = $request->input('ticket_taxes', []);
+            if (is_string($rawTaxes)) {
+                $rawTaxes = json_decode($rawTaxes, true) ?: [];
+            }
+            $cleanTaxes = [];
+            $totalRate = 0.0;
+            $taxNames = [];
+
+            if ($data['tax_enabled'] && is_array($rawTaxes)) {
+                foreach ($rawTaxes as $tItem) {
+                    if (is_array($tItem) && !empty($tItem['name']) && isset($tItem['rate'])) {
+                        $tName = trim((string)$tItem['name']);
+                        $tRate = (float)$tItem['rate'];
+                        if ($tName !== '' && $tRate >= 0) {
+                            $cleanTaxes[] = [
+                                'name' => $tName,
+                                'rate' => $tRate,
+                            ];
+                            $totalRate += $tRate;
+                            $taxNames[] = $tName . ' (' . ($tRate + 0) . '%)';
+                        }
+                    }
+                }
+            }
+
+            // Fallback backward compatibility jika form mengirim format single tax lawas
+            if ($data['tax_enabled'] && empty($cleanTaxes) && $request->filled('tax_rate')) {
+                $legacyName = $request->input('tax_name') ?: 'Pajak Daerah / Hiburan';
+                $legacyRate = (float)$request->input('tax_rate', 0);
+                if ($legacyRate > 0) {
+                    $cleanTaxes[] = [
+                        'name' => $legacyName,
+                        'rate' => $legacyRate,
+                    ];
+                    $totalRate = $legacyRate;
+                    $taxNames[] = $legacyName;
+                }
+            }
+
+            $data['ticket_taxes'] = $data['tax_enabled'] ? $cleanTaxes : null;
+            $data['tax_rate']     = $data['tax_enabled'] ? $totalRate : 0;
+            $data['tax_name']     = $data['tax_enabled'] ? (!empty($taxNames) ? implode(' + ', $taxNames) : 'Pajak Tiket') : null;
 
             // Pengaturan Tiket OTS (On-The-Spot)
             $data['ots_enabled'] = $request->boolean('ots_enabled');
             $data['ots_price']   = $request->filled('ots_price') ? (float) $request->input('ots_price') : null;
             $data['ots_quota']   = $request->filled('ots_quota') ? (int) $request->input('ots_quota') : null;
         } else {
-            $data['tax_enabled'] = false;
-            $data['tax_name']    = null;
-            $data['tax_rate']    = 0;
-            $data['ots_enabled'] = false;
-            $data['ots_price']   = null;
-            $data['ots_quota']   = null;
+            $data['tax_enabled']  = false;
+            $data['tax_name']     = null;
+            $data['tax_rate']     = 0;
+            $data['ticket_taxes'] = null;
+            $data['ots_enabled']  = false;
+            $data['ots_price']    = null;
+            $data['ots_quota']    = null;
         }
 
         // Generate unique slug
@@ -526,23 +569,66 @@ class SellerProductController extends Controller
             $data['short_desc'] = substr($data['short_desc'], 0, 500);
         }
 
-        // Pajak tiket (Pajak Daerah / Hiburan / PPN)
+        // Pajak tiket (Pajak Daerah / Hiburan / PPN / Multi-Pajak)
         if ($data['product_type'] === 'ticket') {
             $data['tax_enabled'] = $request->boolean('tax_enabled');
-            $data['tax_name']    = $data['tax_enabled'] ? ($request->input('tax_name') ?: 'Pajak Daerah / Hiburan') : null;
-            $data['tax_rate']    = $data['tax_enabled'] ? (float) ($request->input('tax_rate', 0)) : 0;
+
+            // Multi-tax list parsing
+            $rawTaxes = $request->input('ticket_taxes', []);
+            if (is_string($rawTaxes)) {
+                $rawTaxes = json_decode($rawTaxes, true) ?: [];
+            }
+            $cleanTaxes = [];
+            $totalRate = 0.0;
+            $taxNames = [];
+
+            if ($data['tax_enabled'] && is_array($rawTaxes)) {
+                foreach ($rawTaxes as $tItem) {
+                    if (is_array($tItem) && !empty($tItem['name']) && isset($tItem['rate'])) {
+                        $tName = trim((string)$tItem['name']);
+                        $tRate = (float)$tItem['rate'];
+                        if ($tName !== '' && $tRate >= 0) {
+                            $cleanTaxes[] = [
+                                'name' => $tName,
+                                'rate' => $tRate,
+                            ];
+                            $totalRate += $tRate;
+                            $taxNames[] = $tName . ' (' . ($tRate + 0) . '%)';
+                        }
+                    }
+                }
+            }
+
+            // Fallback backward compatibility jika form mengirim format single tax lawas
+            if ($data['tax_enabled'] && empty($cleanTaxes) && $request->filled('tax_rate')) {
+                $legacyName = $request->input('tax_name') ?: 'Pajak Daerah / Hiburan';
+                $legacyRate = (float)$request->input('tax_rate', 0);
+                if ($legacyRate > 0) {
+                    $cleanTaxes[] = [
+                        'name' => $legacyName,
+                        'rate' => $legacyRate,
+                    ];
+                    $totalRate = $legacyRate;
+                    $taxNames[] = $legacyName;
+                }
+            }
+
+            $data['ticket_taxes'] = $data['tax_enabled'] ? $cleanTaxes : null;
+            $data['tax_rate']     = $data['tax_enabled'] ? $totalRate : 0;
+            $data['tax_name']     = $data['tax_enabled'] ? (!empty($taxNames) ? implode(' + ', $taxNames) : 'Pajak Tiket') : null;
 
             // Pengaturan Tiket OTS (On-The-Spot)
             $data['ots_enabled'] = $request->boolean('ots_enabled');
             $data['ots_price']   = $request->filled('ots_price') ? (float) $request->input('ots_price') : null;
             $data['ots_quota']   = $request->filled('ots_quota') ? (int) $request->input('ots_quota') : null;
         } else {
-            $data['tax_enabled'] = false;
-            $data['tax_name']    = null;
-            $data['tax_rate']    = 0;
-            $data['ots_enabled'] = false;
-            $data['ots_price']   = null;
-            $data['ots_quota']   = null;
+            $data['tax_enabled']  = false;
+            $data['tax_name']     = null;
+            $data['tax_rate']     = 0;
+            $data['ticket_taxes'] = null;
+            $data['ots_enabled']  = false;
+            $data['ots_price']    = null;
+            $data['ots_quota']    = null;
         }
 
         $product->update($data);

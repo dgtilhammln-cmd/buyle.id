@@ -26,7 +26,7 @@ class Product extends Model
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields
         'event_date', 'event_end_date', 'event_time', 'event_location', 'event_type', 'event_sub_type', 'custom_fields', 'event_platform',
-        'tax_name', 'tax_rate', 'tax_enabled',
+        'tax_name', 'tax_rate', 'tax_enabled', 'ticket_taxes',
         'ots_enabled', 'ots_price', 'ots_quota',
         'terms_conditions', 'instagram_username', 'tiktok_username',
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
@@ -72,6 +72,7 @@ class Product extends Model
         'ticket_war_start' => 'datetime',
         'max_tickets_per_order' => 'integer',
         'custom_fields'        => 'array',
+        'ticket_taxes'         => 'array',
         'tax_rate'             => 'decimal:2',
         'tax_enabled'          => 'boolean',
         'ots_enabled'          => 'boolean',
@@ -856,14 +857,62 @@ class Product extends Model
         return (int) ($this->stock ?? 0);
     }
 
+    public function getTicketTaxesListAttribute(): array
+    {
+        if (!$this->tax_enabled) {
+            return [];
+        }
+
+        if (!empty($this->ticket_taxes) && is_array($this->ticket_taxes)) {
+            $list = [];
+            foreach ($this->ticket_taxes as $item) {
+                if (is_array($item) && !empty($item['name']) && isset($item['rate'])) {
+                    $rate = (float)$item['rate'];
+                    if ($rate >= 0) {
+                        $list[] = [
+                            'name' => trim((string)$item['name']),
+                            'rate' => $rate,
+                        ];
+                    }
+                }
+            }
+            if (!empty($list)) {
+                return $list;
+            }
+        }
+
+        // Backward compatibility fallback ke tax_rate & tax_name
+        if (!empty($this->tax_rate) && (float)$this->tax_rate > 0) {
+            return [
+                [
+                    'name' => $this->tax_name ?: 'Pajak Daerah / Hiburan',
+                    'rate' => (float)$this->tax_rate,
+                ]
+            ];
+        }
+
+        return [];
+    }
+
     public function getTicketTaxRateAttribute(): float
     {
-        if (!empty($this->attributes['tax_enabled']) && isset($this->attributes['tax_rate'])) {
+        if (!$this->tax_enabled) {
+            return 0.0;
+        }
+
+        $list = $this->ticket_taxes_list;
+        if (!empty($list)) {
+            $sum = 0.0;
+            foreach ($list as $t) {
+                $sum += (float)($t['rate'] ?? 0);
+            }
+            return (float)$sum;
+        }
+
+        if (isset($this->attributes['tax_rate'])) {
             return (float) $this->attributes['tax_rate'];
         }
-        if (!empty($this->custom_fields['tax']['enabled']) && isset($this->custom_fields['tax']['rate'])) {
-            return (float) $this->custom_fields['tax']['rate'];
-        }
+
         return 0.0;
     }
 
@@ -872,12 +921,19 @@ class Product extends Model
      */
     public function getTicketTaxNameAttribute(): string
     {
-        if (!empty($this->attributes['tax_enabled']) && !empty($this->attributes['tax_name'])) {
+        $list = $this->ticket_taxes_list;
+        if (!empty($list)) {
+            $names = [];
+            foreach ($list as $t) {
+                $names[] = $t['name'] . ' (' . ($t['rate'] + 0) . '%)';
+            }
+            return implode(' + ', $names);
+        }
+
+        if (!empty($this->attributes['tax_name'])) {
             return $this->attributes['tax_name'];
         }
-        if (!empty($this->custom_fields['tax']['enabled']) && !empty($this->custom_fields['tax']['name'])) {
-            return $this->custom_fields['tax']['name'];
-        }
+
         return 'Pajak Daerah / Hiburan';
     }
 

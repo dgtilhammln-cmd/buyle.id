@@ -1549,6 +1549,7 @@ class TicketScannerController extends Controller
                     'is_ots'          => true,
                     'tax_name'        => $product->ticket_tax_name,
                     'tax_total'       => $taxTotal,
+                    'ticket_taxes'    => $product->ticket_taxes_list,
                     'fulfillment'     => $request->fulfillment_type,
                 ],
             ]);
