@@ -255,6 +255,66 @@ Kreator **hanya dapat mengatur** jadwal war tiket (waktu mulai) di menu Produk:
 
 ---
 
+## 🎟️ 4. Arsitektur & Manajemen Tiket OTS (On-The-Spot / Gate Cashier POS)
+
+Fitur ini melengkapi penjualan tiket online presale/war tiket dengan menyediakan modul **penjualan langsung di venue (walk-in)** pada hari pelaksanaan event.
+
+### A. Alur Kerja Sistem OTS (End-to-End Workflow)
+
+```
+[Pengunjung Datang di Loket Venue]
+               │
+               ▼
+   [Meja Kasir / Crew Loket OTS]
+ (Menggunakan Tablet / HP / POS Buyle)
+               │
+               ├─► Pilih Kategori Tiket & Qty (1-Klik Cepat)
+               ├─► Input Minimal: Nama Lengkap & No. WhatsApp
+               │
+               ▼
+       [Metode Pembayaran]
+        ├── Tunai (Cash) ──► Kasir hitung kembalian & konfirmasi lunas
+        └── QRIS Dinamis ──► Tampil di tablet, di-scan pengunjung
+               │
+               ▼
+    [Penerbitan & Masuk Venue]
+    ├── Model A: "Auto Check-In" ──► Langsung pasang gelang fisik (Bypass antrean)
+    ├── Model B: Cetak Thermal  ──► Printer Bluetooth print struk QR ke Gate
+    └── Model C: WA E-Ticket    ──► Notifikasi tiket QR instan via WhatsApp
+```
+
+### B. Alokasi Kuota & Diferensiasi Harga OTS
+1. **Model Kuota OTS**:
+   - **Dedicated Quota**: EO mengalokasikan kuota khusus yang hanya bisa dijual via loket kasir OTS.
+   - **Dynamic Spillover Quota**: Tiket online yang belum laku hingga gate dibuka otomatis dialihkan menjadi kuota OTS tanpa perlu input manual.
+2. **Penetapan Harga Khusus Lapangan**:
+   - Umumnya tiket OTS memiliki harga lebih tinggi 10% – 30% dibanding harga presale online (misal: Online Rp 100.000 -> OTS Rp 130.000).
+
+### C. Antarmuka Kasir Cepat (Fast-Checkout UI)
+- Karena antrean fisik di lokasi sering padat, antarmuka kasir OTS dirancang **tanpa formulir panjang**:
+  - Cukup memilih kategori tiket dan jumlah.
+  - Form hanya meminta **Nama Lengkap** dan **No. WhatsApp** (tidak meminta alamat pengiriman, NIK, atau survei).
+  - Waktu transaksi ditargetkan selesai dalam **< 10 detik per pembeli**.
+
+### D. Model Fulfillment Tiket di Lapangan
+1. **Model Auto Check-In (Fast Pass Gelang Langsung)**:
+   - Karena pengunjung sudah berdiri tepat di depan pintu masuk, saat pembayaran terkonfirmasi lunas, sistem secara otomatis menandai tiket tersebut sebagai `status = 'used'` (`used_at = now()`, `checked_in_by = cashier_user_id`).
+   - Kasir langsung mengalungkan/memasangkan gelang tiket fisik, dan pengunjung langsung masuk tanpa perlu antre di gate scanner lagi.
+2. **Model Cetak Thermal (Struk / Gelang Barcode)**:
+   - Terhubung via Web Bluetooth ke printer kasir thermal portable (58mm/80mm).
+   - Menghasilkan struk QR fisik sekali pakai untuk dipindai di pintu gerbang oleh petugas Gate Scanner.
+3. **Model E-Ticket WhatsApp**:
+   - Sistem menembak QR code dan link e-ticket langsung ke nomor WhatsApp pembeli detik itu juga.
+
+### E. Rekonsiliasi Kasir & Shift Keuangan (Shift Report)
+- Setiap sesi pergantian kasir/penutupan event menyediakan laporan audit:
+  - Total lembar tiket terjual per kategori.
+  - Total uang masuk via QRIS (masuk gateway).
+  - Total uang fisik (*cash on hand*) yang wajib disetor ke bendahara panitia.
+  - Data penjualan otomatis teragregasi ke **Total Penjualan (Omzet)** di dashboard event attendance.
+
+---
+
 ## 📋 5. Alur Validasi Gate Check-in & Identitas Pengunjung
 
 1. **Data Peserta**:
