@@ -654,22 +654,22 @@ class SellerProductController extends Controller
                     $keptIds[] = $valModel->id;
                 }
             } else {
-                // Cek apakah ada existing value dengan SKU atau nama yang sama (cegah duplicate)
+                // Lookup global (bukan scoped) karena unique constraint SKU itu table-wide
                 $existingBySkuOrName = null;
                 if ($valSku) {
-                    $existingBySkuOrName = $option->values()->where('sku', $valSku)->first();
+                    $existingBySkuOrName = \App\Models\ProductVariantValue::where('sku', $valSku)->first();
                 }
                 if (!$existingBySkuOrName) {
                     $existingBySkuOrName = $option->values()->where('value', $valName)->first();
                 }
 
                 if ($existingBySkuOrName) {
-                    // Update existing record daripada INSERT duplikat
                     $updatePayload = [
-                        'value' => $valName,
-                        'price' => $valPrice,
-                        'stock' => $valStock,
-                        'sku'   => $valSku,
+                        'value'              => $valName,
+                        'price'              => $valPrice,
+                        'stock'              => $valStock,
+                        'sku'                => $valSku,
+                        'variant_option_id'  => $option->id,
                     ];
                     if ($imagePath !== null) {
                         $updatePayload['image'] = $imagePath;
@@ -677,14 +677,26 @@ class SellerProductController extends Controller
                     $existingBySkuOrName->update($updatePayload);
                     $keptIds[] = $existingBySkuOrName->id;
                 } else {
-                    $newVal = $option->values()->create([
-                        'value' => $valName,
-                        'price' => $valPrice,
-                        'stock' => $valStock,
-                        'sku'   => $valSku,
-                        'image' => $imagePath,
-                    ]);
-                    $keptIds[] = $newVal->id;
+                    try {
+                        $newVal = $option->values()->create([
+                            'value' => $valName,
+                            'price' => $valPrice,
+                            'stock' => $valStock,
+                            'sku'   => $valSku,
+                            'image' => $imagePath,
+                        ]);
+                        $keptIds[] = $newVal->id;
+                    } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                        // Race condition fallback: SKU sudah ada, update saja
+                        $fallback = \App\Models\ProductVariantValue::where('sku', $valSku)->first();
+                        if ($fallback) {
+                            $fallback->update([
+                                'value' => $valName, 'price' => $valPrice,
+                                'stock' => $valStock, 'sku'   => $valSku,
+                            ]);
+                            $keptIds[] = $fallback->id;
+                        }
+                    }
                 }
             }
         }
