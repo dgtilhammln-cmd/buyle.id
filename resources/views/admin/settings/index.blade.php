@@ -1470,7 +1470,16 @@ button[style*="background:rgba(37,211,102,.15)"]:hover {
       <div>
         <label class="form-label">Durasi Jeda Iklan Pop-up <span>(Detik Hitung Mundur)</span></label>
         <input type="number" name="adsense_interstitial_delay" class="form-input" value="{{ old('adsense_interstitial_delay', $settings['adsense_interstitial_delay'] ?? '3') }}" placeholder="3" min="1" max="30">
-        <p style="font-size:0.75rem;color:#94A3B8;margin-top:0.35rem;">Jumlah detik penundaan sebelum tombol 'Lanjutkan ke Link' otomatis terbuka.</p>
+        <p style="font-size:0.75rem;color:#94A3B8;margin-top:0.35rem;">Jumlah detik penundaan sebelum otomatis mengarahkan ke link tujuan.</p>
+      </div>
+
+      <div>
+        <label class="form-label">Tombol Skip / Lanjutkan ke Link</label>
+        <select name="adsense_show_continue_button" class="form-input">
+          <option value="1" {{ (old('adsense_show_continue_button', $settings['adsense_show_continue_button'] ?? '1')) == '1' || (old('adsense_show_continue_button', $settings['adsense_show_continue_button'] ?? '1')) === 'enabled' ? 'selected' : '' }}>Tampilkan Tombol (User bisa klik Lanjutkan)</option>
+          <option value="0" {{ (old('adsense_show_continue_button', $settings['adsense_show_continue_button'] ?? '1')) == '0' || (old('adsense_show_continue_button', $settings['adsense_show_continue_button'] ?? '1')) === 'disabled' ? 'selected' : '' }}>Sembunyikan Tombol (Wajib tunggu timer selesai)</option>
+        </select>
+        <p style="font-size:0.75rem;color:#94A3B8;margin-top:0.35rem;">Pilih apakah tombol 'Lanjutkan ke Link' ditampilkan atau disembunyikan agar user wajib menunggu.</p>
       </div>
     </div>
 

@@ -11,6 +11,9 @@
     $customImage = \App\Models\Setting::get('adsense_custom_image', '');
     $customUrl = \App\Models\Setting::get('adsense_custom_url', '');
     $interstitialDelay = (int) \App\Models\Setting::get('adsense_interstitial_delay', 3);
+    
+    $showBtnSetting = \App\Models\Setting::get('adsense_show_continue_button', '1');
+    $showContinueBtn = ($showBtnSetting === '1' || $showBtnSetting === 1 || $showBtnSetting === 'enabled' || $showBtnSetting === true);
 @endphp
 
 @if($adsenseEnabled)
@@ -62,10 +65,12 @@
             </p>
 
             {{-- Button Header Style ("Daftar" Button Style) --}}
+            @if($showContinueBtn)
             <a href="#" id="adsenseContinueBtn" style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; width:100%; padding:0.65rem 1.5rem; background:linear-gradient(135deg, #1eb349, #a5cf37); color:#ffffff; font-family:'Montserrat', sans-serif; font-weight:700; font-size:0.85rem; border-radius:999px; text-decoration:none; transition:transform 0.2s, box-shadow 0.2s; box-shadow:0 4px 14px rgba(30,179,73,0.35); border:none; cursor:pointer;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(30,179,73,0.45)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 14px rgba(30,179,73,0.35)'">
                 <span>Lanjutkan ke Link</span>
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
+            @endif
         </div>
     </div>
 
