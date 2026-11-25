@@ -654,14 +654,38 @@ class SellerProductController extends Controller
                     $keptIds[] = $valModel->id;
                 }
             } else {
-                $newVal = $option->values()->create([
-                    'value' => $valName,
-                    'price' => $valPrice,
-                    'stock' => $valStock,
-                    'sku'   => $valSku,
-                    'image' => $imagePath,
-                ]);
-                $keptIds[] = $newVal->id;
+                // Cek apakah ada existing value dengan SKU atau nama yang sama (cegah duplicate)
+                $existingBySkuOrName = null;
+                if ($valSku) {
+                    $existingBySkuOrName = $option->values()->where('sku', $valSku)->first();
+                }
+                if (!$existingBySkuOrName) {
+                    $existingBySkuOrName = $option->values()->where('value', $valName)->first();
+                }
+
+                if ($existingBySkuOrName) {
+                    // Update existing record daripada INSERT duplikat
+                    $updatePayload = [
+                        'value' => $valName,
+                        'price' => $valPrice,
+                        'stock' => $valStock,
+                        'sku'   => $valSku,
+                    ];
+                    if ($imagePath !== null) {
+                        $updatePayload['image'] = $imagePath;
+                    }
+                    $existingBySkuOrName->update($updatePayload);
+                    $keptIds[] = $existingBySkuOrName->id;
+                } else {
+                    $newVal = $option->values()->create([
+                        'value' => $valName,
+                        'price' => $valPrice,
+                        'stock' => $valStock,
+                        'sku'   => $valSku,
+                        'image' => $imagePath,
+                    ]);
+                    $keptIds[] = $newVal->id;
+                }
             }
         }
 
