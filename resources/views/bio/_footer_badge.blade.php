@@ -40,13 +40,13 @@
 @endphp
 
 @if($hasMediaPartnerBadge)
-{{-- Official Media Partner Badge Container --}}
-<div class="media-partner-footer-badge" style="text-align:center; margin-top:2.5rem; margin-bottom:1rem; padding:0 1rem; position:relative; z-index:10;">
-    <div style="font-size:9.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:0.45rem; font-family:'Montserrat', sans-serif;">
+{{-- Official Media Partner Banner/Badge Container (Full Responsive) --}}
+<div class="media-partner-footer-badge" style="text-align:center; margin-top:2rem; margin-bottom:1.25rem; width:100%; box-sizing:border-box; position:relative; z-index:10;">
+    <div style="font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:0.5rem; font-family:'Montserrat', sans-serif;">
         Official Media Partner
     </div>
-    <a href="{{ $mediaPartnerUrl }}" target="_blank" rel="noopener" style="display:inline-block; text-decoration:none; transition:transform 0.2s, opacity 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='0.9'" onmouseout="this.style.transform='none';this.style.opacity='1'" title="{{ $mediaPartner->name }}">
-        <img src="{{ asset('storage/' . $mediaPartner->badge_image) }}" alt="{{ $mediaPartner->name }}" style="max-height:38px; max-width:180px; width:auto; height:auto; object-fit:contain; border-radius:6px; display:inline-block; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.15));">
+    <a href="{{ $mediaPartnerUrl }}" target="_blank" rel="noopener" style="display:block; width:100%; text-decoration:none; transition:transform 0.2s, opacity 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='0.95'" onmouseout="this.style.transform='none';this.style.opacity='1'" title="{{ $mediaPartner->name }}">
+        <img src="{{ asset('storage/' . $mediaPartner->badge_image) }}" alt="{{ $mediaPartner->name }}" style="width:100%; max-width:100%; height:auto; display:block; margin:0 auto; border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,0.15); object-fit:cover;">
     </a>
 </div>
 @endif
