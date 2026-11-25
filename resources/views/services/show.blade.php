@@ -3215,11 +3215,11 @@
                                         <button type="button" class="bvm-lightbox-close" onclick="closeBvmLightbox()"
                                             aria-label="Tutup Preview">&times;</button>
                                         <div class="bvm-lightbox-header">
-                                            <span class="bvm-lightbox-tag">PREVIEW DENAH / EVENT</span>
-                                            <span class="bvm-lightbox-sub">Klik di luar gambar atau tekan Esc untuk menutup</span>
+                                            <span class="bvm-lightbox-tag">PREVIEW GAMBAR</span>
+                                            <span class="bvm-lightbox-sub">Tap di luar atau tekan Esc untuk menutup</span>
                                         </div>
                                         <div class="bvm-lightbox-body">
-                                            <img id="bvmLightboxImage" src="" alt="Denah / Event Preview" class="bvm-lightbox-img">
+                                            <img id="bvmLightboxImage" src="" alt="Preview Gambar" class="bvm-lightbox-img">
                                         </div>
                                     </div>
                                 </div>
