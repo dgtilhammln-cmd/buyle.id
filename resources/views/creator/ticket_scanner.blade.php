@@ -148,6 +148,85 @@
             max-width: 100%;
         }
 
+        /* ── Home Hero Desktop Row (Side-by-side Calendar + Event Card) ── */
+        .home-hero-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+            align-items: stretch;
+        }
+
+        @media (min-width: 992px) {
+            .home-hero-row {
+                grid-template-columns: 365px 1fr;
+            }
+        }
+
+        .home-calendar-month-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 22px;
+            padding: 1.15rem 1.25rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .home-calendar-month-card .cal-day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s ease;
+            user-select: none;
+            color: #1e293b;
+            padding: 2px;
+        }
+
+        .home-calendar-month-card .cal-day-cell:hover:not(.is-other-month) {
+            background: #f1f5f9;
+        }
+
+        .home-calendar-month-card .cal-day-cell.is-today {
+            background: #1eb349 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            box-shadow: 0 3px 10px rgba(30, 179, 73, 0.35);
+        }
+
+        .home-calendar-month-card .cal-day-cell.is-event {
+            background: #f0fdf4;
+            border: 1.5px solid #86efac;
+            color: #15803d;
+            font-weight: 700;
+        }
+
+        .home-calendar-month-card .cal-day-cell.is-other-month {
+            color: #cbd5e1;
+            cursor: default;
+        }
+
+        .home-calendar-month-card .cal-event-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #16a34a;
+            position: absolute;
+            bottom: 3px;
+        }
+
+        .home-calendar-month-card .cal-day-cell.is-today .cal-event-dot {
+            background: #ffffff;
+        }
+
         /* ── TAB BUTTONS (Dynamic Collapsible Sidebar) ── */
         .tab-btn {
             width: 100%;
@@ -3224,10 +3303,9 @@
                         onclick="switchTab('tab-data', this)" title="Data Pengunjung">
                         <span class="tab-icon-wrap">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                                <rect x="9" y="3" width="6" height="4" rx="1" />
+                                <path d="m9 14 2 2 4-4" />
                             </svg>
                         </span>
                         <span class="tab-text-full">Data Pengunjung</span>
@@ -3249,10 +3327,10 @@
                         onclick="switchTab('tab-gate', this)" title="Akses Gate Crew">
                         <span class="tab-icon-wrap">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <line x1="19" y1="8" x2="19" y2="14" />
-                                <line x1="22" y1="11" x2="16" y2="11" />
+                                <path d="M10 2h4a1 1 0 0 1 1 1v2H9V3a1 1 0 0 1 1-1z" />
+                                <rect x="4" y="5" width="16" height="15" rx="3" />
+                                <circle cx="12" cy="11" r="2.5" />
+                                <path d="M8 16h8" />
                             </svg>
                         </span>
                         <span class="tab-text-full">Akses Gate Crew</span>
@@ -3273,8 +3351,8 @@
                     <a href="{{ route('creator.ticket.profile') }}" class="tab-btn" title="Menu & Profil">
                         <span class="tab-icon-wrap">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                             </svg>
                         </span>
                         <span class="tab-text-full">Menu & Profil</span>
@@ -3557,70 +3635,79 @@
                 </div>
                 @endif
 
-                {{-- 4. Interactive Horizontal Calendar Strip (August 2025 style from Image 2) --}}
-                <div
-                    style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px; padding:1.15rem 1.25rem; margin-bottom:1.25rem; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
-                        <h5 id="homeCalendarMonthLabel"
-                            style="margin:0; font-size:0.95rem; font-weight:700; color:#0f172a; font-family:'Montserrat',sans-serif;">
-                            {{ now()->translatedFormat('F Y') }}
-                        </h5>
-                        <div style="display:flex; align-items:center; gap:0.35rem;">
-                            <button type="button" onclick="shiftHomeCalendar(-7)"
-                                style="width:28px; height:28px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;"
-                                title="Minggu Sebelumnya">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <polyline points="15 18 9 12 15 6" />
-                                </svg>
-                            </button>
-                            <button type="button" onclick="shiftHomeCalendar(7)"
-                                style="width:28px; height:28px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;"
-                                title="Minggu Selanjutnya">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <polyline points="9 18 15 12 9 6" />
-                                </svg>
-                            </button>
+                {{-- 4 & 5. Side-by-Side Hero Section on Desktop: Full 1-Month Calendar & Event Poster --}}
+                <div class="home-hero-row">
+                    {{-- 4. Interactive Full 1-Month Calendar Card (Compact, Proportional, Matching Event Card) --}}
+                    <div class="home-calendar-month-card">
+                        <div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+                                <div>
+                                    <div style="font-size:0.72rem; font-weight:700; color:#16a34a; text-transform:uppercase; letter-spacing:0.04em; display:flex; align-items:center; gap:0.35rem;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                                            <line x1="16" y1="2" x2="16" y2="6" />
+                                            <line x1="8" y1="2" x2="8" y2="6" />
+                                            <line x1="3" y1="10" x2="21" y2="10" />
+                                        </svg>
+                                        <span>Kalender Event</span>
+                                    </div>
+                                    <h5 id="homeCalendarMonthLabel"
+                                        style="margin:2px 0 0; font-size:1.02rem; font-weight:700; color:#0f172a; font-family:'Montserrat',sans-serif;">
+                                        {{ now()->translatedFormat('F Y') }}
+                                    </h5>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.3rem;">
+                                    <button type="button" onclick="shiftHomeMonth(-1)"
+                                        style="width:28px; height:28px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;"
+                                        title="Bulan Sebelumnya">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="15 18 9 12 15 6" />
+                                        </svg>
+                                    </button>
+                                    <button type="button" onclick="resetHomeMonthToday()"
+                                        style="padding:0.2rem 0.55rem; border-radius:999px; background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-size:0.7rem; font-weight:700; cursor:pointer;"
+                                        title="Bulan Ini">
+                                        Bulan Ini
+                                    </button>
+                                    <button type="button" onclick="shiftHomeMonth(1)"
+                                        style="width:28px; height:28px; border-radius:50%; background:#f8fafc; border:1px solid #e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b; cursor:pointer;"
+                                        title="Bulan Selanjutnya">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <polyline points="9 18 15 12 9 6" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{-- Weekday Row: Min, Sen, Sel, Rab, Kam, Jum, Sab --}}
+                            <div style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; font-size:0.72rem; font-weight:700; color:#94a3b8; margin-bottom:0.4rem; padding-bottom:0.35rem; border-bottom:1px solid #f1f5f9;">
+                                <span style="color:#ef4444;">Min</span>
+                                <span>Sen</span>
+                                <span>Sel</span>
+                                <span>Rab</span>
+                                <span>Kam</span>
+                                <span>Jum</span>
+                                <span>Sab</span>
+                            </div>
+
+                            {{-- 1-Month Days Grid Container --}}
+                            <div id="homeCalendarMonthGrid" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:0.22rem; text-align:center;">
+                                {{-- Populated dynamically by JS --}}
+                            </div>
+                        </div>
+
+                        {{-- Calendar Footer Legend --}}
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:0.75rem; padding-top:0.5rem; border-top:1px dashed #e2e8f0; font-size:0.7rem; color:#64748b;">
+                            <div style="display:flex; align-items:center; gap:0.35rem;">
+                                <span style="width:6px; height:6px; border-radius:50%; background:#16a34a; display:inline-block;"></span>
+                                <span>Ada Jadwal Event</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:0.35rem;">
+                                <span style="width:8px; height:8px; border-radius:3px; background:#1eb349; display:inline-block;"></span>
+                                <span style="font-weight:600; color:#14532d;">Hari Ini</span>
+                            </div>
                         </div>
                     </div>
-
-                    {{-- Weekday Strip (S M T W T F S) with Rounded Highlight Pill --}}
-                    <div id="homeCalendarStrip"
-                        style="display:grid; grid-template-columns:repeat(7, 1fr); text-align:center; gap:0.25rem;">
-                        @php
-                            $startOfWeek = now()->startOfWeek(\Carbon\Carbon::SUNDAY);
-                            $todayDateStr = now()->format('Y-m-d');
-                            $allEventDatesSet = isset($eventDates) ? array_flip($eventDates) : [];
-                        @endphp
-                        @for($i = 0; $i < 7; $i++)
-                            @php
-                                $curDay = $startOfWeek->copy()->addDays($i);
-                                $curDateStr = $curDay->format('Y-m-d');
-                                $isToday = $curDateStr === $todayDateStr;
-                                $isEventDay = isset($allEventDatesSet[$curDateStr]);
-                            @endphp
-                            <div
-                                style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; {{ $isToday ? 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);' : ($isEventDay ? 'background:#f0fdf4;' : 'color:#64748b;') }} font-family:'Montserrat',sans-serif;">
-                                <span
-                                    style="font-size:0.75rem; font-weight:700; text-transform:uppercase; {{ $isToday ? 'color:#15803d;' : ($isEventDay ? 'color:#15803d;' : 'color:#64748b;') }}">
-                                    {{ substr($curDay->translatedFormat('l'), 0, 1) }}
-                                </span>
-                                <span
-                                    style="font-size:0.9rem; font-weight:{{ ($isToday || $isEventDay) ? '700' : '600' }}; {{ $isToday ? 'color:#14532d;' : ($isEventDay ? 'color:#15803d;' : 'color:#0f172a;') }}">
-                                    {{ $curDay->format('d') }}
-                                </span>
-                                @if($isEventDay || $isToday)
-                                    <span
-                                        style="width:5px; height:5px; background:{{ $isEventDay ? '#16a34a' : '#15803d' }}; border-radius:50%; display:block;"
-                                        title="{{ $isEventDay ? 'Ada Event' : 'Hari Ini' }}"></span>
-                                @else
-                                    <span style="width:5px; height:5px; opacity:0; display:block;"></span>
-                                @endif
-                            </div>
-                        @endfor
-                    </div>
-                </div>
 
                 {{-- 5. Landscape Event Poster & Countdown Section (Requested by User) --}}
                 <div class="home-poster-card"
@@ -3809,6 +3896,7 @@
                         @endif
                     </div>
                 </div>
+                </div> {{-- Close .home-hero-row (Side-by-side Calendar & Event Card) --}}
 
                 @else
                 {{-- Card: Belum KYC - Jelajahi Semua Event Tersedia + Apply Volunteer --}}
@@ -4798,9 +4886,10 @@
             <button type="button" class="scanner-nav-item {{ $activeTab === 'gate' ? 'active' : '' }}" id="scanNavGate"
                 onclick="switchTab('tab-gate', this); updateBottomNav('gate')" title="Akses Gate Panitia">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14" />
-                    <path d="M2 20h20" />
-                    <circle cx="14" cy="12" r="1" fill="currentColor" />
+                    <path d="M10 2h4a1 1 0 0 1 1 1v2H9V3a1 1 0 0 1 1-1z" />
+                    <rect x="4" y="5" width="16" height="15" rx="3" />
+                    <circle cx="12" cy="11" r="2.5" />
+                    <path d="M8 16h8" />
                 </svg>
             </button>
             @endif
@@ -4809,8 +4898,8 @@
             <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item" id="scanNavProfile"
                 title="Menu & Profil">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                 </svg>
             </a>
         </div>
@@ -5198,74 +5287,86 @@
             }
         }
 
-        // ── Home Calendar Week Strip Navigation ──
-        let currentCalendarShift = 0;
-        const monthNamesIndo = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        // ── Full 1-Month Calendar Engine (Side-by-side with Event Card) ──
+        let calCurrentYear = new Date().getFullYear();
+        let calCurrentMonth = new Date().getMonth();
+        const calMonthNamesIndo = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         // Set tanggal event dari PHP (semua event creator)
         const calEventDates = new Set({!! json_encode($eventDates ?? []) !!});
 
-        function shiftHomeCalendar(days) {
-            currentCalendarShift += days;
-            const strip = document.getElementById('homeCalendarStrip');
-            if (!strip) return;
-            const baseDate = new Date();
-            baseDate.setDate(baseDate.getDate() + currentCalendarShift);
-            const dayOfWeek = baseDate.getDay();
-            const startOfWeek = new Date(baseDate);
-            startOfWeek.setDate(baseDate.getDate() - dayOfWeek);
+        function renderMonthlyCalendar(year, month) {
+            const grid = document.getElementById('homeCalendarMonthGrid');
+            const label = document.getElementById('homeCalendarMonthLabel');
+            if (!grid) return;
 
-            const monthLabel = document.getElementById('homeCalendarMonthLabel');
-            if (monthLabel) {
-                monthLabel.textContent = monthNamesIndo[baseDate.getMonth()] + ' ' + baseDate.getFullYear();
+            if (label) {
+                label.textContent = `${calMonthNamesIndo[month]} ${year}`;
             }
 
-            const dayNames = ['M', 'S', 'S', 'R', 'K', 'J', 'S'];
-            let html = '';
+            const firstDayIndex = new Date(year, month, 1).getDay(); // 0 is Sunday
+            const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate();
+
             const today = new Date();
-            for (let i = 0; i < 7; i++) {
-                const cur = new Date(startOfWeek);
-                cur.setDate(startOfWeek.getDate() + i);
-                const isToday = cur.toDateString() === today.toDateString();
-                // Format YYYY-MM-DD
-                const yy = cur.getFullYear();
-                const mm = String(cur.getMonth() + 1).padStart(2, '0');
-                const dd = String(cur.getDate()).padStart(2, '0');
-                const dateStr = `${yy}-${mm}-${dd}`;
-                const isEventDay = calEventDates.has(dateStr);
-                const dStr = String(cur.getDate()).padStart(2, '0');
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-                let wrapStyle = `display:flex; flex-direction:column; align-items:center; gap:0.4rem; padding:0.45rem 0.15rem; border-radius:18px; font-family:'Montserrat',sans-serif;`;
-                let dayNameColor = '#64748b';
-                let dateColor = '#0f172a';
-                let dateFontWeight = '600';
+            let cells = '';
 
-                if (isToday) {
-                    wrapStyle += 'background:#cbf3cb; color:#14532d; font-weight:700; box-shadow:0 3px 10px rgba(34,197,94,0.25);';
-                    dayNameColor = '#15803d';
-                    dateColor = '#14532d';
-                    dateFontWeight = '700';
-                } else if (isEventDay) {
-                    wrapStyle += 'background:#f0fdf4;';
-                    dayNameColor = '#15803d';
-                    dateColor = '#15803d';
-                    dateFontWeight = '700';
-                } else {
-                    wrapStyle += 'color:#64748b;';
-                }
-
-                const dotVisible = (isToday || isEventDay);
-                const dotColor = isEventDay ? '#16a34a' : '#15803d';
-                const dotTitle = isEventDay ? 'Ada Event' : 'Hari Ini';
-
-                html += `
-                            <div style="${wrapStyle}">
-                                <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:${dayNameColor};">${dayNames[i]}</span>
-                                <span style="font-size:0.9rem; font-weight:${dateFontWeight}; color:${dateColor};">${dStr}</span>
-                                <span style="width:5px; height:5px; background:${dotColor}; border-radius:50%; display:block; ${dotVisible ? '' : 'opacity:0;'}" title="${dotTitle}"></span>
-                            </div>
-                        `;
+            // 1. Previous month trailing days
+            for (let i = firstDayIndex - 1; i >= 0; i--) {
+                const dayNum = prevMonthDays - i;
+                cells += `<div class="cal-day-cell is-other-month">${dayNum}</div>`;
             }
-            strip.innerHTML = html;
+
+            // 2. Current month days
+            for (let day = 1; day <= totalDaysInMonth; day++) {
+                const mStr = String(month + 1).padStart(2, '0');
+                const dStr = String(day).padStart(2, '0');
+                const dateKey = `${year}-${mStr}-${dStr}`;
+
+                const isToday = (dateKey === todayStr);
+                const hasEvent = calEventDates.has(dateKey);
+
+                let cellClass = 'cal-day-cell';
+                if (isToday) cellClass += ' is-today';
+                else if (hasEvent) cellClass += ' is-event';
+
+                const dot = hasEvent ? '<span class="cal-event-dot"></span>' : '';
+                const titleAttr = hasEvent ? 'Ada Jadwal Event' : (isToday ? 'Hari Ini' : '');
+
+                cells += `<div class="${cellClass}" title="${titleAttr}" data-date="${dateKey}">
+                    <span>${day}</span>
+                    ${dot}
+                </div>`;
+            }
+
+            // 3. Next month leading days to complete row of 7
+            const totalFilled = firstDayIndex + totalDaysInMonth;
+            const remaining = (7 - (totalFilled % 7)) % 7;
+            for (let j = 1; j <= remaining; j++) {
+                cells += `<div class="cal-day-cell is-other-month">${j}</div>`;
+            }
+
+            grid.innerHTML = cells;
+        }
+
+        function shiftHomeMonth(delta) {
+            calCurrentMonth += delta;
+            if (calCurrentMonth < 0) {
+                calCurrentMonth = 11;
+                calCurrentYear--;
+            } else if (calCurrentMonth > 11) {
+                calCurrentMonth = 0;
+                calCurrentYear++;
+            }
+            renderMonthlyCalendar(calCurrentYear, calCurrentMonth);
+        }
+
+        function resetHomeMonthToday() {
+            const now = new Date();
+            calCurrentYear = now.getFullYear();
+            calCurrentMonth = now.getMonth();
+            renderMonthlyCalendar(calCurrentYear, calCurrentMonth);
         }
 
         // ── Helper Gate Link & Modal ──
@@ -5694,11 +5795,6 @@
             } catch (e) {
                 console.error('Error load all staff:', e);
             }
-                    container.innerHTML = html;
-                }
-            } catch (e) {
-                console.error('Error load all staff:', e);
-            }
         }
 
         async function toggleStaffSimple(productId, staffId, btn) {
@@ -6122,6 +6218,9 @@
 
             // Aktifkan Original Html5QrcodeScanner (Resmi & Terbukti Stabil di Desktop & HP)
             startOriginalScanner();
+
+            // Inisialisasi Full 1-Month Calendar
+            renderMonthlyCalendar(calCurrentYear, calCurrentMonth);
 
             // Load data staff untuk semua event
             loadAllStaff();
