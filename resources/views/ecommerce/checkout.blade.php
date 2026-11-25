@@ -1764,22 +1764,43 @@
                                 $pfAmt = 0;
                                 $afAmt = 0;
                                 $ticketTaxTotal = 0;
-                                $ticketTaxName = 'Pajak Daerah / Hiburan';
-                                $ticketTaxRate = 0;
+                                $ticketTaxesBreakdown = [];
                                 $hasTicketItem = false;
                                 $hasNonTicketItem = false;
                                 foreach ($summary['items'] as $ci) {
                                     $pt = $ci->product->product_type ?? $ci->product->type ?? '';
+                                    $isTicket = (method_exists($ci->product, 'isTicketProduct') && $ci->product->isTicketProduct()) || $pt === 'ticket';
                                     $sellerProfile = $ci->product->seller?->creatorProfile
                                         ?? \App\Models\CreatorProfile::where('user_id', $ci->product->seller_id)->first();
-                                    if ($pt === 'ticket') {
+                                    if ($isTicket) {
                                         $hasTicketItem = true;
-                                        $tRate = (float) ($ci->product->ticket_tax_rate ?? 0);
-                                        if ($tRate > 0) {
-                                            $itemTax = round(($ci->subtotal * $tRate) / 100);
-                                            $ticketTaxTotal += $itemTax;
-                                            $ticketTaxName = $ci->product->ticket_tax_name ?: 'Pajak Daerah / Hiburan';
-                                            $ticketTaxRate = $tRate;
+                                        if (!empty($ci->product->tax_enabled)) {
+                                            $taxesList = $ci->product->ticket_taxes_list ?? [];
+                                            if (!empty($taxesList) && is_array($taxesList)) {
+                                                foreach ($taxesList as $taxItem) {
+                                                    $rate = (float) ($taxItem['rate'] ?? 0);
+                                                    $name = trim($taxItem['name'] ?? 'Pajak Daerah / Hiburan');
+                                                    if ($rate > 0) {
+                                                        $itemTax = round(($ci->subtotal * $rate) / 100);
+                                                        $ticketTaxTotal += $itemTax;
+                                                        if (!isset($ticketTaxesBreakdown[$name])) {
+                                                            $ticketTaxesBreakdown[$name] = ['rate' => $rate, 'amount' => 0];
+                                                        }
+                                                        $ticketTaxesBreakdown[$name]['amount'] += $itemTax;
+                                                    }
+                                                }
+                                            } else {
+                                                $tRate = (float) ($ci->product->ticket_tax_rate ?? 0);
+                                                if ($tRate > 0) {
+                                                    $itemTax = round(($ci->subtotal * $tRate) / 100);
+                                                    $ticketTaxTotal += $itemTax;
+                                                    $name = $ci->product->ticket_tax_name ?: 'Pajak Daerah / Hiburan';
+                                                    if (!isset($ticketTaxesBreakdown[$name])) {
+                                                        $ticketTaxesBreakdown[$name] = ['rate' => $tRate, 'amount' => 0];
+                                                    }
+                                                    $ticketTaxesBreakdown[$name]['amount'] += $itemTax;
+                                                }
+                                            }
                                         }
                                         if ($sellerProfile && $sellerProfile->has_custom_fee) {
                                             $tFee = $sellerProfile->calculateTicketFees($ci->subtotal, $ci->qty);
@@ -1831,14 +1852,30 @@
                                     {{ number_format($afAmt, 0, ',', '.') }}</span>
                             </div>
 
-                            @if($ticketTaxTotal > 0)
+                            @if(!empty($ticketTaxesBreakdown))
+                                @foreach($ticketTaxesBreakdown as $tName => $tData)
+                                <div class="summary-row ticket-tax-item-row">
+                                    <span style="display:inline-flex;align-items:center;gap:4px;">
+                                        {{ $tName }} ({{ $tData['rate'] }}%)
+                                        <span class="fee-info-wrapper">
+                                            <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
+                                            <div class="fee-popover">
+                                                <span class="fee-popover-title">{{ $tName }}</span>
+                                                Pajak resmi daerah / hiburan sesuai ketentuan peraturan daerah terkait tiket acara ({{ $tData['rate'] }}%).
+                                            </div>
+                                        </span>
+                                    </span>
+                                    <span style="color:#64748B;font-weight:600;">+Rp {{ number_format($tData['amount'], 0, ',', '.') }}</span>
+                                </div>
+                                @endforeach
+                            @elseif($ticketTaxTotal > 0)
                             <div class="summary-row" id="ticket-tax-row">
                                 <span style="display:inline-flex;align-items:center;gap:4px;">
-                                    {{ $ticketTaxName }} ({{ $ticketTaxRate }}%)
+                                    Pajak Tiket
                                     <span class="fee-info-wrapper">
                                         <span class="fee-info-icon" onclick="toggleFeePopover(event, this)">ⓘ</span>
                                         <div class="fee-popover">
-                                            <span class="fee-popover-title">{{ $ticketTaxName }}</span>
+                                            <span class="fee-popover-title">Pajak Tiket</span>
                                             Pajak resmi daerah / hiburan sesuai ketentuan peraturan daerah terkait tiket acara.
                                         </div>
                                     </span>
@@ -3113,7 +3150,7 @@
             function updateTotal() {
                 const shippingCost = selectedCost || 0;
                 const discount = appliedVoucherDiscount || 0;
-                const total = Math.max(0, subtotal + shippingCost - discount);
+                const total = Math.max(0, subtotal + totalFees + shippingCost - discount);
                 document.getElementById('total-row-val').textContent = 'Rp ' + total.toLocaleString('id-ID');
 
                 // Show/update discount row

@@ -677,7 +677,7 @@
         <div class="prof-content">
             <form
                 action="{{ route('creator.products.update', array_merge(['product' => $product->id], request('from') ? ['from' => request('from')] : [])) }}"
-                method="POST" enctype="multipart/form-data" id="productForm">
+                method="POST" enctype="multipart/form-data" id="productForm" novalidate>
                 @csrf
                 @method('PUT')
                 @if(request('from'))
@@ -724,8 +724,6 @@
                                             id="productSlugPreview">
                                             {{ old('slug', $product->slug) }}
                                         </span>
-                                        <span style="color:#94a3b8; font-size:0.7rem;">(Otomatis diperbarui mengikuti judul
-                                            produk)</span>
                                     </div>
                                 </div>
 
@@ -736,7 +734,7 @@
                                         $selectedType = old('product_type', $defaultType);
                                     @endphp
                                     <select name="product_type" id="productTypeSelect" class="form-input"
-                                        onchange="handleProductTypeSelectChange(this)" required>
+                                        onchange="handleProductTypeSelectChange(this)">
                                         <option value="external_link" {{ $selectedType == 'external_link' ? 'selected' : '' }}>Produk Digital / Link Access</option>
                                         <option value="ticket" {{ $selectedType == 'ticket' ? 'selected' : '' }}>Tiket Event /
                                             Webinar</option>
@@ -774,7 +772,7 @@
 
                                 <div id="categoryWrap" class="form-group">
                                     <label class="form-label">Kategori Utama <span>*</span></label>
-                                    <select name="product_category_id" id="catSelect" class="form-input" required
+                                    <select name="product_category_id" id="catSelect" class="form-input"
                                         onchange="loadSubCat(this.value)">
                                         <option value="">— Pilih Kategori —</option>
                                         <optgroup label="--- TIKET & EVENT ---" data-type="event">
@@ -1141,48 +1139,18 @@
 
                                             <div id="ticketTaxBox"
                                                 style="{{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-                                                {{-- Quick Template Pills --}}
-                                                <div
-                                                    style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap; margin-bottom:0.85rem;">
-                                                    <span style="font-size:0.75rem; font-weight:700; color:#475569;">+ Tambah dari Template:</span>
-                                                    <button type="button" class="tax-tpl-btn"
-                                                        onclick="addTaxRow({name: 'Pajak Hiburan / Daerah', rate: 10})"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ Pajak
-                                                        Hiburan 10%</button>
-                                                    <button type="button" class="tax-tpl-btn"
-                                                        onclick="addTaxRow({name: 'Pajak Hiburan / Daerah', rate: 15})"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ Pajak
-                                                        Hiburan 15%</button>
-                                                    <button type="button" class="tax-tpl-btn"
-                                                        onclick="addTaxRow({name: 'Pajak Daerah / PB1', rate: 10})"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ PB1
-                                                        10%</button>
-                                                    <button type="button" class="tax-tpl-btn"
-                                                        onclick="addTaxRow({name: 'PPN', rate: 11})"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ PPN
-                                                        11%</button>
-                                                    <button type="button" class="tax-tpl-btn"
-                                                        onclick="addTaxRow({name: 'Pajak Daerah', rate: 5})"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; transition:all 0.15s;">+ Pajak
-                                                        Daerah 5%</button>
-                                                </div>
-
                                                 {{-- Multi-Tax Rows Container --}}
                                                 <div id="ticketTaxItemsContainer" style="display:flex; flex-direction:column; gap:0.65rem;">
                                                     {{-- Diisi secara dinamis oleh JavaScript --}}
                                                 </div>
 
-                                                {{-- Action & Total Summary Row --}}
-                                                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #BBF7D0;">
+                                                {{-- Action Row --}}
+                                                <div style="display:flex; align-items:center; justify-content:flex-start; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #BBF7D0;">
                                                     <button type="button" onclick="addTaxRow({name: '', rate: 10})"
                                                         style="background:#FFFFFF; border:1.5px dashed #16a34a; color:#16a34a; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:10px; cursor:pointer; font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; transition:all 0.15s;">
                                                         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                                                         <span>Tambah Pajak Lainnya</span>
                                                     </button>
-
-                                                    <div id="ticketTaxTotalSummary" style="font-size:0.82rem; font-weight:700; color:#166534; background:#F0FDF4; padding:0.35rem 0.85rem; border-radius:999px; border:1px solid #BBF7D0;">
-                                                        Total Tarif Pajak: <span id="ticketTaxTotalRateDisplay">0%</span>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1296,68 +1264,32 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Preset Buttons: Menggunakan Clean SVG Icons, no emoji -->
+                                            <!-- Preset Buttons: Compact & Mobile Friendly -->
                                             <div
-                                                style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.5rem 0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; font-family:'Montserrat', sans-serif;">
-                                                <span
-                                                    style="font-size:0.74rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="#eab308"
-                                                        stroke-width="2" viewBox="0 0 24 24">
-                                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                                                    </svg>
-                                                    Template Cepat:
+                                                style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.75rem; padding:0.35rem 0.6rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-family:'Montserrat', sans-serif;">
+                                                <span style="font-size:0.72rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                                    Preset:
                                                 </span>
                                                 <button type="button" onclick="applyCustomFieldPreset('run')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24">
-                                                        <circle cx="13" cy="4" r="2" />
-                                                        <path d="M7 21l3-6 3 2 2 4" />
-                                                        <path d="M5 11l4-2 3 2 3-1 2 3" />
-                                                        <path d="M9 13l2 4" />
-                                                    </svg>
-                                                    Lari / Marathon
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    🏃 Marathon
                                                 </button>
                                                 <button type="button" onclick="applyCustomFieldPreset('seminar')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24">
-                                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                                                        <path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5" />
-                                                    </svg>
-                                                    Seminar / Workshop
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    🎓 Seminar
                                                 </button>
                                                 <button type="button" onclick="applyCustomFieldPreset('sport')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24">
-                                                        <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2" />
-                                                        <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2" />
-                                                        <path d="M4 22h16" />
-                                                        <path
-                                                            d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34" />
-                                                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
-                                                    </svg>
-                                                    Turnamen Olahraga
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    🏆 Olahraga
                                                 </button>
                                                 <button type="button" onclick="applyCustomFieldPreset('concert')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24">
-                                                        <path d="M9 18V5l12-2v13" />
-                                                        <circle cx="6" cy="18" r="3" />
-                                                        <circle cx="18" cy="16" r="3" />
-                                                    </svg>
-                                                    Konser / Festival
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    🎵 Konser
                                                 </button>
                                                 <button type="button" onclick="clearAllCustomFields()"
-                                                    style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24">
-                                                        <polyline points="1 4 1 10 7 10"></polyline>
-                                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-                                                    </svg>
-                                                    Reset Form
+                                                    style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.72rem; font-weight:600; padding:0.2rem 0.5rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    ↺ Reset
                                                 </button>
                                             </div>
 
@@ -2054,17 +1986,30 @@
         const prodForm = document.getElementById('productForm');
         if (prodForm) {
             prodForm.addEventListener('submit', function (e) {
+                // 1. Validasi Nama Produk
+                const nameInput = document.getElementById('productNameInput');
+                if (nameInput && !nameInput.value.trim()) {
+                    e.preventDefault();
+                    document.querySelector('.tab-btn[data-tab="tab-content"]')?.click();
+                    nameInput.focus();
+                    alert('Nama produk wajib diisi!');
+                    return false;
+                }
+
+                // 2. Validasi Thumbnail Utama
                 const thumbInput = document.getElementById('thumb-input');
                 const removeImg = document.getElementById('remove_image_input');
                 const previewWrap = document.getElementById('thumbPreviewWrap');
                 const previewImg = document.getElementById('thumbPreviewImg');
+                const hasDbImg = {{ !empty($product->image) ? 'true' : 'false' }};
                 const hasImgFile = thumbInput && thumbInput.files && thumbInput.files.length > 0;
                 const isRemoved = removeImg && removeImg.value === '1';
-                const hasExistingValidPreview = previewWrap && previewWrap.style.display !== 'none' && previewImg && previewImg.src && !previewImg.src.includes('data:,') && previewImg.src.length > 20 && !isRemoved;
+                const hasExistingValidPreview = (hasDbImg || (previewWrap && previewWrap.style.display !== 'none' && previewImg && previewImg.src && !previewImg.src.includes('data:,') && previewImg.src.length > 20)) && !isRemoved;
 
                 if (!hasImgFile && !hasExistingValidPreview) {
                     e.preventDefault();
                     e.stopPropagation();
+                    document.querySelector('.tab-btn[data-tab="tab-media"]')?.click();
                     const dropzone = document.getElementById('thumbDropzone');
                     if (dropzone) {
                         dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2078,20 +2023,6 @@
                     alert('Semua tipe produk mewajibkan upload foto / thumbnail utama! Silakan pilih foto produk.');
                     return false;
                 }
-            });
-
-            prodForm.querySelectorAll('input, select, textarea').forEach(input => {
-                input.addEventListener('invalid', function () {
-                    const pane = input.closest('.tab-pane');
-                    if (pane && !pane.classList.contains('active')) {
-                        const targetTabId = pane.id;
-                        document.querySelectorAll('.tab-btn').forEach(btn => {
-                            if (btn.getAttribute('data-tab') === targetTabId) {
-                                btn.click();
-                            }
-                        });
-                    }
-                });
             });
         }
 
