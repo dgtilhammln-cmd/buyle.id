@@ -253,6 +253,12 @@ class CheckoutService
             $shippingAddressArray['ticket_id_types'] = $ticketIdTypesInput;
         }
 
+        // Simpan input Extra Data peserta event (divisi lari, jersey, institusi, dll) ke snapshot order
+        $ticketExtraInput = $data['ticket_extra'] ?? request()->input('ticket_extra', []);
+        if (!empty($ticketExtraInput)) {
+            $shippingAddressArray['ticket_extra'] = $ticketExtraInput;
+        }
+
         // Simpan input Nomor Meja jika dipesan dari Link in Bio / QR Meja
         $tableNumberInput = $data['table_number'] ?? ($data['fnb_table_number'] ?? request()->input('table_number', request()->input('fnb_table_number')));
         if (!empty($tableNumberInput)) {
@@ -709,17 +715,21 @@ class CheckoutService
             $ticketHoldersSnapshot = $order->shipping_address['ticket_holders'] ?? [];
             $ticketNiksSnapshot    = $order->shipping_address['ticket_niks'] ?? [];
             $ticketIdTypesSnapshot = $order->shipping_address['ticket_id_types'] ?? [];
+            $ticketExtraSnapshot   = $order->shipping_address['ticket_extra'] ?? [];
 
             foreach ($order->items as $item) {
                 if ($item->product && $item->product->product_type === 'ticket') {
                     $holdersForProduct = $ticketHoldersSnapshot[$item->product_id] ?? [];
                     $niksForProduct    = $ticketNiksSnapshot[$item->product_id] ?? [];
                     $idTypesForProduct = $ticketIdTypesSnapshot[$item->product_id] ?? [];
+                    $extraForProduct   = $ticketExtraSnapshot[$item->product_id] ?? [];
 
                     for ($i = 0; $i < $item->qty; $i++) {
                         $customHolder = !empty($holdersForProduct[$i]) ? trim($holdersForProduct[$i]) : null;
                         $customNik    = !empty($niksForProduct[$i]) ? trim($niksForProduct[$i]) : null;
                         $customIdType = !empty($idTypesForProduct[$i]) ? trim($idTypesForProduct[$i]) : null;
+                        $rawExtra     = $extraForProduct[$i] ?? [];
+                        $cleanExtra   = is_array($rawExtra) ? array_filter($rawExtra, fn($v) => $v !== null && $v !== '') : [];
 
                         $finalNik = $customNik;
                         if ($customNik && $customIdType && !str_starts_with(strtolower($customNik), strtolower($customIdType))) {
@@ -736,6 +746,7 @@ class CheckoutService
                             'holder_email'  => $order->user?->email ?? $order->customer_email,
                             'holder_phone'  => $order->user?->phone ?? ($order->shipping_address['phone'] ?? null),
                             'holder_nik'    => $finalNik,
+                            'extra_data'    => !empty($cleanExtra) ? $cleanExtra : null,
                             'status'        => 'valid',
                         ]);
 

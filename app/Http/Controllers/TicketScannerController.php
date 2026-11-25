@@ -126,6 +126,7 @@ class TicketScannerController extends Controller
                 'toggle_url'    => route('creator.ticket.scanner.toggle-checkin', $t->id),
                 'claim_proof'   => $order?->claim_proof ? (str_starts_with($order->claim_proof, 'http') ? $order->claim_proof : asset('storage/' . $order->claim_proof)) : null,
                 'claim_proofs'  => $order?->claim_proofs_list ?? [],
+                'extra_data'    => $t->extra_data ?? [],
             ];
         });
 
@@ -634,6 +635,7 @@ class TicketScannerController extends Controller
                     : ($ticket->checked_in_by ? 'Creator Studio' : null),
                 'claim_proof'   => $order?->claim_proof ? (str_starts_with($order->claim_proof, 'http') ? $order->claim_proof : asset('storage/' . $order->claim_proof)) : null,
                 'claim_proofs'  => $order?->claim_proofs_list ?? [],
+                'extra_data'    => $ticket->extra_data ?? [],
             ],
         ]);
     }
@@ -648,7 +650,7 @@ class TicketScannerController extends Controller
         $statusFilter = $request->input('status');
         $search = trim($request->input('search', ''));
 
-        $ticketsQuery = TicketPass::with(['product', 'order'])
+        $ticketsQuery = TicketPass::with(['product', 'order', 'orderItem'])
             ->where(function ($q) use ($sellerId) {
                 $q->where('seller_id', $sellerId)
                   ->orWhereHas('product', function ($pq) use ($sellerId) {
@@ -689,20 +691,38 @@ class TicketScannerController extends Controller
             $file = fopen('php://output', 'w');
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-            fputcsv($file, [
+            $extraFieldsMap = [
+                'gender'           => 'Gender',
+                'tgl_lahir'        => 'Tanggal Lahir',
+                'ukuran_jersey'    => 'Ukuran Jersey',
+                'divisi_lari'      => 'Divisi / Kategori Lari',
+                'kontak_darurat'   => 'Kontak Darurat',
+                'institusi'        => 'Institusi / Perusahaan',
+                'jabatan'          => 'Divisi / Jabatan',
+                'nama_tim'         => 'Nama Tim',
+                'posisi'           => 'Posisi / Nomor',
+                'kebutuhan_khusus' => 'Kebutuhan Khusus',
+            ];
+
+            $headerRow = [
                 'No',
                 'Kode Tiket',
                 'Nama Event',
+                'Kategori / Varian',
                 'Nama Pemegang',
                 'Email',
                 'No. HP',
-                'NIK',
+                'NIK / Identitas',
                 'Status Kehadiran',
                 'Waktu Check-In',
                 'Petugas Gate',
                 'No. Gate',
-                'Tanggal Pembelian'
-            ]);
+                'Tanggal Pembelian',
+            ];
+            foreach ($extraFieldsMap as $label) {
+                $headerRow[] = $label;
+            }
+            fputcsv($file, $headerRow);
 
             foreach ($tickets as $index => $ticket) {
                 $statusLabel = match($ticket->status) {
@@ -711,10 +731,14 @@ class TicketScannerController extends Controller
                     default     => 'Belum Hadir',
                 };
 
-                fputcsv($file, [
+                $extra = is_array($ticket->extra_data) ? $ticket->extra_data : [];
+                $variantName = $ticket->orderItem?->variant_name ?? '-';
+
+                $row = [
                     $index + 1,
                     $ticket->ticket_code,
                     $ticket->product?->name ?? 'Event',
+                    $variantName,
                     $ticket->holder_name ?? '-',
                     $ticket->holder_email ?? '-',
                     $ticket->holder_phone ?? '-',
@@ -723,8 +747,13 @@ class TicketScannerController extends Controller
                     $ticket->checked_in_at ? $ticket->checked_in_at->format('Y-m-d H:i:s') : '-',
                     $ticket->scanned_by_staff_name ?? ($ticket->checked_in_by ? 'Creator Studio' : '-'),
                     $ticket->scanned_at_gate ? ('Gate ' . $ticket->scanned_at_gate) : '-',
-                    $ticket->created_at ? $ticket->created_at->format('Y-m-d H:i:s') : '-'
-                ]);
+                    $ticket->created_at ? $ticket->created_at->format('Y-m-d H:i:s') : '-',
+                ];
+                foreach (array_keys($extraFieldsMap) as $eKey) {
+                    $row[] = $extra[$eKey] ?? '-';
+                }
+
+                fputcsv($file, $row);
             }
 
             fclose($file);
@@ -744,7 +773,7 @@ class TicketScannerController extends Controller
         $statusFilter = $request->input('status');
         $search = trim($request->input('search', ''));
 
-        $ticketsQuery = TicketPass::with(['product', 'order'])
+        $ticketsQuery = TicketPass::with(['product', 'order', 'orderItem'])
             ->where(function ($q) use ($sellerId) {
                 $q->where('seller_id', $sellerId)
                   ->orWhereHas('product', function ($pq) use ($sellerId) {

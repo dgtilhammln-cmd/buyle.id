@@ -46,6 +46,7 @@ class StoreProductRequest extends FormRequest
             'event_time'          => ['nullable', 'string', 'max:100'],
             'event_location'      => ['nullable', 'string', 'max:1000'],
             'event_type'          => ['nullable', 'string', 'in:online,offline'],
+            'event_sub_type'      => ['nullable', 'string', 'in:concert,run,seminar,sport,trip,webinar,festival,other'],
             'event_platform'      => ['nullable', 'string', 'max:100'],
             'terms_conditions'    => ['nullable', 'string'],
             'instagram_username'  => ['nullable', 'string', 'max:100'],
@@ -305,11 +306,15 @@ class StoreProductRequest extends FormRequest
         } elseif ($pricingType === 'pay_what_you_want') {
             $merge['price'] = (float)($merge['pwyw_min_price'] ?? 0);
             $merge['sale_price'] = null;
-            $merge['require_follow_join'] = false;
+            if ($this->input('product_type') !== 'ticket') {
+                $merge['require_follow_join'] = false;
+            }
         } elseif ($pricingType === 'traktir') {
             $merge['price'] = (float)($merge['traktir_unit_price'] ?? 10000);
             $merge['sale_price'] = null;
-            $merge['require_follow_join'] = false;
+            if ($this->input('product_type') !== 'ticket') {
+                $merge['require_follow_join'] = false;
+            }
         } else {
             // Fixed
             if ($this->has('price') && $this->input('price') !== null) {

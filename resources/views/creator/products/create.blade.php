@@ -814,6 +814,24 @@
                                             </select>
                                         </div>
 
+                                        <div class="form-group full">
+                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                                <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                                                Kategori / Sub-Tipe Event <span>*</span>
+                                            </label>
+                                            <select name="event_sub_type" id="eventSubTypeSelect" class="form-input" onchange="updateEventSubTypeInfo(this.value)">
+                                                <option value="concert" {{ old('event_sub_type','concert') == 'concert' ? 'selected' : '' }}>🎵 Konser / Festival Musik</option>
+                                                <option value="run" {{ old('event_sub_type') == 'run' ? 'selected' : '' }}>🏃 Lari / Fun Run / Marathon</option>
+                                                <option value="seminar" {{ old('event_sub_type') == 'seminar' ? 'selected' : '' }}>🎓 Seminar / Workshop / Training</option>
+                                                <option value="sport" {{ old('event_sub_type') == 'sport' ? 'selected' : '' }}>⚽ Olahraga / Turnamen</option>
+                                                <option value="trip" {{ old('event_sub_type') == 'trip' ? 'selected' : '' }}>✈️ Wisata / Trip / Travel</option>
+                                                <option value="webinar" {{ old('event_sub_type') == 'webinar' ? 'selected' : '' }}>💻 Webinar / Online Event</option>
+                                                <option value="festival" {{ old('event_sub_type') == 'festival' ? 'selected' : '' }}>🎪 Festival / Expo / Pameran</option>
+                                                <option value="other" {{ old('event_sub_type') == 'other' ? 'selected' : '' }}>🎟️ Lainnya</option>
+                                            </select>
+                                            <span class="form-hint" id="eventSubTypeHint">Menentukan data tambahan yang diminta saat checkout (divisi lari, institusi seminar, dll).</span>
+                                        </div>
+
                                         <div class="form-group full" id="offlineLocationWrap">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
                                                 <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2"
@@ -2310,6 +2328,22 @@
             }
             lastProductType = val;
             toggleProductTypeFields(val);
+            if (typeof checkFreeProductPrice === 'function') checkFreeProductPrice();
+        }
+
+        function updateEventSubTypeInfo(val) {
+            const hints = {
+                'concert': 'Data checkout: Nama + Identitas resmi + Kontak darurat (opsional).',
+                'run': 'Data checkout: Nama + Identitas + Gender + Tgl Lahir + Ukuran Jersey + Divisi Lari + Kontak Darurat.',
+                'seminar': 'Data checkout: Nama + Identitas + Institusi/Perusahaan + Divisi/Jabatan.',
+                'sport': 'Data checkout: Nama + Identitas + Nama Tim + Posisi + Gender.',
+                'trip': 'Data checkout: Nama + Identitas + Gender + Tgl Lahir + Kebutuhan Khusus.',
+                'webinar': 'Data checkout: Nama + Identitas resmi.',
+                'festival': 'Data checkout: Nama + Identitas resmi + Kontak darurat (opsional).',
+                'other': 'Data checkout: Nama + Identitas resmi (default).',
+            };
+            const el = document.getElementById('eventSubTypeHint');
+            if (el) el.textContent = hints[val] || hints['other'];
         }
 
         // ── Video Link Panel Toggle & Preview ──

@@ -22,6 +22,7 @@ class TicketPass extends Model
         'holder_email',
         'holder_phone',
         'holder_nik',
+        'extra_data',
         'status',
         'checked_in_at',
         'checked_in_by',
@@ -31,6 +32,7 @@ class TicketPass extends Model
 
     protected $casts = [
         'holder_nik'    => 'encrypted', // AES-256 via APP_KEY, otomatis encrypt/decrypt
+        'extra_data'    => 'array',
         'checked_in_at' => 'datetime',
     ];
 
@@ -91,6 +93,7 @@ class TicketPass extends Model
         $allHolders = $order->shipping_address['ticket_holders'] ?? [];
         $allNiks    = $order->shipping_address['ticket_niks'] ?? [];
         $allIdTypes = $order->shipping_address['ticket_id_types'] ?? [];
+        $allExtra   = $order->shipping_address['ticket_extra'] ?? [];
 
         foreach ($order->items as $item) {
             if ($item->product && $item->product->product_type === 'ticket') {
@@ -102,12 +105,15 @@ class TicketPass extends Model
                 $holdersForProduct = $allHolders[$item->product_id] ?? [];
                 $niksForProduct    = $allNiks[$item->product_id] ?? [];
                 $idTypesForProduct = $allIdTypes[$item->product_id] ?? [];
+                $extraForProduct   = $allExtra[$item->product_id] ?? [];
 
                 for ($i = 0; $i < $qtyNeeded; $i++) {
                     $slotIndex = $existingCount + $i;
                     $customHolder = !empty($holdersForProduct[$slotIndex]) ? trim($holdersForProduct[$slotIndex]) : null;
                     $customNik    = !empty($niksForProduct[$slotIndex]) ? trim($niksForProduct[$slotIndex]) : null;
                     $customIdType = !empty($idTypesForProduct[$slotIndex]) ? trim($idTypesForProduct[$slotIndex]) : null;
+                    $rawExtra     = $extraForProduct[$slotIndex] ?? [];
+                    $cleanExtra   = is_array($rawExtra) ? array_filter($rawExtra, fn($v) => $v !== null && $v !== '') : [];
 
                     $finalNik = $customNik;
                     if ($customNik && $customIdType && !str_starts_with(strtolower($customNik), strtolower($customIdType))) {
@@ -124,6 +130,7 @@ class TicketPass extends Model
                         'holder_email'  => $order->user?->email,
                         'holder_phone'  => $order->user?->phone,
                         'holder_nik'    => $finalNik,
+                        'extra_data'    => !empty($cleanExtra) ? $cleanExtra : null,
                         'status'        => 'valid',
                     ]);
 

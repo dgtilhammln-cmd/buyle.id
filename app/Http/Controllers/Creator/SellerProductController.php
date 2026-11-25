@@ -205,7 +205,7 @@ class SellerProductController extends Controller
             ? (float) $data['sale_price']
             : (float) ($data['price'] ?? 0);
 
-        if ($data['pricing_type'] === 'free' || $effectivePrice <= 0) {
+        if ($data['pricing_type'] === 'free' || $effectivePrice <= 0 || $data['product_type'] === 'ticket') {
             $data['require_follow_join'] = $request->boolean('require_follow_join');
             $data['require_screenshot_proof'] = $data['require_follow_join'] ? $request->boolean('require_screenshot_proof') : false;
 
@@ -435,7 +435,7 @@ class SellerProductController extends Controller
             ? (float) $data['sale_price']
             : (float) ($data['price'] ?? $product->price);
 
-        if ($data['pricing_type'] === 'free' || $effectivePrice <= 0) {
+        if ($data['pricing_type'] === 'free' || $effectivePrice <= 0 || $data['product_type'] === 'ticket') {
             $data['require_follow_join'] = $request->boolean('require_follow_join');
             $data['require_screenshot_proof'] = $data['require_follow_join'] ? $request->boolean('require_screenshot_proof') : false;
 

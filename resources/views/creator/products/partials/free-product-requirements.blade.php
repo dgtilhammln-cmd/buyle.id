@@ -50,10 +50,10 @@
     <div style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; user-select:none; background:#f8fafc; gap:0.75rem;">
         <label for="require_follow_join_toggle" style="flex:1; cursor:pointer; margin:0;">
             <div style="font-size:0.86rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:6px;">
-                <span>Syarat Klaim Gratis</span>
+                <span id="reqSectionTitleText">Syarat Klaim Gratis</span>
                 <span style="font-size:0.65rem; font-weight:600; background:#dcfce7; color:#15803d; padding:2px 7px; border-radius:6px;">Sosmed / Komunitas</span>
             </div>
-            <div style="font-size:0.72rem; color:#64748b; line-height:1.4; margin-top:2px;">Wajibkan pembeli follow sosmed atau join grup sebelum klaim tiket/file.</div>
+            <div id="reqSectionSubtitleText" style="font-size:0.72rem; color:#64748b; line-height:1.4; margin-top:2px;">Wajibkan pembeli follow sosmed atau join grup sebelum menyelesaikan pesanan/klaim.</div>
         </label>
         <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
             <input type="checkbox" name="require_follow_join" id="require_follow_join_toggle" value="1"
@@ -176,8 +176,14 @@ function checkFreeProductPrice() {
     const salePrice = rawSalePrice !== '' ? parseInt(rawSalePrice, 10) : null;
 
     const isFree = pricingType === 'free' || (pricingType === null && ((salePrice !== null && salePrice === 0) || (salePrice === null && price === 0)));
+    const isTicket = document.getElementById('productTypeSelect')?.value === 'ticket';
 
-    if (isFree) {
+    const titleEl = document.getElementById('reqSectionTitleText');
+    if (titleEl) {
+        titleEl.textContent = (isTicket && !isFree) ? 'Syarat Follow / Join Komunitas' : 'Syarat Klaim Gratis';
+    }
+
+    if (isFree || isTicket) {
         wrap.style.display = 'block';
         const toggle = document.getElementById('require_follow_join_toggle');
         toggleFreeRequirementsFields(toggle ? toggle.checked : false);

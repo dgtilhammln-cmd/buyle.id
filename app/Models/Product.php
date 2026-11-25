@@ -25,7 +25,7 @@ class Product extends Model
         'product_category_id', 'product_sub_category_id', 'is_featured', 'is_buyle_checkout',
         'product_type', 'file_type', 'digital_resource', 'seller_id', 'creator_group_id', 'sold_count', 'views_count', 'unit', 'min_order', 'max_order', 'rating', 'tiktok_video_url',
         // Event / Ticket fields
-        'event_date', 'event_end_date', 'event_time', 'event_location', 'event_type', 'event_platform',
+        'event_date', 'event_end_date', 'event_time', 'event_location', 'event_type', 'event_sub_type', 'event_platform',
         'terms_conditions', 'instagram_username', 'tiktok_username',
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',

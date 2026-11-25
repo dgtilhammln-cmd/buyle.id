@@ -4369,7 +4369,7 @@
                                 <div class="visitor-card"
                                      data-event-id="{{ $ticket->product_id }}"
                                      data-status="{{ $ticket->status }}"
-                                     data-search="{{ strtolower(($ticket->holder_name ?? '') . ' ' . ($ticket->ticket_code ?? '') . ' ' . ($ticket->holder_email ?? '') . ' ' . ($ticket->holder_phone ?? '') . ' ' . ($ticket->product?->name ?? '')) }}">
+                                     data-search="{{ strtolower(($ticket->holder_name ?? '') . ' ' . ($ticket->ticket_code ?? '') . ' ' . ($ticket->holder_email ?? '') . ' ' . ($ticket->holder_phone ?? '') . ' ' . ($ticket->product?->name ?? '') . ' ' . implode(' ', is_array($ticket->extra_data) ? array_values($ticket->extra_data) : [])) }}">
                                     <div class="visitor-card-main">
                                         <div class="visitor-avatar">
                                             {{ strtoupper(substr($ticket->holder_name ?? 'P', 0, 1)) }}
@@ -4385,6 +4385,17 @@
                                                     <span style="color: #16a34a; font-weight: 600;">Hadir {{ $ticket->checked_in_at->format('H:i') }}</span>
                                                 @endif
                                             </div>
+                                            @if(!empty($ticket->extra_data) && is_array($ticket->extra_data))
+                                                <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">
+                                                    @foreach($ticket->extra_data as $ek => $ev)
+                                                        @if($ev !== null && $ev !== '')
+                                                            <span style="display:inline-block; font-size:0.65rem; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:6px; padding:1px 6px; color:#166534; font-weight:600;">
+                                                                {{ ucfirst(str_replace('_', ' ', $ek)) }}: {{ $ev }}
+                                                            </span>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="visitor-card-actions">
@@ -4955,6 +4966,15 @@
                 <div class="detail-field-box">
                     <span class="detail-field-label">No. Pesanan (Order ID)</span>
                     <span id="modalOrderNumber" class="detail-field-value" style="font-family: monospace;">—</span>
+                </div>
+            </div>
+
+            {{-- Data Tambahan Peserta Event (Lari / Seminar / Olahraga / Wisata) --}}
+            <div id="modalExtraDataBox" style="display:none; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.75rem 0.85rem; margin-top:0.75rem;">
+                <div style="font-size:0.7rem; font-weight:700; color:#166534; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:0.5rem;">
+                    Data Tambahan Peserta
+                </div>
+                <div id="modalExtraDataGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
                 </div>
             </div>
 
@@ -5737,6 +5757,40 @@
                 if (scannedByEl) scannedByEl.textContent = t.scanned_by ? ('Oleh: ' + t.scanned_by) : '';
             } else {
                 if (checkinBox) checkinBox.style.display = 'none';
+            }
+
+            // Render Data Tambahan Peserta (extra_data)
+            const extraBox = document.getElementById('modalExtraDataBox');
+            const extraGrid = document.getElementById('modalExtraDataGrid');
+            if (extraBox && extraGrid) {
+                const ed = t.extra_data && typeof t.extra_data === 'object' ? t.extra_data : {};
+                const edKeys = Object.keys(ed).filter(k => ed[k] !== null && ed[k] !== '');
+                if (edKeys.length > 0) {
+                    const labelMap = {
+                        gender: 'Gender',
+                        tgl_lahir: 'Tanggal Lahir',
+                        ukuran_jersey: 'Ukuran Jersey',
+                        divisi_lari: 'Divisi / Kategori Lari',
+                        kontak_darurat: 'Kontak Darurat',
+                        institusi: 'Institusi / Perusahaan',
+                        jabatan: 'Divisi / Jabatan',
+                        nama_tim: 'Nama Tim',
+                        posisi: 'Posisi / Nomor',
+                        kebutuhan_khusus: 'Kebutuhan Khusus'
+                    };
+                    extraGrid.innerHTML = edKeys.map(k => {
+                        const lbl = labelMap[k] || k.replace(/_/g, ' ');
+                        const val = String(ed[k]).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+                        return `<div style="background:#fff;border:1px solid #DCFCE7;border-radius:8px;padding:0.4rem 0.6rem;">
+                            <div style="font-size:0.65rem;color:#64748B;font-weight:600;text-transform:uppercase;">${lbl}</div>
+                            <div style="font-size:0.78rem;color:#0F172A;font-weight:700;margin-top:1px;">${val}</div>
+                        </div>`;
+                    }).join('');
+                    extraBox.style.display = 'block';
+                } else {
+                    extraGrid.innerHTML = '';
+                    extraBox.style.display = 'none';
+                }
             }
 
             // Render Bukti Screenshot Klaim Tiket Gratis (Multi-Sosmed Support)
