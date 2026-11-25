@@ -621,8 +621,17 @@ class SellerProductController extends Controller
             $rawStock = $vData['stock'] ?? null;
             $valStock = ($rawStock !== null && $rawStock !== '') ? (int) $rawStock : null;
 
-            // Optional SKU
+            // Optional SKU (pastikan unik table-wide agar tidak pernah trigger SQL 1062 Duplicate entry)
             $valSku = !empty($vData['sku']) ? trim($vData['sku']) : null;
+            if ($valSku) {
+                $skuCheck = \App\Models\ProductVariantValue::where('sku', $valSku);
+                if ($valueId) {
+                    $skuCheck->where('id', '!=', $valueId);
+                }
+                if ($skuCheck->exists()) {
+                    $valSku = $valSku . '-' . strtoupper(\Illuminate\Support\Str::random(3));
+                }
+            }
 
             $imagePath = null;
             if ($request->hasFile("variants.{$index}.image") && $request->file("variants.{$index}.image")->isValid()) {
@@ -686,15 +695,20 @@ class SellerProductController extends Controller
                             'image' => $imagePath,
                         ]);
                         $keptIds[] = $newVal->id;
-                    } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
-                        // Race condition fallback: SKU sudah ada, update saja
-                        $fallback = \App\Models\ProductVariantValue::where('sku', $valSku)->first();
-                        if ($fallback) {
-                            $fallback->update([
-                                'value' => $valName, 'price' => $valPrice,
-                                'stock' => $valStock, 'sku'   => $valSku,
+                    } catch (\Throwable $e) {
+                        // Race condition fallback: SKU collision, coba generate SKU baru
+                        $fallbackSku = ($valSku ?: 'TIX-' . strtoupper(\Illuminate\Support\Str::random(4))) . '-' . strtoupper(\Illuminate\Support\Str::random(3));
+                        try {
+                            $newVal = $option->values()->create([
+                                'value' => $valName,
+                                'price' => $valPrice,
+                                'stock' => $valStock,
+                                'sku'   => $fallbackSku,
+                                'image' => $imagePath,
                             ]);
-                            $keptIds[] = $fallback->id;
+                            $keptIds[] = $newVal->id;
+                        } catch (\Throwable $e2) {
+                            \Log::warning("Gagal buat variant value: " . $e2->getMessage());
                         }
                     }
                 }

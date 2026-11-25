@@ -46,7 +46,8 @@ class StoreProductRequest extends FormRequest
             'event_time'          => ['nullable', 'string', 'max:100'],
             'event_location'      => ['nullable', 'string', 'max:1000'],
             'event_type'          => ['nullable', 'string', 'in:online,offline'],
-            'event_sub_type'      => ['nullable', 'string', 'in:concert,run,seminar,sport,trip,webinar,festival,other'],
+            'event_sub_type'      => ['nullable', 'string', 'max:50'],
+            'custom_fields'       => ['nullable'],
             'event_platform'      => ['nullable', 'string', 'max:100'],
             'terms_conditions'    => ['nullable', 'string'],
             'instagram_username'  => ['nullable', 'string', 'max:100'],
@@ -272,6 +273,30 @@ class StoreProductRequest extends FormRequest
                 ->values()
                 ->toArray();
             $merge['faqs'] = $faqs ?: null;
+        }
+
+        // Custom checkout fields for tickets
+        if ($this->has('custom_fields')) {
+            $rawFields = $this->input('custom_fields');
+            if (is_string($rawFields)) {
+                $rawFields = json_decode($rawFields, true);
+            }
+            $cleanFields = [];
+            if (is_array($rawFields)) {
+                foreach ($rawFields as $cf) {
+                    $label = trim($cf['label'] ?? '');
+                    if (!empty($label)) {
+                        $type = in_array($cf['type'] ?? '', ['text', 'select', 'number', 'date']) ? $cf['type'] : 'text';
+                        $cleanFields[] = [
+                            'label'    => $label,
+                            'type'     => $type,
+                            'options'  => trim($cf['options'] ?? ''),
+                            'required' => !empty($cf['required']),
+                        ];
+                    }
+                }
+            }
+            $merge['custom_fields'] = !empty($cleanFields) ? $cleanFields : null;
         }
 
         // Pricing Models (Fixed, Free, PWYW, Traktir)

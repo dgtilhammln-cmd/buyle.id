@@ -808,23 +808,46 @@
                                             </select>
                                         </div>
 
-                                        @php $curSubType = old('event_sub_type', $product->event_sub_type ?? 'concert'); @endphp
-                                        <div class="form-group full">
-                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-                                                Kategori / Sub-Tipe Event <span>*</span>
-                                            </label>
-                                            <select name="event_sub_type" id="eventSubTypeSelect" class="form-input" onchange="updateEventSubTypeInfo(this.value)">
-                                                <option value="concert" {{ $curSubType == 'concert' ? 'selected' : '' }}>🎵 Konser / Festival Musik</option>
-                                                <option value="run" {{ $curSubType == 'run' ? 'selected' : '' }}>🏃 Lari / Fun Run / Marathon</option>
-                                                <option value="seminar" {{ $curSubType == 'seminar' ? 'selected' : '' }}>🎓 Seminar / Workshop / Training</option>
-                                                <option value="sport" {{ $curSubType == 'sport' ? 'selected' : '' }}>⚽ Olahraga / Turnamen</option>
-                                                <option value="trip" {{ $curSubType == 'trip' ? 'selected' : '' }}>✈️ Wisata / Trip / Travel</option>
-                                                <option value="webinar" {{ $curSubType == 'webinar' ? 'selected' : '' }}>💻 Webinar / Online Event</option>
-                                                <option value="festival" {{ $curSubType == 'festival' ? 'selected' : '' }}>🎪 Festival / Expo / Pameran</option>
-                                                <option value="other" {{ $curSubType == 'other' ? 'selected' : '' }}>🎟️ Lainnya</option>
-                                            </select>
-                                            <span class="form-hint" id="eventSubTypeHint">Menentukan data tambahan yang diminta saat checkout (divisi lari, institusi seminar, dll).</span>
+                                        {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
+                                        <div class="form-group full" id="customFieldsSection" style="margin-top:0.5rem; padding-top:1rem; border-top:1.5px dashed #BBF7D0;">
+                                            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                                                <div>
+                                                    <label class="form-label" style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem; font-size:0.92rem; font-weight:800; color:#166534;">
+                                                        <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <path d="M9 11l3 3L22 4"/>
+                                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                                        </svg>
+                                                        Formulir Tambahan Checkout / Data Peserta (Custom Fields)
+                                                    </label>
+                                                    <div style="font-size:0.76rem; color:#64748b;">
+                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout. Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal: Ukuran Jersey, Institusi, Kontak Darurat, dll).
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button type="button" onclick="addCustomFieldRow()" style="display:inline-flex; align-items:center; gap:0.35rem; background:#166534; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:background 0.15s;">
+                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                        + Tambah Form Custom
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Preset Buttons -->
+                                            <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.5rem 0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px;">
+                                                <span style="font-size:0.74rem; font-weight:700; color:#475569; display:flex; align-items:center; gap:0.3rem;">
+                                                    ⚡ Template Cepat:
+                                                </span>
+                                                <button type="button" onclick="applyCustomFieldPreset('run')" style="background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">🏃 Lari / Marathon</button>
+                                                <button type="button" onclick="applyCustomFieldPreset('seminar')" style="background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">🎓 Seminar / Workshop</button>
+                                                <button type="button" onclick="applyCustomFieldPreset('sport')" style="background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">⚽ Turnamen Olahraga</button>
+                                                <button type="button" onclick="applyCustomFieldPreset('concert')" style="background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer;">🎵 Konser / Festival</button>
+                                                <button type="button" onclick="clearAllCustomFields()" style="background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto;">Reset Form</button>
+                                            </div>
+
+                                            <div id="customFieldsContainer" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
+
+                                            <div id="customFieldsEmptyNotice" style="text-align:center; padding:1.15rem; background:#fff; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
+                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap &amp; Nomor Identitas</strong> saat checkout. Klik <strong>+ Tambah Form Custom</strong> jika memerlukan data lain.
+                                            </div>
                                         </div>
 
                                         <div class="form-group full" id="offlineLocationWrap">
@@ -2152,20 +2175,143 @@
             if (typeof checkFreeProductPrice === 'function') checkFreeProductPrice();
         }
 
-        function updateEventSubTypeInfo(val) {
-            const hints = {
-                'concert': 'Data checkout: Nama + Identitas resmi + Kontak darurat (opsional).',
-                'run': 'Data checkout: Nama + Identitas + Gender + Tgl Lahir + Ukuran Jersey + Divisi Lari + Kontak Darurat.',
-                'seminar': 'Data checkout: Nama + Identitas + Institusi/Perusahaan + Divisi/Jabatan.',
-                'sport': 'Data checkout: Nama + Identitas + Nama Tim + Posisi + Gender.',
-                'trip': 'Data checkout: Nama + Identitas + Gender + Tgl Lahir + Kebutuhan Khusus.',
-                'webinar': 'Data checkout: Nama + Identitas resmi.',
-                'festival': 'Data checkout: Nama + Identitas resmi + Kontak darurat (opsional).',
-                'other': 'Data checkout: Nama + Identitas resmi (default).',
-            };
-            const el = document.getElementById('eventSubTypeHint');
-            if (el) el.textContent = hints[val] || hints['other'];
+        // ── DYNAMIC CUSTOM CHECKOUT FIELDS BUILDER ──
+        let customFieldCount = 0;
+
+        function addCustomFieldRow(data = {}) {
+            const container = document.getElementById('customFieldsContainer');
+            const emptyNotice = document.getElementById('customFieldsEmptyNotice');
+            if (!container) return;
+
+            const idx = customFieldCount++;
+            const label = data.label || '';
+            const type = data.type || 'text';
+            const options = data.options || '';
+            const isReq = data.required !== undefined ? !!data.required : true;
+
+            const row = document.createElement('div');
+            row.className = 'custom-field-row';
+            row.id = `cf_row_${idx}`;
+            row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03);';
+
+            row.innerHTML = `
+                <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start;">
+                    <div>
+                        <label style="font-size:0.73rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
+                        <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-size:0.82rem; padding:0.45rem 0.65rem;">
+                    </div>
+                    <div>
+                        <label style="font-size:0.73rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
+                        <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-size:0.82rem; padding:0.45rem 0.65rem;">
+                            <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
+                            <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
+                            <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
+                            <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
+                            <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.73rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
+                        <label style="display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                            <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                            <span>Wajib Diisi</span>
+                        </label>
+                    </div>
+                    <div style="padding-top:1.4rem;">
+                        <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0;">
+                    <label style="font-size:0.73rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
+                        Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-size:0.82rem; padding:0.45rem 0.65rem;">
+                    <span style="font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
+                </div>
+            `;
+
+            container.appendChild(row);
+            if (emptyNotice) emptyNotice.style.display = 'none';
         }
+
+        function removeCustomFieldRow(btn) {
+            const row = btn.closest('.custom-field-row');
+            if (row) row.remove();
+            checkEmptyCustomFields();
+        }
+
+        function handleCfTypeChange(sel) {
+            const row = sel.closest('.custom-field-row');
+            if (!row) return;
+            const optWrap = row.querySelector('.cf-options-wrap');
+            const optInput = row.querySelector('.cf-options');
+            if (sel.value === 'select') {
+                if (optWrap) optWrap.style.display = 'block';
+                if (optInput) optInput.setAttribute('required', 'required');
+            } else {
+                if (optWrap) optWrap.style.display = 'none';
+                if (optInput) optInput.removeAttribute('required');
+            }
+        }
+
+        function checkEmptyCustomFields() {
+            const container = document.getElementById('customFieldsContainer');
+            const emptyNotice = document.getElementById('customFieldsEmptyNotice');
+            if (container && emptyNotice) {
+                const count = container.querySelectorAll('.custom-field-row').length;
+                emptyNotice.style.display = count === 0 ? 'block' : 'none';
+            }
+        }
+
+        function clearAllCustomFields() {
+            const container = document.getElementById('customFieldsContainer');
+            if (container) container.innerHTML = '';
+            checkEmptyCustomFields();
+        }
+
+        function applyCustomFieldPreset(preset) {
+            clearAllCustomFields();
+            if (preset === 'run') {
+                addCustomFieldRow({ label: 'Ukuran Jersey', type: 'select', options: 'XS, S, M, L, XL, XXL, XXXL', required: true });
+                addCustomFieldRow({ label: 'Golongan Darah', type: 'select', options: 'A, B, AB, O', required: true });
+                addCustomFieldRow({ label: 'Kontak Darurat (Nama & HP)', type: 'text', options: '', required: true });
+                addCustomFieldRow({ label: 'Riwayat Penyakit (Opsional)', type: 'text', options: '', required: false });
+            } else if (preset === 'seminar') {
+                addCustomFieldRow({ label: 'Institusi / Perusahaan / Kampus', type: 'text', options: '', required: true });
+                addCustomFieldRow({ label: 'Jabatan / Divisi / Jurusan', type: 'text', options: '', required: true });
+                addCustomFieldRow({ label: 'Pertanyaan untuk Pembicara (Opsional)', type: 'textarea', options: '', required: false });
+            } else if (preset === 'sport') {
+                addCustomFieldRow({ label: 'Nama Tim / Komunitas', type: 'text', options: '', required: true });
+                addCustomFieldRow({ label: 'Posisi / Kategori Lomba', type: 'text', options: '', required: true });
+                addCustomFieldRow({ label: 'Kontak Manajer / Penanggung Jawab', type: 'text', options: '', required: true });
+            } else if (preset === 'concert') {
+                addCustomFieldRow({ label: 'Kontak Darurat (Nama & HP)', type: 'text', options: '', required: false });
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        // Render initial custom fields on load (from existing product custom_fields or old input)
+        document.addEventListener('DOMContentLoaded', function () {
+            const initialFields = @json(old('custom_fields', $product->custom_fields ?? []));
+            if (Array.isArray(initialFields) && initialFields.length > 0) {
+                initialFields.forEach(f => {
+                    if (f && f.label) addCustomFieldRow(f);
+                });
+            } else {
+                checkEmptyCustomFields();
+            }
+        });
 
         // Event Duration Mode Toggle (Single Day vs Multi Day)
         function toggleEventDurationMode(mode) {

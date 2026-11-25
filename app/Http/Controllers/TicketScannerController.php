@@ -691,7 +691,19 @@ class TicketScannerController extends Controller
             $file = fopen('php://output', 'w');
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
-            $extraFieldsMap = [
+            // Kumpulkan semua custom field keys secara dinamis dari tickets yang diexport
+            $dynamicKeys = [];
+            foreach ($tickets as $t) {
+                if (!empty($t->extra_data) && is_array($t->extra_data)) {
+                    foreach (array_keys($t->extra_data) as $k) {
+                        if (!in_array($k, $dynamicKeys)) {
+                            $dynamicKeys[] = $k;
+                        }
+                    }
+                }
+            }
+
+            $legacyMap = [
                 'gender'           => 'Gender',
                 'tgl_lahir'        => 'Tanggal Lahir',
                 'ukuran_jersey'    => 'Ukuran Jersey',
@@ -719,8 +731,8 @@ class TicketScannerController extends Controller
                 'No. Gate',
                 'Tanggal Pembelian',
             ];
-            foreach ($extraFieldsMap as $label) {
-                $headerRow[] = $label;
+            foreach ($dynamicKeys as $dKey) {
+                $headerRow[] = $legacyMap[$dKey] ?? $dKey;
             }
             fputcsv($file, $headerRow);
 
@@ -749,8 +761,8 @@ class TicketScannerController extends Controller
                     $ticket->scanned_at_gate ? ('Gate ' . $ticket->scanned_at_gate) : '-',
                     $ticket->created_at ? $ticket->created_at->format('Y-m-d H:i:s') : '-',
                 ];
-                foreach (array_keys($extraFieldsMap) as $eKey) {
-                    $row[] = $extra[$eKey] ?? '-';
+                foreach ($dynamicKeys as $dKey) {
+                    $row[] = $extra[$dKey] ?? '-';
                 }
 
                 fputcsv($file, $row);

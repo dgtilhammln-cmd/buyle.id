@@ -1295,126 +1295,59 @@
                                                 </div>
                                             </div>
 
-                                            {{-- ═══ EXTRA FIELDS per sub-type event ═══ --}}
+                                            {{-- ═══ DYNAMIC CUSTOM FIELDS PER EVENT ═══ --}}
                                             @php
-                                                $subType = strtolower($item->product->event_sub_type ?? 'other');
+                                                $customFields = $item->product->custom_fields ?? [];
                                                 $extraOld = old("ticket_extra.{$pid}.{$ticketIdx}", []);
                                             @endphp
-                                            @if($subType === 'run')
-                                                <div style="margin-top:0.75rem;padding:0.75rem;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0;">
-                                                    <div style="font-size:0.75rem;font-weight:700;color:#166534;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;">
-                                                        <svg width="13" height="13" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-                                                        Data Peserta Lari
+                                            @if(!empty($customFields) && is_array($customFields))
+                                                <div style="margin-top:0.75rem;padding:0.75rem 0.85rem;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0;">
+                                                    <div style="font-size:0.75rem;font-weight:700;color:#166534;margin-bottom:0.55rem;display:flex;align-items:center;gap:0.35rem;">
+                                                        <svg width="13" height="13" fill="none" stroke="#166534" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                                                        Data Tambahan Peserta
                                                     </div>
-                                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Gender <span style="color:#EF4444;">*</span></label>
-                                                            <select name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][gender]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" required>
-                                                                <option value="">— Pilih —</option>
-                                                                <option value="Laki-laki" {{ ($extraOld['gender'] ?? '') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                                                <option value="Perempuan" {{ ($extraOld['gender'] ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                                                            </select>
-                                                        </div>
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Tanggal Lahir <span style="color:#EF4444;">*</span></label>
-                                                            <input type="date" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][tgl_lahir]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" value="{{ $extraOld['tgl_lahir'] ?? '' }}" required>
-                                                        </div>
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Ukuran Jersey <span style="color:#EF4444;">*</span></label>
-                                                            <select name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][ukuran_jersey]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" required>
-                                                                <option value="">— Pilih —</option>
-                                                                @foreach(['XS','S','M','L','XL','XXL','XXXL'] as $sz)
-                                                                    <option value="{{ $sz }}" {{ ($extraOld['ukuran_jersey'] ?? '') == $sz ? 'selected' : '' }}>{{ $sz }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Divisi / Kategori <span style="color:#EF4444;">*</span></label>
-                                                            <select name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][divisi_lari]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" required>
-                                                                <option value="">— Pilih —</option>
-                                                                @php
-                                                                    $lariOptions = ['5K','10K','15K','Half Marathon (21K)','Full Marathon (42K)','Fun Run'];
-                                                                    $variantName = $item->variant_name ?? '';
-                                                                @endphp
-                                                                @if($variantName && !in_array($variantName, $lariOptions))
-                                                                    <option value="{{ $variantName }}" {{ ($extraOld['divisi_lari'] ?? '') == $variantName ? 'selected' : '' }}>{{ $variantName }}</option>
-                                                                @endif
-                                                                @foreach($lariOptions as $lo)
-                                                                    <option value="{{ $lo }}" {{ ($extraOld['divisi_lari'] ?? '') == $lo ? 'selected' : '' }}>{{ $lo }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+                                                    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:0.6rem;">
+                                                        @foreach($customFields as $cf)
+                                                            @php
+                                                                $fLabel = trim($cf['label'] ?? '');
+                                                                $fType = $cf['type'] ?? 'text';
+                                                                $fOptions = $cf['options'] ?? '';
+                                                                $fReq = !empty($cf['required']);
+                                                                $valOld = $extraOld[$fLabel] ?? '';
+                                                                $isFull = ($fType === 'textarea' || strlen($fLabel) > 28);
+                                                            @endphp
+                                                            @if(!empty($fLabel))
+                                                                <div style="{{ $isFull ? 'grid-column: 1 / -1;' : '' }}">
+                                                                    <label style="font-size:0.73rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">
+                                                                        {{ $fLabel }} @if($fReq)<span style="color:#EF4444;">*</span>@else<span style="font-weight:400;color:#94A3B8;">(opsional)</span>@endif
+                                                                    </label>
+
+                                                                    @if($fType === 'select')
+                                                                        @php
+                                                                            $optList = array_filter(array_map('trim', explode(',', $fOptions)));
+                                                                        @endphp
+                                                                        <select name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][{{ $fLabel }}]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" {{ $fReq ? 'required' : '' }}>
+                                                                            <option value="">— Pilih —</option>
+                                                                            @foreach($optList as $opt)
+                                                                                <option value="{{ $opt }}" {{ $valOld === $opt ? 'selected' : '' }}>{{ $opt }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    @elseif($fType === 'date')
+                                                                        <input type="date" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][{{ $fLabel }}]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" value="{{ $valOld }}" {{ $fReq ? 'required' : '' }}>
+                                                                    @elseif($fType === 'number')
+                                                                        <input type="number" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][{{ $fLabel }}]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" placeholder="0" value="{{ $valOld }}" {{ $fReq ? 'required' : '' }}>
+                                                                    @elseif($fType === 'textarea')
+                                                                        <textarea name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][{{ $fLabel }}]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" rows="2" placeholder="Isi {{ strtolower($fLabel) }}" {{ $fReq ? 'required' : '' }}>{{ $valOld }}</textarea>
+                                                                    @else
+                                                                        <input type="text" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][{{ $fLabel }}]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" placeholder="Isi {{ strtolower($fLabel) }}" value="{{ $valOld }}" {{ $fReq ? 'required' : '' }}>
+                                                                    @endif
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
                                                     </div>
-                                                    <div style="margin-top:0.6rem;">
-                                                        <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Kontak Darurat (Nama & HP) <span style="color:#EF4444;">*</span></label>
-                                                        <input type="text" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][kontak_darurat]" class="form-input" style="font-size:0.82rem;" placeholder="Contoh: Budi / 08123456789" value="{{ $extraOld['kontak_darurat'] ?? '' }}" required>
-                                                    </div>
-                                                </div>
-                                            @elseif($subType === 'seminar')
-                                                <div style="margin-top:0.75rem;padding:0.75rem;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0;">
-                                                    <div style="font-size:0.75rem;font-weight:700;color:#166534;margin-bottom:0.6rem;">Data Peserta Seminar / Workshop</div>
-                                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Institusi / Perusahaan <span style="color:#EF4444;">*</span></label>
-                                                            <input type="text" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][institusi]" class="form-input" style="font-size:0.82rem;" placeholder="Nama perusahaan / universitas" value="{{ $extraOld['institusi'] ?? '' }}" required>
-                                                        </div>
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Divisi / Jabatan</label>
-                                                            <input type="text" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][jabatan]" class="form-input" style="font-size:0.82rem;" placeholder="Manajer, Mahasiswa, dll" value="{{ $extraOld['jabatan'] ?? '' }}">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @elseif($subType === 'sport')
-                                                <div style="margin-top:0.75rem;padding:0.75rem;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0;">
-                                                    <div style="font-size:0.75rem;font-weight:700;color:#166534;margin-bottom:0.6rem;">Data Peserta Olahraga</div>
-                                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Nama Tim <span style="color:#EF4444;">*</span></label>
-                                                            <input type="text" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][nama_tim]" class="form-input" style="font-size:0.82rem;" placeholder="Nama tim / klub" value="{{ $extraOld['nama_tim'] ?? '' }}" required>
-                                                        </div>
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Posisi / Nomor</label>
-                                                            <input type="text" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][posisi]" class="form-input" style="font-size:0.82rem;" placeholder="GK, Pivot, No.7" value="{{ $extraOld['posisi'] ?? '' }}">
-                                                        </div>
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Gender <span style="color:#EF4444;">*</span></label>
-                                                            <select name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][gender]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" required>
-                                                                <option value="">— Pilih —</option>
-                                                                <option value="Laki-laki" {{ ($extraOld['gender'] ?? '') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                                                <option value="Perempuan" {{ ($extraOld['gender'] ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @elseif($subType === 'trip')
-                                                <div style="margin-top:0.75rem;padding:0.75rem;background:#F0FDF4;border-radius:10px;border:1px solid #BBF7D0;">
-                                                    <div style="font-size:0.75rem;font-weight:700;color:#166534;margin-bottom:0.6rem;">Data Peserta Wisata / Trip</div>
-                                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Gender <span style="color:#EF4444;">*</span></label>
-                                                            <select name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][gender]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" required>
-                                                                <option value="">— Pilih —</option>
-                                                                <option value="Laki-laki" {{ ($extraOld['gender'] ?? '') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                                                <option value="Perempuan" {{ ($extraOld['gender'] ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                                                            </select>
-                                                        </div>
-                                                        <div>
-                                                            <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Tanggal Lahir <span style="color:#EF4444;">*</span></label>
-                                                            <input type="date" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][tgl_lahir]" class="form-input" style="font-size:0.82rem;padding:0.45rem 0.6rem;" value="{{ $extraOld['tgl_lahir'] ?? '' }}" required>
-                                                        </div>
-                                                    </div>
-                                                    <div style="margin-top:0.6rem;">
-                                                        <label style="font-size:0.75rem;font-weight:700;color:#334155;display:block;margin-bottom:0.25rem;">Kebutuhan Khusus / Catatan</label>
-                                                        <input type="text" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][kebutuhan_khusus]" class="form-input" style="font-size:0.82rem;" placeholder="Vegetarian, alergi, dll (opsional)" value="{{ $extraOld['kebutuhan_khusus'] ?? '' }}">
-                                                    </div>
-                                                </div>
-                                            @elseif(in_array($subType, ['concert','festival']))
-                                                <div style="margin-top:0.65rem;">
-                                                    <label style="font-size:0.75rem;font-weight:600;color:#334155;display:block;margin-bottom:0.25rem;">Kontak Darurat <span style="font-weight:400;color:#94A3B8;">(opsional)</span></label>
-                                                    <input type="text" name="ticket_extra[{{ $pid }}][{{ $ticketIdx }}][kontak_darurat]" class="form-input" style="font-size:0.82rem;" placeholder="Nama & nomor HP yang bisa dihubungi" value="{{ $extraOld['kontak_darurat'] ?? '' }}">
                                                 </div>
                                             @endif
-                                            {{-- ═══ END EXTRA FIELDS ═══ --}}
+                                            {{-- ═══ END DYNAMIC CUSTOM FIELDS ═══ --}}
 
                                             @if(!$isFirstSlot)
                                                 <div style="font-size:0.72rem;color:#94A3B8;margin-top:0.3rem;">Nama sesuai identitas resmi
