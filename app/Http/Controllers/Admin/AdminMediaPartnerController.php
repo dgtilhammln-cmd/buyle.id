@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminMediaPartnerController extends Controller
 {
+    use HandlesImageUpload;
+
     /**
      * Tampilkan daftar master Media Partner & ringkasan komisi.
      */
@@ -104,6 +106,9 @@ class AdminMediaPartnerController extends Controller
             'bank_account_number' => 'nullable|string|max:50',
             'bank_account_name'   => 'nullable|string|max:100',
             'notes'               => 'nullable|string|max:500',
+            'target_url'          => 'nullable|string|max:1000',
+            'show_on_bio'         => 'nullable|boolean',
+            'badge_image'         => 'nullable|image|max:5120',
         ]);
 
         $code = !empty($validated['code'])
@@ -115,6 +120,11 @@ class AdminMediaPartnerController extends Controller
         $counter = 1;
         while (MediaPartner::where('code', $code)->exists()) {
             $code = $baseCode . '-' . $counter++;
+        }
+
+        $badgePath = null;
+        if ($request->hasFile('badge_image')) {
+            $badgePath = $this->uploadImage($request->file('badge_image'), 'media-partners/badges', 800, null, 90);
         }
 
         $mediaPartner = MediaPartner::create([
@@ -129,6 +139,9 @@ class AdminMediaPartnerController extends Controller
             'bank_account_number' => $validated['bank_account_number'] ?? null,
             'bank_account_name'   => $validated['bank_account_name'] ?? null,
             'notes'               => $validated['notes'] ?? null,
+            'badge_image'         => $badgePath,
+            'target_url'          => $validated['target_url'] ?? null,
+            'show_on_bio'         => $request->boolean('show_on_bio', true),
             'is_active'           => true,
             'total_commission_earned' => 0,
             'total_commission_paid'   => 0,
@@ -228,7 +241,23 @@ class AdminMediaPartnerController extends Controller
             'bank_account_number' => 'nullable|string|max:50',
             'bank_account_name'   => 'nullable|string|max:100',
             'notes'               => 'nullable|string|max:500',
+            'target_url'          => 'nullable|string|max:1000',
+            'show_on_bio'         => 'nullable|boolean',
+            'badge_image'         => 'nullable|image|max:5120',
         ]);
+
+        $badgePath = $mediaPartner->badge_image;
+        if ($request->hasFile('badge_image')) {
+            if ($badgePath && Storage::disk('public')->exists($badgePath)) {
+                Storage::disk('public')->delete($badgePath);
+            }
+            $badgePath = $this->uploadImage($request->file('badge_image'), 'media-partners/badges', 800, null, 90);
+        } elseif ($request->boolean('remove_badge_image')) {
+            if ($badgePath && Storage::disk('public')->exists($badgePath)) {
+                Storage::disk('public')->delete($badgePath);
+            }
+            $badgePath = null;
+        }
 
         $mediaPartner->update([
             'user_id'             => $validated['user_id'] ?? $mediaPartner->user_id,
@@ -242,6 +271,9 @@ class AdminMediaPartnerController extends Controller
             'bank_account_number' => $validated['bank_account_number'] ?? null,
             'bank_account_name'   => $validated['bank_account_name'] ?? null,
             'notes'               => $validated['notes'] ?? null,
+            'badge_image'         => $badgePath,
+            'target_url'          => $validated['target_url'] ?? null,
+            'show_on_bio'         => $request->boolean('show_on_bio', true),
         ]);
 
         $targetUserId = $validated['user_id'] ?? $mediaPartner->user_id;

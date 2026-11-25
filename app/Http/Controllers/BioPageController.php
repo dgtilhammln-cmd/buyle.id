@@ -21,7 +21,7 @@ class BioPageController extends Controller
             abort(404);
         }
 
-        $profile = CreatorProfile::with(['user', 'bioBlocks' => function ($q) {
+        $profile = CreatorProfile::with(['user.mediaPartner', 'bioBlocks' => function ($q) {
             $q->where('is_active', true)->orderBy('order', 'asc')->orderBy('id', 'asc');
         }])->where('store_slug', $username)->firstOrFail();
 

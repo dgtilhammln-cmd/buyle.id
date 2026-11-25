@@ -732,7 +732,7 @@
                 <div class="mp-modal-title">Daftarkan Media Partner Baru</div>
                 <button type="button" onclick="closeModal('modalCreate')" class="mp-modal-close">&times;</button>
             </div>
-            <form method="POST" action="{{ route('admin.media-partners.store') }}">
+            <form method="POST" action="{{ route('admin.media-partners.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="mp-modal-body">
 
@@ -837,6 +837,28 @@
                             class="mp-input">
                     </div>
 
+                    {{-- Badge & Link Bio Section (Auto WebP) --}}
+                    <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:1rem; box-sizing:border-box;">
+                        <div style="font-size:0.7rem; font-weight:800; color:#15803D; margin-bottom:0.5rem; text-transform:uppercase; display:flex; align-items:center; gap:0.4rem;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            Logo / Badge Media Partner di Link in Bio
+                        </div>
+                        <div class="mp-form-group" style="margin-bottom:0.5rem;">
+                            <label class="mp-form-label">Upload Gambar Badge (Auto WebP)</label>
+                            <input type="file" name="badge_image" accept="image/*" class="mp-input" style="padding:0.4rem;">
+                            <p style="font-size:0.68rem; color:#64748B; margin-top:0.25rem;">Format PNG transparan / JPG. Otomatis dikonversi ke WebP & responsive di atas footer tema bio.</p>
+                        </div>
+                        <div class="mp-form-group" style="margin-bottom:0.5rem;">
+                            <label class="mp-form-label">Link Tujuan (Klik Badge)</label>
+                            <input type="url" name="target_url" placeholder="https://instagram.com/partner atau https://website.com" class="mp-input">
+                            <p style="font-size:0.68rem; color:#64748B; margin-top:0.25rem;">Otomatis disisipkan parameter UTM pelacakan leads saat pengunjung klik di link bio creator.</p>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.4rem;">
+                            <input type="checkbox" name="show_on_bio" value="1" id="createShowOnBio" checked style="accent-color:#16a34a; width:16px; height:16px; cursor:pointer;">
+                            <label for="createShowOnBio" style="font-size:0.75rem; color:#334155; font-weight:700; cursor:pointer; margin:0;">Tampilkan Badge ini di Link Bio Creator binaan</label>
+                        </div>
+                    </div>
+
                     {{-- Rekening Section --}}
                     <div
                         style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:0.85rem; margin-bottom:1rem; box-sizing:border-box;">
@@ -875,7 +897,7 @@
                 <div class="mp-modal-title">Edit Media Partner</div>
                 <button type="button" onclick="closeModal('modalEdit')" class="mp-modal-close">&times;</button>
             </div>
-            <form id="formEdit" method="POST" action="">
+            <form id="formEdit" method="POST" action="" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mp-modal-body">
@@ -971,6 +993,39 @@
                     <div class="mp-form-group">
                         <label class="mp-form-label">Email PIC</label>
                         <input type="email" name="pic_email" id="editPicEmail" class="mp-input">
+                    </div>
+
+                    {{-- Badge & Link Bio Section Edit (Auto WebP) --}}
+                    <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:0.85rem; margin-bottom:1rem; box-sizing:border-box;">
+                        <div style="font-size:0.7rem; font-weight:800; color:#15803D; margin-bottom:0.5rem; text-transform:uppercase; display:flex; align-items:center; gap:0.4rem;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            Logo / Badge Media Partner di Link in Bio
+                        </div>
+
+                        <div id="editBadgePreviewWrap" style="display:none; margin-bottom:0.75rem; padding:0.6rem; background:#fff; border:1px solid #E2E8F0; border-radius:8px; align-items:center; gap:0.75rem;">
+                            <img id="editBadgeImg" src="" alt="Badge" style="max-height:40px; max-width:120px; object-fit:contain;">
+                            <div style="flex:1;">
+                                <span style="font-size:0.72rem; color:#64748B; display:block;">Badge Aktif saat ini</span>
+                                <label style="font-size:0.7rem; color:#dc2626; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:0.25rem;">
+                                    <input type="checkbox" name="remove_badge_image" value="1" style="accent-color:#dc2626;"> Hapus Badge
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mp-form-group" style="margin-bottom:0.5rem;">
+                            <label class="mp-form-label">Ganti Gambar Badge (Auto WebP)</label>
+                            <input type="file" name="badge_image" accept="image/*" class="mp-input" style="padding:0.4rem;">
+                            <p style="font-size:0.68rem; color:#64748B; margin-top:0.25rem;">Upload gambar baru untuk mengganti. Otomatis dikonversi ke format WebP.</p>
+                        </div>
+                        <div class="mp-form-group" style="margin-bottom:0.5rem;">
+                            <label class="mp-form-label">Link Tujuan (Klik Badge)</label>
+                            <input type="url" name="target_url" id="editTargetUrl" placeholder="https://instagram.com/partner atau https://website.com" class="mp-input">
+                            <p style="font-size:0.68rem; color:#64748B; margin-top:0.25rem;">Otomatis disisipkan parameter UTM pelacakan leads saat pengunjung klik di link bio creator.</p>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.4rem;">
+                            <input type="checkbox" name="show_on_bio" value="1" id="editShowOnBio" checked style="accent-color:#16a34a; width:16px; height:16px; cursor:pointer;">
+                            <label for="editShowOnBio" style="font-size:0.75rem; color:#334155; font-weight:700; cursor:pointer; margin:0;">Tampilkan Badge ini di Link Bio Creator binaan</label>
+                        </div>
                     </div>
 
                     <div
@@ -1273,6 +1328,17 @@
             document.getElementById('editBankNumber').value = partner.bank_account_number || '';
             document.getElementById('editBankHolder').value = partner.bank_account_name || '';
             document.getElementById('editNotes').value = partner.notes || '';
+            document.getElementById('editTargetUrl').value = partner.target_url || '';
+            document.getElementById('editShowOnBio').checked = partner.show_on_bio !== false && partner.show_on_bio != 0;
+
+            const badgePreviewWrap = document.getElementById('editBadgePreviewWrap');
+            const badgeImg = document.getElementById('editBadgeImg');
+            if (partner.badge_image) {
+                badgeImg.src = '/storage/' + partner.badge_image;
+                badgePreviewWrap.style.display = 'flex';
+            } else {
+                badgePreviewWrap.style.display = 'none';
+            }
 
             if (partner.user_id) {
                 selectCreator(partner.user_id, 'edit');

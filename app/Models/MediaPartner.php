@@ -27,6 +27,9 @@ class MediaPartner extends Model
         'balance',
         'is_active',
         'notes',
+        'badge_image',
+        'target_url',
+        'show_on_bio',
     ];
 
     protected function casts(): array
@@ -37,6 +40,7 @@ class MediaPartner extends Model
             'total_commission_paid'   => 'decimal:2',
             'balance'                 => 'decimal:2',
             'is_active'               => 'boolean',
+            'show_on_bio'             => 'boolean',
         ];
     }
 
