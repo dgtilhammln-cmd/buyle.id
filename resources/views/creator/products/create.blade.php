@@ -604,21 +604,34 @@
                 SEO & FAQ
             </button>
 
-            <div class="sidebar-settings-box" style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7;">
+            <div class="sidebar-settings-box" style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7; display:flex; flex-direction:column; gap:0.9rem;">
                 <div
-                    style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">
+                    style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:0.1rem; text-transform:uppercase; letter-spacing:0.05em;">
                     Pengaturan Form</div>
 
                 <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
                     <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
                         <input type="checkbox" name="is_advanced" id="seoModeToggle" onchange="toggleSeoMode()"
-                            style="opacity:0; width:0; height:0;" {{ old('is_advanced') ? 'checked' : '' }}>
+                            style="opacity:0; width:0; height:0;" {{ old('is_advanced') ? 'checked' : '' }} form="productForm">
                         <span class="toggle-slider-s"></span>
                     </div>
                     <div>
                         <div style="font-size:0.85rem; font-weight:700; color:#0b120c;">Mode Advanced SEO</div>
                         <div style="font-size:0.7rem; color:#64748b; line-height:1.4; margin-top:0.2rem;">Tampilkan tab SEO
                             & Schema FAQ</div>
+                    </div>
+                </label>
+
+                <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+                    <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                        <input type="hidden" name="is_active" value="0" form="productForm">
+                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', '1') == '1' ? 'checked' : '' }}
+                            style="opacity:0; width:0; height:0;" form="productForm">
+                        <span class="toggle-slider-s"></span>
+                    </div>
+                    <div>
+                        <div style="font-size:0.85rem; font-weight:700; color:#0b120c;">Status Produk Aktif</div>
+                        <div style="font-size:0.7rem; color:#64748b; line-height:1.4; margin-top:0.2rem;">Langsung tampil di toko &amp; bio link</div>
                     </div>
                 </label>
             </div>
@@ -746,6 +759,25 @@
                                             @endforeach
                                         </optgroup>
                                     </select>
+                                </div>
+
+                                <div class="form-group" id="subCatWrap" style="display:none;">
+                                    <label class="form-label">Sub-Kategori</label>
+                                    <select name="product_sub_category_id" id="subCatSelect" class="form-input">
+                                        <option value="">— Pilih Sub-Kategori —</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" id="groupWrap">
+                                    <label class="form-label">Kelompok Produk</label>
+                                    <select name="creator_group_id" class="form-input">
+                                        <option value="">— Tidak Masuk Kelompok —</option>
+                                        @foreach($groups as $grp)
+                                            <option value="{{ $grp->id }}" {{ old('creator_group_id') == $grp->id ? 'selected' : '' }}>{{ $grp->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="form-hint"><a href="{{ route('creator.groups.index') }}"
+                                            style="color:#1eb349;text-decoration:none;">Buat Kelompok Baru?</a></span>
                                 </div>
 
                                 <div class="form-group full" id="ticketFieldsWrap"
@@ -1095,25 +1127,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group" id="subCatWrap" style="display:none;">
-                                    <label class="form-label">Sub-Kategori</label>
-                                    <select name="product_sub_category_id" id="subCatSelect" class="form-input">
-                                        <option value="">— Pilih Sub-Kategori —</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group" id="groupWrap">
-                                    <label class="form-label">Kelompok Produk</label>
-                                    <select name="creator_group_id" class="form-input">
-                                        <option value="">— Tidak Masuk Kelompok —</option>
-                                        @foreach($groups as $grp)
-                                            <option value="{{ $grp->id }}" {{ old('creator_group_id') == $grp->id ? 'selected' : '' }}>{{ $grp->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="form-hint"><a href="{{ route('creator.groups.index') }}"
-                                            style="color:#1eb349;text-decoration:none;">Buat Kelompok Baru?</a></span>
-                                </div>
-
                                 {{-- PHYSICAL PRODUCT SPECIFIC FIELDS --}}
                                 <div class="form-group full" id="physicalFieldsWrap"
                                     style="display:none; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
@@ -1204,7 +1217,7 @@
                                 @include('creator.products.partials.variants-manager')
 
                                 <div id="commissionWrap" class="form-group full"
-                                    style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
+                                    style="display: {{ old('product_type', $selectedType) === 'ticket' ? 'none' : 'block' }}; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
                                     <label
                                         style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
                                         <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
@@ -1280,11 +1293,11 @@
                                     </div>
                                 @endif
 
-                                <div class="form-group full" id="shortDescWrap">
+                                <div class="form-group full" id="shortDescWrap" style="display: {{ old('product_type', $selectedType) === 'ticket' ? 'none' : 'block' }};">
                                     <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
                                     <textarea name="short_desc" id="shortDescInput" class="form-input" rows="2"
                                         placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160"
-                                        required>{{ old('short_desc') }}</textarea>
+                                        {{ old('product_type', $selectedType) === 'ticket' ? '' : 'required' }}>{{ old('short_desc') }}</textarea>
                                     <span class="form-hint">Digunakan sebagai meta description SEO jika mode advanced
                                         dimatikan.</span>
                                 </div>
@@ -1292,23 +1305,6 @@
                                 <div class="form-group full" style="margin-bottom:0;">
                                     <label class="form-label">Deskripsi Lengkap <span>*</span></label>
                                     @include('admin.partials.rich-editor', ['name' => 'description', 'value' => old('description'), 'height' => '280px'])
-                                </div>
-
-                                <div class="form-group"
-                                    style="flex-direction:row; align-items:center; gap:0.75rem; margin-top:2rem; padding-top:1rem; border-top:1px solid #f3f7f3;">
-                                    <label class="toggle-switch"
-                                        style="position:relative; width:44px; height:24px; flex-shrink:0;">
-                                        <input type="hidden" name="is_active" value="0">
-                                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', '1') == '1' ? 'checked' : '' }} style="opacity:0; width:0; height:0;">
-                                        <span class="toggle-slider-s"></span>
-                                    </label>
-                                    <div>
-                                        <div class="form-label" style="font-size:0.9rem;">Status Produk: Langsung Aktif
-                                        </div>
-                                        <div class="form-hint">Nyalakan agar produk langsung tampil di etalase toko setelah
-                                            dibuat. Matikan untuk menyimpan sebagai Draf / Arsip (tidak tampil ke pembeli).
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2117,12 +2113,25 @@
                 if (categoryWrap) categoryWrap.style.display = 'block';
                 if (groupWrap) groupWrap.style.display = 'block';
                 if (catSelect) catSelect.setAttribute('required', 'required');
-                // Komisi Affiliate hanya untuk digital & tiket
-                if (commissionWrap) commissionWrap.style.display = 'block';
-                if (commissionInput) commissionInput.removeAttribute('required'); // tidak required, pakai toggle
+                // Komisi Affiliate hanya untuk digital
+                if (val === 'external_link') {
+                    if (commissionWrap) commissionWrap.style.display = 'block';
+                } else {
+                    if (commissionWrap) commissionWrap.style.display = 'none';
+                }
+                if (commissionInput) commissionInput.removeAttribute('required');
             }
 
             if (val === 'ticket') {
+                if (shortDescWrap) shortDescWrap.style.display = 'none';
+                if (shortDescInput) shortDescInput.removeAttribute('required');
+                if (commissionWrap) commissionWrap.style.display = 'none';
+                if (commissionInput) commissionInput.removeAttribute('required');
+                const affToggle = document.getElementById('affiliateCommissionToggle');
+                if (affToggle) {
+                    affToggle.checked = false;
+                    handleAffiliateToggle(false);
+                }
                 if (wrap) wrap.style.display = 'block';
                 if (posterWrap) posterWrap.style.display = 'block';
                 if (digitalCard) digitalCard.style.display = 'none';
@@ -2134,6 +2143,9 @@
                 if (extInput) extInput.removeAttribute('required');
                 if (evType) toggleEventTypeFields(evType.value);
             } else if (val === 'external_link') {
+                if (shortDescWrap) shortDescWrap.style.display = 'block';
+                if (shortDescInput) shortDescInput.setAttribute('required', 'required');
+                if (commissionWrap) commissionWrap.style.display = 'block';
                 if (wrap) wrap.style.display = 'none';
                 if (posterWrap) posterWrap.style.display = 'none';
                 if (digitalCard) digitalCard.style.display = 'block';
