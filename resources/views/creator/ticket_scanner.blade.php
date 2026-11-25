@@ -3258,6 +3258,18 @@
                         <span class="tab-text-full">Akses Gate Crew</span>
                     </button>
                     @endif
+                    <button type="button" class="tab-btn {{ $activeTab === 'ots' ? 'active' : '' }}"
+                        onclick="switchTab('tab-ots', this)" title="Kasir Loket OTS">
+                        <span class="tab-icon-wrap">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="2" y="4" width="20" height="16" rx="3" />
+                                <line x1="2" y1="10" x2="22" y2="10" />
+                                <circle cx="7" cy="15" r="1.5" />
+                                <line x1="12" y1="15" x2="17" y2="15" />
+                            </svg>
+                        </span>
+                        <span class="tab-text-full">Kasir Loket OTS</span>
+                    </button>
                     <a href="{{ route('creator.ticket.profile') }}" class="tab-btn" title="Menu & Profil">
                         <span class="tab-icon-wrap">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -4724,7 +4736,7 @@
     </div>
     </div>
 
-
+        @include('creator.ticket_ots_tab')
 
     </div> {{-- Close .bio-content --}}
 
@@ -4737,7 +4749,7 @@
         $showCreatorAdminTabs = !($isCrewMode ?? false) && $isKycVerified;
     @endphp
     <div class="scanner-bottom-nav-wrap" id="scannerBottomNavWrap">
-        <div class="scanner-bottom-nav-bar" style="{{ !$showCreatorAdminTabs ? 'grid-template-columns: 1fr 52px 1fr !important;' : 'grid-template-columns: 1fr 1fr 52px 1fr 1fr !important;' }}">
+        <div class="scanner-bottom-nav-bar" style="{{ !$showCreatorAdminTabs ? 'grid-template-columns: 1fr 1fr 52px 1fr !important;' : 'grid-template-columns: 1fr 1fr 52px 1fr 1fr 1fr !important;' }}">
             {{-- 1. Home (Pojok Kiri) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'home' ? 'active' : '' }}" id="scanNavHome"
                 onclick="switchTab('tab-home', this); updateBottomNav('home')" title="Home Event">
@@ -4770,8 +4782,19 @@
                 </svg>
             </button>
 
+            {{-- 4. Kasir Loket OTS --}}
+            <button type="button" class="scanner-nav-item {{ $activeTab === 'ots' ? 'active' : '' }}" id="scanNavOts"
+                onclick="switchTab('tab-ots', this); updateBottomNav('ots')" title="Kasir Loket OTS">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <rect x="2" y="4" width="20" height="16" rx="3" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                    <circle cx="7" cy="15" r="1.5" />
+                    <line x1="12" y1="15" x2="17" y2="15" />
+                </svg>
+            </button>
+
             @if($showCreatorAdminTabs)
-            {{-- 4. Akses Gate Panitia (Hanya Creator Mode) --}}
+            {{-- 5. Akses Gate Panitia (Hanya Creator Mode) --}}
             <button type="button" class="scanner-nav-item {{ $activeTab === 'gate' ? 'active' : '' }}" id="scanNavGate"
                 onclick="switchTab('tab-gate', this); updateBottomNav('gate')" title="Akses Gate Panitia">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -4782,7 +4805,7 @@
             </button>
             @endif
 
-            {{-- 5. Menu & Profil (Pojok Kanan) --}}
+            {{-- 6. Menu & Profil (Pojok Kanan) --}}
             <a href="{{ route('creator.ticket.profile') }}" class="scanner-nav-item" id="scanNavProfile"
                 title="Menu & Profil">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -5143,6 +5166,7 @@
             else if (tabId === 'tab-data') tabName = 'data';
             else if (tabId === 'tab-scanner') tabName = 'scanner';
             else if (tabId === 'tab-gate') tabName = 'gate';
+            else if (tabId === 'tab-ots') tabName = 'ots';
             else if (tabId === 'tab-profile') tabName = 'profile';
 
             // Sync both desktop sidebar tabs and mobile bottom navbar
@@ -6988,9 +7012,10 @@
                 ? 'scanNavProfile'
                 : (activeKey === 'data' ? 'scanNavData'
                     : (activeKey === 'scanner' ? 'scanNavScanner'
-                        : (activeKey === 'gate' ? 'scanNavGate' : 'scanNavHome')));
+                        : (activeKey === 'ots' ? 'scanNavOts'
+                            : (activeKey === 'gate' ? 'scanNavGate' : 'scanNavHome'))));
 
-            ['scanNavHome', 'scanNavData', 'scanNavScanner', 'scanNavGate', 'scanNavProfile'].forEach(id => {
+            ['scanNavHome', 'scanNavData', 'scanNavScanner', 'scanNavOts', 'scanNavGate', 'scanNavProfile'].forEach(id => {
                 const el = document.getElementById(id);
                 if (!el) return;
                 if (id === activeId) {

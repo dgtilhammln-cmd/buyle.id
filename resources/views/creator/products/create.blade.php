@@ -1180,6 +1180,71 @@
                                             </div>
                                         </div>
 
+                                        {{-- PENGATURAN TIKET OTS (ON-THE-SPOT / LOKET VENUE) --}}
+                                        <div class="form-group full" id="ticketOtsSection"
+                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
+                                            <div
+                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                                                <div>
+                                                    <div
+                                                        style="font-weight:700; font-size:0.88rem; color:#166534; display:flex; align-items:center; gap:0.4rem;">
+                                                        <svg width="17" height="17" fill="none" stroke="#166534"
+                                                            stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <rect x="2" y="4" width="20" height="16" rx="3" />
+                                                            <line x1="2" y1="10" x2="22" y2="10" />
+                                                            <circle cx="7" cy="15" r="1" />
+                                                            <line x1="12" y1="15" x2="17" y2="15" />
+                                                        </svg>
+                                                        <span>Penjualan Tiket OTS (On-The-Spot / Kasir Loket Hari-H)</span>
+                                                    </div>
+                                                    <div style="font-size:0.74rem; color:#64748B; margin-top:0.25rem;">
+                                                        Buka penjualan tiket walk-in di pintu masuk (venue) menggunakan antarmuka Kasir Loket cepat oleh Panitia / Crew.
+                                                    </div>
+                                                </div>
+
+                                                <label
+                                                    style="display:flex; align-items:center; gap:0.55rem; cursor:pointer; background:#F0FDF4; border:1px solid #BBF7D0; padding:0.35rem 0.8rem; border-radius:999px;">
+                                                    <input type="checkbox" name="ots_enabled" id="ticketOtsToggle" value="1"
+                                                        {{ old('ots_enabled', '1') == '1' ? 'checked' : '' }}
+                                                        onchange="toggleTicketOtsBox(this.checked)"
+                                                        style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                                                    <span style="font-size:0.8rem; font-weight:700; color:#166534;">Aktifkan Tiket OTS</span>
+                                                </label>
+                                            </div>
+
+                                            <div id="ticketOtsBox"
+                                                style="{{ old('ots_enabled', '1') == '1' ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.85rem;">
+                                                    <div>
+                                                        <label class="form-label"
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
+                                                            Harga Tiket OTS (Rp)
+                                                        </label>
+                                                        <div style="position:relative;">
+                                                            <span
+                                                                style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); font-size:0.82rem; font-weight:700; color:#64748B;">Rp</span>
+                                                            <input type="number" step="1000" min="0" name="ots_price" id="ticketOtsPriceInput"
+                                                                value="{{ old('ots_price') }}"
+                                                                class="form-input" placeholder="Sama dengan harga normal (otomatis)"
+                                                                style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px; padding-left:2.4rem;">
+                                                        </div>
+                                                        <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.25rem;">Kosongkan jika harga OTS sama dengan harga tiket online.</div>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label"
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
+                                                            Alokasi Kuota Khusus OTS (Opsional)
+                                                        </label>
+                                                        <input type="number" min="0" name="ots_quota" id="ticketOtsQuotaInput"
+                                                            value="{{ old('ots_quota') }}"
+                                                            class="form-input" placeholder="Pakai sisa stok produk (otomatis)"
+                                                            style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px;">
+                                                        <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.25rem;">Kosongkan jika ingin kuota OTS fleksibel dari sisa stok event.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
                                         <div class="form-group full" id="customFieldsSection"
                                             style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
@@ -3035,6 +3100,11 @@
         // Ticket Tax helper functions
         function toggleTicketTaxBox(checked) {
             const box = document.getElementById('ticketTaxBox');
+            if (box) box.style.display = checked ? 'block' : 'none';
+        }
+
+        function toggleTicketOtsBox(checked) {
+            const box = document.getElementById('ticketOtsBox');
             if (box) box.style.display = checked ? 'block' : 'none';
         }
 

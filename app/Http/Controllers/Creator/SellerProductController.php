@@ -257,10 +257,18 @@ class SellerProductController extends Controller
             $data['tax_enabled'] = $request->boolean('tax_enabled');
             $data['tax_name']    = $data['tax_enabled'] ? ($request->input('tax_name') ?: 'Pajak Daerah / Hiburan') : null;
             $data['tax_rate']    = $data['tax_enabled'] ? (float) ($request->input('tax_rate', 0)) : 0;
+
+            // Pengaturan Tiket OTS (On-The-Spot)
+            $data['ots_enabled'] = $request->boolean('ots_enabled');
+            $data['ots_price']   = $request->filled('ots_price') ? (float) $request->input('ots_price') : null;
+            $data['ots_quota']   = $request->filled('ots_quota') ? (int) $request->input('ots_quota') : null;
         } else {
             $data['tax_enabled'] = false;
             $data['tax_name']    = null;
             $data['tax_rate']    = 0;
+            $data['ots_enabled'] = false;
+            $data['ots_price']   = null;
+            $data['ots_quota']   = null;
         }
 
         // Generate unique slug
@@ -523,10 +531,18 @@ class SellerProductController extends Controller
             $data['tax_enabled'] = $request->boolean('tax_enabled');
             $data['tax_name']    = $data['tax_enabled'] ? ($request->input('tax_name') ?: 'Pajak Daerah / Hiburan') : null;
             $data['tax_rate']    = $data['tax_enabled'] ? (float) ($request->input('tax_rate', 0)) : 0;
+
+            // Pengaturan Tiket OTS (On-The-Spot)
+            $data['ots_enabled'] = $request->boolean('ots_enabled');
+            $data['ots_price']   = $request->filled('ots_price') ? (float) $request->input('ots_price') : null;
+            $data['ots_quota']   = $request->filled('ots_quota') ? (int) $request->input('ots_quota') : null;
         } else {
             $data['tax_enabled'] = false;
             $data['tax_name']    = null;
             $data['tax_rate']    = 0;
+            $data['ots_enabled'] = false;
+            $data['ots_price']   = null;
+            $data['ots_quota']   = null;
         }
 
         $product->update($data);

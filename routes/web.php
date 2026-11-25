@@ -1148,6 +1148,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('creator')->name('creator.')-
     Route::post('/scanner/extend-gate/{product}', [\App\Http\Controllers\TicketScannerController::class, 'quickExtendGate'])->name('ticket.scanner.extend-gate');
     Route::post('/scanner/toggle-bypass/{product}', [\App\Http\Controllers\TicketScannerController::class, 'toggleGateBypass'])->name('ticket.scanner.toggle-bypass');
     Route::post('/scanner/update-pin/{product}', [\App\Http\Controllers\TicketScannerController::class, 'updateGatePin'])->name('ticket.scanner.update-pin');
+    // Tiket OTS (On-The-Spot / Kasir Loket)
+    Route::post('/scanner/ots-order', [\App\Http\Controllers\TicketScannerController::class, 'storeOtsOrder'])->name('ticket.scanner.ots.order');
     // Bank / Payout Account (dari halaman event-attendance)
     Route::post('/event-attendance/bank', [\App\Http\Controllers\TicketScannerController::class, 'updateBankAccount'])->name('ticket.bank.update');
     // Ticket Detail JSON (untuk modal)

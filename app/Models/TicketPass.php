@@ -24,6 +24,9 @@ class TicketPass extends Model
         'holder_nik',
         'extra_data',
         'status',
+        'is_ots',
+        'cashier_user_id',
+        'payment_method',
         'checked_in_at',
         'checked_in_by',
         'scanned_by_staff_name',
@@ -34,6 +37,7 @@ class TicketPass extends Model
         'holder_nik'    => 'encrypted', // AES-256 via APP_KEY, otomatis encrypt/decrypt
         'extra_data'    => 'array',
         'checked_in_at' => 'datetime',
+        'is_ots'        => 'boolean',
     ];
 
     /**

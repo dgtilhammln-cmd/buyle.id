@@ -27,6 +27,7 @@ class Product extends Model
         // Event / Ticket fields
         'event_date', 'event_end_date', 'event_time', 'event_location', 'event_type', 'event_sub_type', 'custom_fields', 'event_platform',
         'tax_name', 'tax_rate', 'tax_enabled',
+        'ots_enabled', 'ots_price', 'ots_quota',
         'terms_conditions', 'instagram_username', 'tiktok_username',
         'gate_scanner_key', 'gate_scanner_enabled', 'gate_scanner_pin',
         'gate_open_time', 'gate_close_time', 'gate_bypass_time',
@@ -73,6 +74,9 @@ class Product extends Model
         'custom_fields'        => 'array',
         'tax_rate'             => 'decimal:2',
         'tax_enabled'          => 'boolean',
+        'ots_enabled'          => 'boolean',
+        'ots_price'            => 'decimal:2',
+        'ots_quota'            => 'integer',
         'gate_scanner_enabled' => 'boolean',
         'gate_bypass_time'     => 'boolean',
         'require_follow_join'  => 'boolean',
@@ -836,6 +840,22 @@ class Product extends Model
     /**
      * Dapatkan persentase pajak tiket yang berlaku (Pajak Daerah / Hiburan / PPN).
      */
+    public function getEffectiveOtsPriceAttribute(): float
+    {
+        if ($this->ots_price !== null && (float) $this->ots_price > 0) {
+            return (float) $this->ots_price;
+        }
+        return (float) ($this->sale_price ?: $this->price);
+    }
+
+    public function getEffectiveOtsQuotaAttribute(): int
+    {
+        if ($this->ots_quota !== null && $this->ots_quota > 0) {
+            return (int) $this->ots_quota;
+        }
+        return (int) ($this->stock ?? 0);
+    }
+
     public function getTicketTaxRateAttribute(): float
     {
         if (!empty($this->attributes['tax_enabled']) && isset($this->attributes['tax_rate'])) {

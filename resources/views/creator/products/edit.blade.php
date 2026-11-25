@@ -712,14 +712,20 @@
                             <div class="form-grid">
                                 <div class="form-group full">
                                     <label class="form-label">Nama Produk <span>*</span></label>
-                                    <input type="text" name="name" id="productNameInput" value="{{ old('name', $product->name) }}"
-                                        class="form-input" placeholder="Contoh: Tiket Konser Musik Fest 2026" required oninput="handleProductNameInput(this.value)">
-                                    <div style="font-size:0.75rem; color:#64748B; margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; font-family:'Montserrat', sans-serif;">
+                                    <input type="text" name="name" id="productNameInput"
+                                        value="{{ old('name', $product->name) }}" class="form-input"
+                                        placeholder="Contoh: Tiket Konser Musik Fest 2026" required
+                                        oninput="handleProductNameInput(this.value)">
+                                    <div
+                                        style="font-size:0.75rem; color:#64748B; margin-top:0.35rem; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; font-family:'Montserrat', sans-serif;">
                                         <span style="font-weight:600; color:#0f172a;">Slug URL:</span>
-                                        <span style="background:#f1f5f9; padding:2px 8px; border-radius:6px; font-family:monospace; color:#166534; font-weight:700;" id="productSlugPreview">
+                                        <span
+                                            style="background:#f1f5f9; padding:2px 8px; border-radius:6px; font-family:monospace; color:#166534; font-weight:700;"
+                                            id="productSlugPreview">
                                             {{ old('slug', $product->slug) }}
                                         </span>
-                                        <span style="color:#94a3b8; font-size:0.7rem;">(Otomatis diperbarui mengikuti judul produk)</span>
+                                        <span style="color:#94a3b8; font-size:0.7rem;">(Otomatis diperbarui mengikuti judul
+                                            produk)</span>
                                     </div>
                                 </div>
 
@@ -1111,59 +1117,72 @@
                                                         style="font-weight:700; font-size:0.88rem; color:#166534; display:flex; align-items:center; gap:0.4rem;">
                                                         <svg width="17" height="17" fill="none" stroke="#166534"
                                                             stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                                            <path
+                                                                d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6">
+                                                            </path>
                                                         </svg>
                                                         <span>Pajak Daerah / Hiburan / Biaya Layanan Tiket (Opsional)</span>
                                                     </div>
                                                     <div style="font-size:0.74rem; color:#64748B; margin-top:0.25rem;">
-                                                        Pajak resmi daerah (PB1 / Pajak Hiburan) yang akan otomatis dihitung dan ditambahkan ke rincian checkout tiket pembeli.
+                                                        Pajak resmi daerah (PB1 / Pajak Hiburan) yang akan otomatis dihitung
+                                                        dan ditambahkan ke rincian checkout tiket pembeli.
                                                     </div>
                                                 </div>
 
                                                 <label
                                                     style="display:flex; align-items:center; gap:0.55rem; cursor:pointer; background:#F0FDF4; border:1px solid #BBF7D0; padding:0.35rem 0.8rem; border-radius:999px;">
                                                     <input type="checkbox" name="tax_enabled" id="ticketTaxToggle" value="1"
-                                                        {{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'checked' : '' }}
-                                                        onchange="toggleTicketTaxBox(this.checked)"
+                                                        {{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'checked' : '' }} onchange="toggleTicketTaxBox(this.checked)"
                                                         style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
-                                                    <span style="font-size:0.8rem; font-weight:700; color:#166534;">Aktifkan Pajak Tiket</span>
+                                                    <span style="font-size:0.8rem; font-weight:700; color:#166534;">Aktifkan
+                                                        Pajak Tiket</span>
                                                 </label>
                                             </div>
 
                                             <div id="ticketTaxBox"
                                                 style="{{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
                                                 {{-- Quick Template Pills --}}
-                                                <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap; margin-bottom:0.85rem;">
-                                                    <span style="font-size:0.75rem; font-weight:700; color:#475569;">Pilihan Template:</span>
+                                                <div
+                                                    style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap; margin-bottom:0.85rem;">
+                                                    <span style="font-size:0.75rem; font-weight:700; color:#475569;">Pilihan
+                                                        Template:</span>
                                                     <button type="button" class="tax-tpl-btn"
                                                         onclick="applyTaxTemplate('Pajak Hiburan / Daerah (10%)', 10)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Hiburan 10%</button>
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak
+                                                        Hiburan 10%</button>
                                                     <button type="button" class="tax-tpl-btn"
                                                         onclick="applyTaxTemplate('Pajak Hiburan / Daerah (15%)', 15)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Hiburan 15%</button>
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak
+                                                        Hiburan 15%</button>
                                                     <button type="button" class="tax-tpl-btn"
                                                         onclick="applyTaxTemplate('Pajak Daerah / PB1 (10%)', 10)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Daerah (PB1) 10%</button>
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak
+                                                        Daerah (PB1) 10%</button>
                                                     <button type="button" class="tax-tpl-btn"
                                                         onclick="applyTaxTemplate('PPN (11%)', 11)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">PPN 11%</button>
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">PPN
+                                                        11%</button>
                                                     <button type="button" class="tax-tpl-btn"
                                                         onclick="applyTaxTemplate('Pajak Daerah (5%)', 5)"
-                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak Daerah 5%</button>
+                                                        style="background:#F0FDF4; border:1px solid #BBF7D0; color:#166534; font-size:0.74rem; font-weight:700; padding:0.25rem 0.65rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif;">Pajak
+                                                        Daerah 5%</button>
                                                 </div>
 
                                                 <div style="display:grid; grid-template-columns: 2fr 1fr; gap:0.85rem;">
                                                     <div>
                                                         <label class="form-label"
-                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Nama Pajak / Keterangan Tagihan</label>
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Nama
+                                                            Pajak / Keterangan Tagihan</label>
                                                         <input type="text" name="tax_name" id="ticketTaxNameInput"
                                                             value="{{ old('tax_name', $product->tax_name ?? 'Pajak Hiburan / Daerah (10%)') }}"
-                                                            class="form-input" placeholder="Contoh: Pajak Hiburan / Daerah (PB1)"
+                                                            class="form-input"
+                                                            placeholder="Contoh: Pajak Hiburan / Daerah (PB1)"
                                                             style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px;">
                                                     </div>
                                                     <div>
                                                         <label class="form-label"
-                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Tarif Pajak (%)</label>
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">Tarif
+                                                            Pajak (%)</label>
                                                         <div style="position:relative;">
                                                             <input type="number" step="0.1" min="0" max="100"
                                                                 name="tax_rate" id="ticketTaxRateInput"
@@ -1173,6 +1192,71 @@
                                                             <span
                                                                 style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.82rem;">%</span>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- PENGATURAN TIKET OTS (ON-THE-SPOT / LOKET VENUE) --}}
+                                        <div class="form-group full" id="ticketOtsSection"
+                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
+                                            <div
+                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                                                <div>
+                                                    <div
+                                                        style="font-weight:700; font-size:0.88rem; color:#166534; display:flex; align-items:center; gap:0.4rem;">
+                                                        <svg width="17" height="17" fill="none" stroke="#166534"
+                                                            stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <rect x="2" y="4" width="20" height="16" rx="3" />
+                                                            <line x1="2" y1="10" x2="22" y2="10" />
+                                                            <circle cx="7" cy="15" r="1" />
+                                                            <line x1="12" y1="15" x2="17" y2="15" />
+                                                        </svg>
+                                                        <span>Penjualan Tiket OTS (On-The-Spot / Kasir Loket Hari-H)</span>
+                                                    </div>
+                                                    <div style="font-size:0.74rem; color:#64748B; margin-top:0.25rem;">
+                                                        Buka penjualan tiket walk-in di pintu masuk (venue) menggunakan antarmuka Kasir Loket cepat oleh Panitia / Crew.
+                                                    </div>
+                                                </div>
+
+                                                <label
+                                                    style="display:flex; align-items:center; gap:0.55rem; cursor:pointer; background:#F0FDF4; border:1px solid #BBF7D0; padding:0.35rem 0.8rem; border-radius:999px;">
+                                                    <input type="checkbox" name="ots_enabled" id="ticketOtsToggle" value="1"
+                                                        {{ old('ots_enabled', (string)($product->ots_enabled ?? 1)) == '1' ? 'checked' : '' }}
+                                                        onchange="toggleTicketOtsBox(this.checked)"
+                                                        style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                                                    <span style="font-size:0.8rem; font-weight:700; color:#166534;">Aktifkan Tiket OTS</span>
+                                                </label>
+                                            </div>
+
+                                            <div id="ticketOtsBox"
+                                                style="{{ old('ots_enabled', (string)($product->ots_enabled ?? 1)) == '1' ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.85rem;">
+                                                    <div>
+                                                        <label class="form-label"
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
+                                                            Harga Tiket OTS (Rp)
+                                                        </label>
+                                                        <div style="position:relative;">
+                                                            <span
+                                                                style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); font-size:0.82rem; font-weight:700; color:#64748B;">Rp</span>
+                                                            <input type="number" step="1000" min="0" name="ots_price" id="ticketOtsPriceInput"
+                                                                value="{{ old('ots_price', $product->ots_price ? (int)$product->ots_price : '') }}"
+                                                                class="form-input" placeholder="Sama dengan harga normal (otomatis)"
+                                                                style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px; padding-left:2.4rem;">
+                                                        </div>
+                                                        <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.25rem;">Kosongkan jika harga OTS sama dengan harga tiket online.</div>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label"
+                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
+                                                            Alokasi Kuota Khusus OTS (Opsional)
+                                                        </label>
+                                                        <input type="number" min="0" name="ots_quota" id="ticketOtsQuotaInput"
+                                                            value="{{ old('ots_quota', $product->ots_quota ?? '') }}"
+                                                            class="form-input" placeholder="Pakai sisa stok produk (otomatis)"
+                                                            style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px;">
+                                                        <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.25rem;">Kosongkan jika ingin kuota OTS fleksibel dari sisa stok event.</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2047,17 +2131,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                                    <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                                        <div class="form-group">
-                                                            <label class="form-label">Pertanyaan</label>
-                                                            <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="form-label">Jawaban</label>
-                                                            <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                                        </div>
-                                                        <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                                    </div>`;
+                                                                                        <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                                                            <div class="form-group">
+                                                                                                <label class="form-label">Pertanyaan</label>
+                                                                                                <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <label class="form-label">Jawaban</label>
+                                                                                                <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                                                            </div>
+                                                                                            <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                                                                        </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -2378,42 +2462,42 @@
             row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:\'Montserrat\', sans-serif;';
 
             row.innerHTML = `
-                        <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
-                            <div>
-                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
-                                <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                            </div>
-                            <div>
-                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
-                                <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                                    <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
-                                    <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
-                                    <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
-                                    <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
-                                    <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
-                                <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
-                                    <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
-                                    <span>Wajib Diisi</span>
-                                </label>
-                            </div>
-                            <div style="padding-top:1.4rem;">
-                                <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
-                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
-                                Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
-                            </label>
-                            <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                            <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
-                        </div>
-                    `;
+                                                            <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
+                                                                <div>
+                                                                    <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
+                                                                    <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                                                                </div>
+                                                                <div>
+                                                                    <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
+                                                                    <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                                                                        <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
+                                                                        <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
+                                                                        <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
+                                                                        <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
+                                                                        <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div>
+                                                                    <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
+                                                                    <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                                                                        <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                                                                        <span>Wajib Diisi</span>
+                                                                    </label>
+                                                                </div>
+                                                                <div style="padding-top:1.4rem;">
+                                                                    <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
+                                                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
+                                                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
+                                                                    Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
+                                                                </label>
+                                                                <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                                                                <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
+                                                            </div>
+                                                        `;
 
             container.appendChild(row);
             if (emptyNotice) emptyNotice.style.display = 'none';
@@ -2942,18 +3026,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                                                style="width:100%; height:100%; border:none; display:block;"
-                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                allowfullscreen loading="lazy"></iframe>
-                                                        </div>`;
+                                                                                            <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                                                                <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                                                                    style="width:100%; height:100%; border:none; display:block;"
+                                                                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                                    allowfullscreen loading="lazy"></iframe>
+                                                                                            </div>`;
                 } else {
                     html += `
-                                                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                                        </div>`;
+                                                                                            <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                                                                <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                                                                <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                                                            </div>`;
                 }
             });
             html += '</div>';
@@ -3005,6 +3089,11 @@
         // Ticket Tax helper functions
         function toggleTicketTaxBox(checked) {
             const box = document.getElementById('ticketTaxBox');
+            if (box) box.style.display = checked ? 'block' : 'none';
+        }
+
+        function toggleTicketOtsBox(checked) {
+            const box = document.getElementById('ticketOtsBox');
             if (box) box.style.display = checked ? 'block' : 'none';
         }
 

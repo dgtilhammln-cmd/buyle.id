@@ -61,9 +61,8 @@ class TicketScannerController extends Controller
         $rawTab = $request->input('tab');
         if (in_array($rawTab, ['settings', 'rekening', 'profile'])) {
             return redirect()->route('creator.ticket.profile');
-        } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home'])) {
-            // Crew mode: hanya home & scanner yang boleh
-            // Creator mode: data & gate butuh KYC
+        } elseif (in_array($rawTab, ['scanner', 'data', 'gate', 'home', 'ots'])) {
+            // Crew mode: data & gate butuh KYC / creator
             if ($isCrewMode && in_array($rawTab, ['data', 'gate'])) {
                 return redirect()->route('creator.ticket.scanner', ['tab' => 'home']);
             }
@@ -309,6 +308,31 @@ class TicketScannerController extends Controller
             ->orderBy('event_date', 'asc')
             ->get();
 
+        // Data & Laporan Tiket OTS (On-The-Spot / Kasir Loket)
+        $otsOrderQuery = \App\Models\Order::where('source', 'ots')
+            ->whereHas('items', function ($q) use ($events) {
+                $q->whereIn('product_id', $events->pluck('id'));
+            });
+
+        $otsOrders = (clone $otsOrderQuery)
+            ->with(['items.product'])
+            ->orderBy('id', 'desc')
+            ->take(15)
+            ->get();
+
+        $otsStats = [
+            'total_tickets' => TicketPass::where('is_ots', true)->whereIn('product_id', $events->pluck('id'))->count(),
+            'total_revenue' => (float) (clone $otsOrderQuery)->where('status', 'confirmed')->sum('total'),
+            'total_cash'    => (float) (clone $otsOrderQuery)->where('status', 'confirmed')
+                ->where(function ($q) {
+                    $q->where('shipping_address->payment_method', 'cash')
+                      ->orWhere('notes', 'like', '%cash%');
+                })->sum('total'),
+            'total_qris'    => (float) (clone $otsOrderQuery)->where('status', 'confirmed')
+                ->where('shipping_address->payment_method', 'qris')
+                ->sum('total'),
+        ];
+
         return view('creator.ticket_scanner', compact(
             'seo',
             'events',
@@ -336,7 +360,9 @@ class TicketScannerController extends Controller
             'isCrewMode',
             'myStaffRecord',
             'myStaffPosition',
-            'isGateDivision'
+            'isGateDivision',
+            'otsOrders',
+            'otsStats'
         ));
     }
 
@@ -1419,5 +1445,207 @@ class TicketScannerController extends Controller
             'seo',
             'isCrewMode'
         ));
+    }
+
+    /**
+     * Proses transaksi penjualan tiket OTS (On-The-Spot / Kasir Loket Hari-H).
+     */
+    public function storeOtsOrder(Request $request): JsonResponse
+    {
+        $sellerId = auth()->id();
+        $user = auth()->user();
+
+        $request->validate([
+            'product_id'       => 'required|exists:products,id',
+            'qty'              => 'required|integer|min:1|max:50',
+            'buyer_name'       => 'required|string|max:150',
+            'buyer_phone'      => 'nullable|string|max:30',
+            'payment_method'   => 'required|in:cash,qris',
+            'cash_received'    => 'nullable|numeric|min:0',
+            'fulfillment_type' => 'required|in:auto_checkin,issue_ticket',
+            'notes'            => 'nullable|string|max:500',
+        ]);
+
+        $product = Product::findOrFail($request->product_id);
+
+        // Security check: Must be seller's product OR staff assigned to this product
+        $isAssigned = \App\Models\GateStaff::where('user_id', $sellerId)
+            ->where('product_id', $product->id)
+            ->where('is_active', true)
+            ->exists();
+
+        if ($product->seller_id !== $sellerId && !$isAssigned) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda tidak memiliki hak akses untuk menjual tiket event ini.'
+            ], 403);
+        }
+
+        $qty = (int) $request->qty;
+        $price = $product->effective_ots_price;
+        $subtotal = $price * $qty;
+
+        // Pajak tiket jika diaktifkan
+        $taxTotal = 0;
+        if ($product->tax_enabled && $product->ticket_tax_rate > 0) {
+            $taxTotal = round($subtotal * ($product->ticket_tax_rate / 100));
+        }
+        $total = $subtotal + $taxTotal;
+
+        // Validasi stok tiket
+        if ($product->stock !== null && $product->stock < $qty) {
+            return response()->json([
+                'success' => false,
+                'message' => "Stok tiket tidak mencukupi (Tersisa {$product->stock} tiket)."
+            ], 422);
+        }
+
+        // Validasi uang tunai
+        $cashReceived = (float) $request->input('cash_received', 0);
+        $change = 0;
+        if ($request->payment_method === 'cash') {
+            if ($cashReceived < $total) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Nominal uang tunai yang diterima kurang dari total tagihan.'
+                ], 422);
+            }
+            $change = $cashReceived - $total;
+        }
+
+        DB::beginTransaction();
+        try {
+            // Pengurangan stok secara atomik
+            if ($product->stock !== null) {
+                $product->decrement('stock', $qty);
+            }
+
+            // Generate Order
+            $orderNumber = 'OTS-' . date('ymd') . '-' . strtoupper(Str::random(5));
+            $order = \App\Models\Order::create([
+                'order_number'        => $orderNumber,
+                'user_id'             => null,
+                'customer_email'      => null,
+                'status'              => \App\Enums\OrderStatus::Confirmed,
+                'subtotal'            => $subtotal,
+                'shipping_cost'       => 0,
+                'platform_fee'        => 0,
+                'admin_fee'           => $taxTotal,
+                'payment_gateway_fee' => 0,
+                'discount'            => 0,
+                'total'               => $total,
+                'source'              => 'ots',
+                'cashier_id'          => $sellerId,
+                'cashier_name'        => $user->name,
+                'notes'               => $request->notes,
+                'shipping_address'    => [
+                    'receiver_name'   => $request->buyer_name,
+                    'phone'           => $request->buyer_phone,
+                    'payment_method'  => $request->payment_method,
+                    'cash_received'   => $cashReceived,
+                    'change'          => $change,
+                    'is_ots'          => true,
+                    'tax_name'        => $product->ticket_tax_name,
+                    'tax_total'       => $taxTotal,
+                    'fulfillment'     => $request->fulfillment_type,
+                ],
+            ]);
+
+            // Order Item
+            $orderItem = \App\Models\OrderItem::create([
+                'order_id'   => $order->id,
+                'product_id' => $product->id,
+                'qty'        => $qty,
+                'price'      => $price,
+                'subtotal'   => $subtotal,
+            ]);
+
+            // Terbitkan Tiket Pass
+            $isAutoCheckin = ($request->fulfillment_type === 'auto_checkin');
+            $createdTickets = [];
+
+            for ($i = 0; $i < $qty; $i++) {
+                $ticket = TicketPass::create([
+                    'order_id'              => $order->id,
+                    'order_item_id'         => $orderItem->id,
+                    'product_id'            => $product->id,
+                    'user_id'               => null,
+                    'seller_id'             => $product->seller_id,
+                    'holder_name'           => $request->buyer_name . ($qty > 1 ? " (#" . ($i + 1) . ")" : ""),
+                    'holder_phone'          => $request->buyer_phone,
+                    'holder_email'          => null,
+                    'status'                => $isAutoCheckin ? 'used' : 'valid',
+                    'is_ots'                => true,
+                    'cashier_user_id'       => $sellerId,
+                    'payment_method'        => $request->payment_method,
+                    'checked_in_at'         => $isAutoCheckin ? now() : null,
+                    'checked_in_by'         => $isAutoCheckin ? $sellerId : null,
+                    'scanned_by_staff_name' => $isAutoCheckin ? ($user->name . ' (Kasir Loket OTS)') : null,
+                    'scanned_at_gate'       => $isAutoCheckin ? 'Loket OTS' : null,
+                ]);
+
+                $createdTickets[] = [
+                    'id'          => $ticket->id,
+                    'ticket_code' => $ticket->ticket_code,
+                    'qr_token'    => $ticket->qr_token,
+                    'holder_name' => $ticket->holder_name,
+                    'status'      => $ticket->status,
+                    'qr_url'      => 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($ticket->qr_token),
+                ];
+            }
+
+            DB::commit();
+
+            // Format tautan WhatsApp
+            $waUrl = null;
+            if (!empty($request->buyer_phone)) {
+                $cleanPhone = preg_replace('/[^0-9]/', '', $request->buyer_phone);
+                if (str_starts_with($cleanPhone, '0')) {
+                    $cleanPhone = '62' . substr($cleanPhone, 1);
+                } elseif (!str_starts_with($cleanPhone, '62')) {
+                    $cleanPhone = '62' . $cleanPhone;
+                }
+                $ticketListText = implode("\n", array_map(fn($t) => "• " . $t['ticket_code'] . " (" . $t['holder_name'] . ")", $createdTickets));
+                $waMsg = "Halo *{$request->buyer_name}*,\n\nTerima kasih telah membeli Tiket OTS event *{$product->name}*!\n\n" .
+                         "ID Pesanan: *{$orderNumber}*\n" .
+                         "Jumlah: *{$qty} Tiket*\n" .
+                         "Total Bayar: *Rp " . number_format($total, 0, ',', '.') . " (" . strtoupper($request->payment_method) . ")*\n\n" .
+                         "Daftar Kode Tiket:\n{$ticketListText}\n\n" .
+                         ($isAutoCheckin 
+                            ? "✅ *Tiket Anda telah langsung di-check in di loket.* Selamat menikmati acara!"
+                            : "🎟️ Tunjukkan kode tiket atau QR kepada petugas di pintu masuk gate.");
+                $waUrl = "https://wa.me/{$cleanPhone}?text=" . rawurlencode($waMsg);
+            }
+
+            return response()->json([
+                'success'        => true,
+                'message'        => 'Transaksi Tiket OTS berhasil diproses!',
+                'order_number'   => $orderNumber,
+                'event_name'     => $product->name,
+                'buyer_name'     => $request->buyer_name,
+                'buyer_phone'    => $request->buyer_phone,
+                'qty'            => $qty,
+                'price'          => $price,
+                'subtotal'       => $subtotal,
+                'tax_total'      => $taxTotal,
+                'total'          => $total,
+                'payment_method' => $request->payment_method,
+                'cash_received'  => $cashReceived,
+                'change'         => $change,
+                'fulfillment'    => $request->fulfillment_type,
+                'tickets'        => $createdTickets,
+                'whatsapp_url'   => $waUrl,
+                'created_at'     => now()->format('d M Y H:i:s'),
+                'cashier_name'   => $user->name,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('OTS Ticket Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memproses tiket OTS: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
