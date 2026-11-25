@@ -813,7 +813,7 @@
                                         </div>
                                     </div>
                                     <div class="form-grid">
-                                        <div class="form-group" id="eventStartDateWrap">
+                                        <div class="form-group {{ empty(old('event_end_date')) ? 'full' : '' }}" id="eventStartDateWrap">
                                             <label class="form-label"
                                                 id="eventStartDateLabel">{{ !empty(old('event_end_date')) ? 'Tanggal Mulai Event' : 'Tanggal Pelaksanaan Event' }}
                                                 <span>*</span></label>
@@ -836,7 +836,7 @@
                                             <input type="text" name="event_time" value="{{ old('event_time') }}"
                                                 class="form-input" placeholder="Contoh: 19:00 - 22:00 WIB">
                                         </div>
-                                        <div class="form-group full">
+                                        <div class="form-group">
                                             <label class="form-label">Jenis Pelaksanaan Event <span>*</span></label>
                                             <select name="event_type" id="eventTypeSelect" class="form-input"
                                                 onchange="toggleEventTypeFields(this.value)">
@@ -1868,12 +1868,14 @@
 
         // Event Duration Mode Toggle (Single Day vs Multi Day)
         function toggleEventDurationMode(mode) {
+            const startGroup = document.getElementById('eventStartDateWrap');
             const endGroup = document.getElementById('eventEndDateWrap');
             const startLabel = document.getElementById('eventStartDateLabel');
             const endInput = document.getElementById('eventEndDateInput');
             const startInput = document.getElementById('eventDateInput');
 
             if (mode === 'multi') {
+                if (startGroup) startGroup.classList.remove('full');
                 if (endGroup) endGroup.style.display = 'block';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Mulai Event <span>*</span>';
                 if (endInput && startInput && startInput.value) {
@@ -1881,6 +1883,7 @@
                     if (!endInput.value) endInput.value = startInput.value;
                 }
             } else {
+                if (startGroup) startGroup.classList.add('full');
                 if (endGroup) endGroup.style.display = 'none';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Pelaksanaan Event <span>*</span>';
                 if (endInput) endInput.value = '';
