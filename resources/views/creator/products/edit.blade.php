@@ -306,10 +306,20 @@
             border: 1.5px solid #e7f0e7;
             background: #fff;
             color: #64748B;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
             font-weight: 700;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #334155;
         }
 
         .btn-submit {
@@ -319,11 +329,21 @@
             background: linear-gradient(135deg, #1eb349, #a5cf37);
             border: none;
             color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(30, 179, 73, 0.25);
+        }
+
+        .btn-submit:hover {
+            opacity: 0.95;
+            box-shadow: 0 4px 12px rgba(30, 179, 73, 0.35);
         }
 
         /* Sidebar Action Buttons on Desktop */
@@ -452,14 +472,17 @@
                 flex: 1;
                 justify-content: center;
                 text-align: center;
-                font-size: 0.85rem;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 0.88rem;
+                font-weight: 700;
             }
 
             .btn-submit {
                 flex: 2;
                 justify-content: center;
                 text-align: center;
-                font-size: 0.875rem;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 0.88rem;
                 font-weight: 700;
             }
 
@@ -632,12 +655,7 @@
             <div class="sidebar-action-btns">
                 <button type="submit" form="productForm" class="btn-submit"
                     style="width:100%; justify-content:center; box-sizing:border-box;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                        <polyline points="17 21 17 13 7 13 7 21" />
-                        <polyline points="7 3 7 8 15 8" />
-                    </svg>
-                    Simpan Perubahan
+                    Simpan
                 </button>
                 <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
                     class="btn-cancel" style="width:100%; justify-content:center; box-sizing:border-box;">
@@ -1791,7 +1809,7 @@
                 <div class="form-footer">
                     <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
                         class="btn-cancel">Batal</a>
-                    <button type="submit" class="btn-submit">Simpan Perubahan</button>
+                    <button type="submit" class="btn-submit">Simpan</button>
                 </div>
             </form>
         </div>
