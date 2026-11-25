@@ -538,7 +538,10 @@
     </div>
 
     <style>
-        .cr-prod-form-mob-header { display: none; }
+        .cr-prod-form-mob-header {
+            display: none;
+        }
+
         @media (max-width: 991px) {
             .cr-prod-form-mob-header {
                 display: flex !important;
@@ -547,19 +550,37 @@
                 padding: max(0.65rem, calc(0.5rem + env(safe-area-inset-top, 0px))) 0 1rem;
                 margin-bottom: 0.25rem;
             }
+
             .cr-prod-form-mob-header .prod-mobile-btn {
-                width: 40px; height: 40px; border-radius: 50%;
-                background: #ffffff; border: 1.5px solid #f1ece4;
-                display: flex; align-items: center; justify-content: center;
-                color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-                cursor: pointer; text-decoration: none; transition: all 0.2s ease;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #ffffff;
+                border: 1.5px solid #f1ece4;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #0f172a;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+                cursor: pointer;
+                text-decoration: none;
+                transition: all 0.2s ease;
                 flex-shrink: 0;
             }
-            .cr-prod-form-mob-header .prod-mobile-btn:active { transform: scale(0.92); }
+
+            .cr-prod-form-mob-header .prod-mobile-btn:active {
+                transform: scale(0.92);
+            }
+
             .cr-prod-form-mob-header .prod-mobile-title {
-                margin: 0; font-size: 1.1rem; font-weight: 800; color: #0f172a;
-                letter-spacing: -0.01em; font-family: 'Montserrat', sans-serif;
-                text-align: center; flex: 1;
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #0f172a;
+                letter-spacing: -0.01em;
+                font-family: 'Montserrat', sans-serif;
+                text-align: center;
+                flex: 1;
             }
         }
     </style>
@@ -600,7 +621,8 @@
                 SEO & FAQ
             </button>
 
-            <div class="sidebar-settings-box" style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7; display:flex; flex-direction:column; gap:0.9rem;">
+            <div class="sidebar-settings-box"
+                style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #e7f0e7; display:flex; flex-direction:column; gap:0.9rem;">
                 <div
                     style="font-size:0.75rem; font-weight:700; color:#64748b; margin-bottom:0.1rem; text-transform:uppercase; letter-spacing:0.05em;">
                     Pengaturan Form</div>
@@ -608,7 +630,8 @@
                 <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
                     <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
                         <input type="checkbox" name="is_advanced" id="seoModeToggle" onchange="toggleSeoMode()"
-                            style="opacity:0; width:0; height:0;" {{ old('is_advanced') ? 'checked' : '' }} form="productForm">
+                            style="opacity:0; width:0; height:0;" {{ old('is_advanced') ? 'checked' : '' }}
+                            form="productForm">
                         <span class="toggle-slider-s"></span>
                     </div>
                     <div>
@@ -621,13 +644,14 @@
                 <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
                     <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
                         <input type="hidden" name="is_active" value="0" form="productForm">
-                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', (string)$product->is_active) == '1' ? 'checked' : '' }}
-                            style="opacity:0; width:0; height:0;" form="productForm">
+                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', (string) $product->is_active) == '1' ? 'checked' : '' }} style="opacity:0; width:0; height:0;"
+                            form="productForm">
                         <span class="toggle-slider-s"></span>
                     </div>
                     <div>
                         <div style="font-size:0.85rem; font-weight:700; color:#0b120c;">Status Produk Aktif</div>
-                        <div style="font-size:0.7rem; color:#64748b; line-height:1.4; margin-top:0.2rem;">Langsung tampil di toko &amp; bio link</div>
+                        <div style="font-size:0.7rem; color:#64748b; line-height:1.4; margin-top:0.2rem;">Langsung tampil di
+                            toko &amp; bio link</div>
                     </div>
                 </label>
             </div>
@@ -882,7 +906,8 @@
                                             <input type="datetime-local" name="ticket_war_start"
                                                 value="{{ old('ticket_war_start', $product->ticket_war_start?->format('Y-m-d\TH:i')) }}"
                                                 class="form-input">
-                                            <span class="form-hint">Kosongkan jika langsung bisa dibeli. Isi untuk countdown hitung mundur.</span>
+                                            <span class="form-hint">Kosongkan jika langsung bisa dibeli. Isi untuk countdown
+                                                hitung mundur.</span>
                                         </div>
 
                                         <div class="form-group full" id="onlineLocationWrap" style="display:none;">
@@ -1154,60 +1179,114 @@
                                         </div>
 
                                         {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
-                                        <div class="form-group full" id="customFieldsSection" style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
-                                            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
+                                        <div class="form-group full" id="customFieldsSection"
+                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
+                                            <div
+                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
                                                 <div>
-                                                    <label class="form-label" style="font-family:'Montserrat', sans-serif; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem; font-size:0.86rem; font-weight:700; color:#166534;">
-                                                        <svg width="17" height="17" fill="none" stroke="#166534" stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <path d="M9 11l3 3L22 4"/>
-                                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                                    <label class="form-label"
+                                                        style="font-family:'Montserrat', sans-serif; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem; font-size:0.86rem; font-weight:700; color:#166534;">
+                                                        <svg width="17" height="17" fill="none" stroke="#166534"
+                                                            stroke-width="2.2" viewBox="0 0 24 24">
+                                                            <path d="M9 11l3 3L22 4" />
+                                                            <path
+                                                                d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
                                                         </svg>
                                                         Formulir Tambahan Checkout / Data Peserta (Custom Fields)
                                                     </label>
-                                                    <div style="font-family:'Montserrat', sans-serif; font-size:0.75rem; color:#64748b;">
-                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout. Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal: Ukuran Jersey, Institusi, Kontak Darurat, dll).
+                                                    <div
+                                                        style="font-family:'Montserrat', sans-serif; font-size:0.75rem; color:#64748b;">
+                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout.
+                                                        Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal:
+                                                        Ukuran Jersey, Institusi, Kontak Darurat, dll).
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <button type="button" onclick="addCustomFieldRow()" style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; background:#166534; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:background 0.15s;">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                    <button type="button" onclick="addCustomFieldRow()"
+                                                        style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; background:#166534; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:background 0.15s;">
+                                                        <svg width="14" height="14" fill="none" stroke="currentColor"
+                                                            stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                                        </svg>
                                                         Tambah Form Custom
                                                     </button>
                                                 </div>
                                             </div>
 
                                             <!-- Preset Buttons: Menggunakan Clean SVG Icons, no emoji -->
-                                            <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.5rem 0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; font-family:'Montserrat', sans-serif;">
-                                                <span style="font-size:0.74rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                            <div
+                                                style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.5rem 0.75rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; font-family:'Montserrat', sans-serif;">
+                                                <span
+                                                    style="font-size:0.74rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="#eab308"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                                    </svg>
                                                     Template Cepat:
                                                 </span>
-                                                <button type="button" onclick="applyCustomFieldPreset('run')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2 2 4"/><path d="M5 11l4-2 3 2 3-1 2 3"/><path d="M9 13l2 4"/></svg>
+                                                <button type="button" onclick="applyCustomFieldPreset('run')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <circle cx="13" cy="4" r="2" />
+                                                        <path d="M7 21l3-6 3 2 2 4" />
+                                                        <path d="M5 11l4-2 3 2 3-1 2 3" />
+                                                        <path d="M9 13l2 4" />
+                                                    </svg>
                                                     Lari / Marathon
                                                 </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('seminar')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
+                                                <button type="button" onclick="applyCustomFieldPreset('seminar')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                                                        <path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5" />
+                                                    </svg>
                                                     Seminar / Workshop
                                                 </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('sport')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                                                <button type="button" onclick="applyCustomFieldPreset('sport')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2" />
+                                                        <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2" />
+                                                        <path d="M4 22h16" />
+                                                        <path
+                                                            d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34" />
+                                                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+                                                    </svg>
                                                     Turnamen Olahraga
                                                 </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('concert')" style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
-                                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                                <button type="button" onclick="applyCustomFieldPreset('concert')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem;">
+                                                    <svg width="13" height="13" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M9 18V5l12-2v13" />
+                                                        <circle cx="6" cy="18" r="3" />
+                                                        <circle cx="18" cy="16" r="3" />
+                                                    </svg>
                                                     Konser / Festival
                                                 </button>
-                                                <button type="button" onclick="clearAllCustomFields()" style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                                                <button type="button" onclick="clearAllCustomFields()"
+                                                    style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.73rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.3rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <polyline points="1 4 1 10 7 10"></polyline>
+                                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                                    </svg>
                                                     Reset Form
                                                 </button>
                                             </div>
 
-                                            <div id="customFieldsContainer" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
+                                            <div id="customFieldsContainer"
+                                                style="display:flex; flex-direction:column; gap:0.65rem;"></div>
 
-                                            <div id="customFieldsEmptyNotice" style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.15rem; background:#fff; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
-                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap &amp; Nomor Identitas</strong> saat checkout. Klik <strong>Tambah Form Custom</strong> jika memerlukan data lain.
+                                            <div id="customFieldsEmptyNotice"
+                                                style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.15rem; background:#fff; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
+                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap
+                                                    &amp; Nomor Identitas</strong> saat checkout. Klik <strong>Tambah Form
+                                                    Custom</strong> jika memerlukan data lain.
                                             </div>
                                         </div>
                                     </div>
@@ -1387,11 +1466,11 @@
                                     </div>
                                 @endif
 
-                                <div class="form-group full" id="shortDescWrap" style="display: {{ old('product_type', $product->product_type) === 'ticket' ? 'none' : 'block' }};">
+                                <div class="form-group full" id="shortDescWrap"
+                                    style="display: {{ old('product_type', $product->product_type) === 'ticket' ? 'none' : 'block' }};">
                                     <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
                                     <textarea name="short_desc" id="shortDescInput" class="form-input" rows="2"
-                                        placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160"
-                                        {{ old('product_type', $product->product_type) === 'ticket' ? '' : 'required' }}>{{ old('short_desc', $product->short_desc) }}</textarea>
+                                        placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160" {{ old('product_type', $product->product_type) === 'ticket' ? '' : 'required' }}>{{ old('short_desc', $product->short_desc) }}</textarea>
                                     <span class="form-hint">Digunakan sebagai meta description SEO jika mode advanced
                                         dimatikan.</span>
                                 </div>
@@ -1968,17 +2047,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                            <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                                <div class="form-group">
-                                                    <label class="form-label">Pertanyaan</label>
-                                                    <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="form-label">Jawaban</label>
-                                                    <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                                </div>
-                                                <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                            </div>`;
+                                                    <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                        <div class="form-group">
+                                                            <label class="form-label">Pertanyaan</label>
+                                                            <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="form-label">Jawaban</label>
+                                                            <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                        </div>
+                                                        <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                                    </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -2299,42 +2378,42 @@
             row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:\'Montserrat\', sans-serif;';
 
             row.innerHTML = `
-                <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
-                    <div>
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
-                        <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                    </div>
-                    <div>
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
-                        <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                            <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
-                            <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
-                            <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
-                            <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
-                            <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
-                        <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
-                            <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
-                            <span>Wajib Diisi</span>
-                        </label>
-                    </div>
-                    <div style="padding-top:1.4rem;">
-                        <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
-                    <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
-                        Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
-                    </label>
-                    <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
-                    <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
-                </div>
-            `;
+                        <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
+                            <div>
+                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
+                                <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                            </div>
+                            <div>
+                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
+                                <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                                    <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
+                                    <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
+                                    <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
+                                    <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
+                                    <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
+                                <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                                    <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                                    <span>Wajib Diisi</span>
+                                </label>
+                            </div>
+                            <div style="padding-top:1.4rem;">
+                                <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
+                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
+                                Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
+                            </label>
+                            <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                            <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
+                        </div>
+                    `;
 
             container.appendChild(row);
             if (emptyNotice) emptyNotice.style.display = 'none';
@@ -2863,18 +2942,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                                <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                                    <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                                        style="width:100%; height:100%; border:none; display:block;"
-                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowfullscreen loading="lazy"></iframe>
-                                                </div>`;
+                                                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                                style="width:100%; height:100%; border:none; display:block;"
+                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                allowfullscreen loading="lazy"></iframe>
+                                                        </div>`;
                 } else {
                     html += `
-                                                <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                                    <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                                    <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                                </div>`;
+                                                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                        </div>`;
                 }
             });
             html += '</div>';
