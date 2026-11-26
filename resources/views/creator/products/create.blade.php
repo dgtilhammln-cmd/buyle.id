@@ -270,6 +270,23 @@
             transform: translateX(20px);
         }
 
+        /* Custom Fields Grid */
+        .cf-fields-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(130px, 1.2fr) auto auto;
+            gap: 0.65rem;
+            align-items: end;
+        }
+        @media (max-width: 640px) {
+            .cf-fields-grid {
+                grid-template-columns: 1fr auto auto;
+                gap: 0.5rem;
+            }
+            .cf-fields-grid .cf-col-label {
+                grid-column: 1 / -1;
+            }
+        }
+
         /* File Upload */
         .img-upload-area {
             border: 2px dashed #bbf7d0;
@@ -2634,38 +2651,41 @@
             row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:\'Montserrat\', sans-serif;';
 
             row.innerHTML = `
-                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) auto; gap:0.65rem; align-items:end; font-family:'Montserrat', sans-serif;">
-                        <div style="min-width:180px;">
-                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
-                            <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px;">
-                        </div>
-                        <div style="min-width:140px;">
-                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
-                            <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px;">
-                                <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
-                                <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
-                                <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
-                                <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
-                                <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
-                            </select>
-                        </div>
-                        <div style="min-width:110px;">
-                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
-                            <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.4rem; height:38px; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
-                                <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#0f172a; cursor:pointer;">
-                                <span>Wajib Diisi</span>
-                            </label>
-                        </div>
-                        <div style="padding-bottom:1px;">
-                            <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                            </button>
-                        </div>
+                <div class="cf-fields-grid" style="font-family:'Montserrat', sans-serif;">
+                    <div class="cf-col-label">
+                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
+                        <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
                     </div>
-                    <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
-                            Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
+                    <div class="cf-col-type">
+                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
+                        <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
+                            <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
+                            <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
+                            <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
+                            <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
+                            <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
+                        </select>
+                    </div>
+                    <div class="cf-col-req">
+                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
+                        <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.4rem; height:38px; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer; white-space:nowrap;">
+                            <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#0f172a; cursor:pointer;">
+                            <span>Wajib Diisi</span>
                         </label>
+                    </div>
+                    <div class="cf-col-del" style="padding-bottom:1px;">
+                        <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;" title="Hapus Form">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
+                    <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
+                        Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
+                    <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
+                </div>
                         <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px;">
                         <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
                     </div>
