@@ -1998,8 +1998,7 @@
 
 @section('scripts')
     <script>
-                                                                                                // Tab switching      // Auto-switch tab if an invalid element exists in a hi    
-                                                                                                dden tab
+        // Auto-switch tab if an invalid element exists in a hidden tab
         const prodForm = document.getElementById('productForm');
         if (prodForm) {
             prodForm.addEventListener('submit', function (e) {
