@@ -815,10 +815,10 @@
                                 </div>
 
                                 <div class="form-group full" id="ticketFieldsWrap"
-                                    style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:18px; padding:1.5rem; width:100%; box-sizing:border-box; box-shadow:0 4px 20px rgba(0,0,0,0.02);">
+                                    style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box; box-shadow:0 4px 20px rgba(0,0,0,0.02);">
                                     <h5
                                         style="font-size:0.95rem; font-weight:800; color:#0F172A; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #E2E8F0; padding-bottom:0.75rem;">
-                                        <svg width="20" height="20" fill="none" stroke="#166534" stroke-width="2"
+                                        <svg width="20" height="20" fill="none" stroke="#0F172A" stroke-width="2"
                                             viewBox="0 0 24 24">
                                             <path
                                                 d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" />
@@ -1085,7 +1085,7 @@
 
                                         <div class="form-group full" style="margin-top:0.5rem;">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2"
+                                                <svg width="15" height="15" fill="none" stroke="#0F172A" stroke-width="2"
                                                     viewBox="0 0 24 24">
                                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
                                                     </path>
@@ -1102,88 +1102,77 @@
                                                 'T&C' khusus tiket event di halaman produk.</span>
                                         </div>
 
-                                        {{-- PENGATURAN PAJAK DAERAH / HIBURAN / PPN TIKET --}}
+                                        {{-- PENGATURAN PAJAK DAERAH / HIBURAN / PPN TIKET (Style matching Variasi Produk) --}}
                                         <div class="form-group full" id="ticketTaxSection"
-                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
-                                            <div
-                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
-                                                <div>
+                                            style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.85rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
+                                            <label
+                                                style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
+                                                <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                                    <input type="checkbox" name="tax_enabled" id="ticketTaxToggle" value="1"
+                                                        {{ old('tax_enabled', '0') == '1' ? 'checked' : '' }}
+                                                        style="opacity:0; width:0; height:0;" onchange="toggleTicketTaxBox(this.checked)">
+                                                    <span class="toggle-slider-s"></span>
+                                                </div>
+                                                <div style="flex:1;">
                                                     <div
-                                                        style="font-weight:700; font-size:0.88rem; color:#166534; display:flex; align-items:center; gap:0.4rem;">
-                                                        <svg width="17" height="17" fill="none" stroke="#166534"
-                                                            stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                                        </svg>
-                                                        <span>Pajak Daerah / Hiburan / Biaya Layanan Tiket (Opsional)</span>
+                                                        style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
+                                                        Pajak Daerah / Hiburan / Layanan (Opsional)
                                                     </div>
-                                                    <div style="font-size:0.74rem; color:#64748B; margin-top:0.25rem;">
+                                                    <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">
                                                         Pajak resmi daerah (PB1 / Pajak Hiburan) yang akan otomatis dihitung dan ditambahkan ke rincian checkout tiket pembeli.
                                                     </div>
                                                 </div>
-
-                                                <label
-                                                    style="display:flex; align-items:center; gap:0.55rem; cursor:pointer; background:#F0FDF4; border:1px solid #BBF7D0; padding:0.35rem 0.8rem; border-radius:999px;">
-                                                    <input type="checkbox" name="tax_enabled" id="ticketTaxToggle" value="1"
-                                                        {{ old('tax_enabled', '0') == '1' ? 'checked' : '' }}
-                                                        onchange="toggleTicketTaxBox(this.checked)"
-                                                        style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
-                                                    <span style="font-size:0.8rem; font-weight:700; color:#166534;">Aktifkan Pajak Tiket</span>
-                                                </label>
-                                            </div>
+                                            </label>
 
                                             <div id="ticketTaxBox"
-                                                style="{{ old('tax_enabled', '0') == '1' ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
+                                                style="{{ old('tax_enabled', '0') == '1' ? '' : 'display:none;' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
                                                 {{-- Multi-Tax Rows Container --}}
-                                                <div id="ticketTaxItemsContainer" style="display:flex; flex-direction:column; gap:0.65rem;">
+                                                <div id="ticketTaxItemsContainer"
+                                                    style="display:flex; flex-direction:column; gap:0.65rem;">
                                                     {{-- Diisi secara dinamis oleh JavaScript --}}
                                                 </div>
 
                                                 {{-- Action Row --}}
-                                                <div style="display:flex; align-items:center; justify-content:flex-start; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #BBF7D0;">
+                                                <div style="display:flex; align-items:center; justify-content:flex-start; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #e2e8f0;">
                                                     <button type="button" onclick="addTaxRow({name: '', rate: 10})"
-                                                        style="background:#FFFFFF; border:1.5px dashed #16a34a; color:#16a34a; font-size:0.78rem; font-weight:700; padding:0.4rem 0.85rem; border-radius:10px; cursor:pointer; font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; transition:all 0.15s;">
-                                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                                        <span>Tambah Pajak Lainnya</span>
+                                                        style="background:#f8fafc; border:1px solid #cbd5e1; color:#334155; font-size:0.8rem; font-weight:700; padding:0.45rem 0.95rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; transition:all 0.15s;"
+                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
+                                                        <svg width="14" height="14" fill="none" stroke="currentColor"
+                                                            stroke-width="2.5" viewBox="0 0 24 24">
+                                                            <line x1="12" y1="5" x2="12" y2="19" />
+                                                            <line x1="5" y1="12" x2="19" y2="12" />
+                                                        </svg>
+                                                        <span>+ Tambah Pajak Lainnya</span>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        {{-- PENGATURAN TIKET OTS (ON-THE-SPOT / LOKET VENUE) --}}
+                                        {{-- PENGATURAN TIKET OTS (ON-THE-SPOT / LOKET VENUE) (Style matching Variasi Produk) --}}
                                         <div class="form-group full" id="ticketOtsSection"
-                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
-                                            <div
-                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
-                                                <div>
+                                            style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
+                                            <label
+                                                style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
+                                                <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                                    <input type="checkbox" name="ots_enabled" id="ticketOtsToggle" value="1"
+                                                        {{ old('ots_enabled', '1') == '1' ? 'checked' : '' }}
+                                                        style="opacity:0; width:0; height:0;" onchange="toggleTicketOtsBox(this.checked)">
+                                                    <span class="toggle-slider-s"></span>
+                                                </div>
+                                                <div style="flex:1;">
                                                     <div
-                                                        style="font-weight:700; font-size:0.88rem; color:#166534; display:flex; align-items:center; gap:0.4rem;">
-                                                        <svg width="17" height="17" fill="none" stroke="#166534"
-                                                            stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <rect x="2" y="4" width="20" height="16" rx="3" />
-                                                            <line x1="2" y1="10" x2="22" y2="10" />
-                                                            <circle cx="7" cy="15" r="1" />
-                                                            <line x1="12" y1="15" x2="17" y2="15" />
-                                                        </svg>
-                                                        <span>Penjualan Tiket OTS (On-The-Spot / Kasir Loket Hari-H)</span>
+                                                        style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
+                                                        Penjualan Tiket OTS (On-The-Spot / Kasir Loket)
                                                     </div>
-                                                    <div style="font-size:0.74rem; color:#64748B; margin-top:0.25rem;">
+                                                    <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">
                                                         Buka penjualan tiket walk-in di pintu masuk (venue) menggunakan antarmuka Kasir Loket cepat oleh Panitia / Crew.
                                                     </div>
                                                 </div>
-
-                                                <label
-                                                    style="display:flex; align-items:center; gap:0.55rem; cursor:pointer; background:#F0FDF4; border:1px solid #BBF7D0; padding:0.35rem 0.8rem; border-radius:999px;">
-                                                    <input type="checkbox" name="ots_enabled" id="ticketOtsToggle" value="1"
-                                                        {{ old('ots_enabled', '1') == '1' ? 'checked' : '' }}
-                                                        onchange="toggleTicketOtsBox(this.checked)"
-                                                        style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
-                                                    <span style="font-size:0.8rem; font-weight:700; color:#166534;">Aktifkan Tiket OTS</span>
-                                                </label>
-                                            </div>
+                                            </label>
 
                                             <div id="ticketOtsBox"
-                                                style="{{ old('ots_enabled', '1') == '1' ? 'display:block;' : 'display:none;' }} background:#FFFFFF; border:1.5px solid #BBF7D0; border-radius:14px; padding:1.15rem; margin-top:0.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-                                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.85rem;">
+                                                style="{{ old('ots_enabled', '1') == '1' ? '' : 'display:none;' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+                                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:0.85rem;">
                                                     <div>
                                                         <label class="form-label"
                                                             style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
@@ -1214,84 +1203,82 @@
                                             </div>
                                         </div>
 
-                                        {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) --}}
+                                        {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) (Style matching Variasi Produk) --}}
                                         <div class="form-group full" id="customFieldsSection"
-                                            style="margin-top:0.75rem; padding-top:1.1rem; border-top:1.5px dashed #BBF7D0; font-family:'Montserrat', sans-serif;">
+                                            style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
                                             <div
-                                                style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
-                                                <div>
-                                                    <label class="form-label"
-                                                        style="font-family:'Montserrat', sans-serif; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem; font-size:0.86rem; font-weight:700; color:#166534;">
-                                                        <svg width="17" height="17" fill="none" stroke="#166534"
-                                                            stroke-width="2.2" viewBox="0 0 24 24">
-                                                            <path d="M9 11l3 3L22 4" />
-                                                            <path
-                                                                d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                                                        </svg>
-                                                        Formulir Tambahan Checkout / Data Peserta (Custom Fields)
-                                                    </label>
+                                                style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; background:#f8fafc; flex-wrap:wrap; gap:0.75rem;">
+                                                <div style="flex:1; min-width:220px;">
                                                     <div
-                                                        style="font-family:'Montserrat', sans-serif; font-size:0.75rem; color:#64748b;">
-                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout.
-                                                        Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal:
-                                                        Ukuran Jersey, Institusi, Kontak Darurat, dll).
+                                                        style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
+                                                        Formulir Tambahan Checkout / Data Peserta (Custom Fields)
+                                                    </div>
+                                                    <div style="font-size:0.73rem; color:#64748b; line-height:1.4; margin-top:2px;">
+                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout. Tambahkan pertanyaan khusus di bawah ini jika diperlukan (misal: Ukuran Jersey, Institusi, Kontak Darurat, dll).
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <button type="button" onclick="addCustomFieldRow()"
-                                                        style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; background:#166534; color:#fff; border:none; padding:0.45rem 0.85rem; border-radius:8px; font-size:0.8rem; font-weight:700; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:background 0.15s;">
+                                                        style="background:#0f172a; color:#fff; border:none; padding:0.45rem 0.95rem; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-family:'Montserrat', sans-serif; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:all 0.15s;"
+                                                        onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0f172a'">
                                                         <svg width="14" height="14" fill="none" stroke="currentColor"
                                                             stroke-width="2.5" viewBox="0 0 24 24">
                                                             <line x1="12" y1="5" x2="12" y2="19" />
                                                             <line x1="5" y1="12" x2="19" y2="12" />
                                                         </svg>
-                                                        Tambah Form Custom
+                                                        <span>+ Tambah Form Custom</span>
                                                     </button>
                                                 </div>
                                             </div>
 
-                                            <!-- Preset Buttons: Compact & Mobile Friendly with Clean SVG Icons -->
-                                            <div
-                                                style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.75rem; padding:0.35rem 0.6rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-family:'Montserrat', sans-serif;">
-                                                <span style="font-size:0.72rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                                                    Preset:
-                                                </span>
-                                                <button type="button" onclick="applyCustomFieldPreset('run')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2 2 4"/><path d="M5 11l4-2 3 2 3-1 2 3"/><path d="M9 13l2 4"/></svg>
-                                                    <span>Marathon</span>
-                                                </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('seminar')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
-                                                    <span>Seminar</span>
-                                                </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('sport')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-                                                    <span>Olahraga</span>
-                                                </button>
-                                                <button type="button" onclick="applyCustomFieldPreset('concert')"
-                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                                                    <span>Konser</span>
-                                                </button>
-                                                <button type="button" onclick="clearAllCustomFields()"
-                                                    style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.72rem; font-weight:600; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-                                                    <span>Reset</span>
-                                                </button>
-                                            </div>
+                                            <div style="border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+                                                <!-- Preset Buttons: Compact & Mobile Friendly with Clean SVG Icons -->
+                                                <div
+                                                    style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.45rem 0.65rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-family:'Montserrat', sans-serif;">
+                                                    <span style="font-size:0.72rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                        <svg width="12" height="12" fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                                        Preset Cepat:
+                                                    </span>
+                                                    <button type="button" onclick="applyCustomFieldPreset('run')"
+                                                        style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
+                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2 2 4"/><path d="M5 11l4-2 3 2 3-1 2 3"/><path d="M9 13l2 4"/></svg>
+                                                        <span>Marathon</span>
+                                                    </button>
+                                                    <button type="button" onclick="applyCustomFieldPreset('seminar')"
+                                                        style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
+                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
+                                                        <span>Seminar</span>
+                                                    </button>
+                                                    <button type="button" onclick="applyCustomFieldPreset('sport')"
+                                                        style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
+                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                                                        <span>Olahraga</span>
+                                                    </button>
+                                                    <button type="button" onclick="applyCustomFieldPreset('concert')"
+                                                        style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
+                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
+                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                                        <span>Konser</span>
+                                                    </button>
+                                                    <button type="button" onclick="clearAllCustomFields()"
+                                                        style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                                                        <span>Reset</span>
+                                                    </button>
+                                                </div>
 
-                                            <div id="customFieldsContainer"
-                                                style="display:flex; flex-direction:column; gap:0.65rem;"></div>
+                                                <div id="customFieldsContainer"
+                                                    style="display:flex; flex-direction:column; gap:0.65rem;"></div>
 
-                                            <div id="customFieldsEmptyNotice"
-                                                style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.15rem; background:#fff; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
-                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap
-                                                    &amp; Nomor Identitas</strong> saat checkout. Klik <strong>Tambah Form
-                                                    Custom</strong> jika memerlukan data lain.
+                                                <div id="customFieldsEmptyNotice"
+                                                    style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.25rem; background:#F8FAFC; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
+                                                    Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap
+                                                        &amp; Nomor Identitas</strong> saat checkout. Klik <strong>+ Tambah Form
+                                                        Custom</strong> jika memerlukan data lain.
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2637,14 +2624,14 @@
             row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:\'Montserrat\', sans-serif;';
 
             row.innerHTML = `
-                    <div style="display:grid; grid-template-columns: 2fr 1.3fr 1fr auto; gap:0.65rem; align-items:start; font-family:'Montserrat', sans-serif;">
-                        <div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) auto; gap:0.65rem; align-items:end; font-family:'Montserrat', sans-serif;">
+                        <div style="min-width:180px;">
                             <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
-                            <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                            <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px;">
                         </div>
-                        <div>
+                        <div style="min-width:140px;">
                             <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
-                            <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                            <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px;">
                                 <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
                                 <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
                                 <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
@@ -2652,15 +2639,15 @@
                                 <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
                             </select>
                         </div>
-                        <div>
+                        <div style="min-width:110px;">
                             <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
-                            <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; margin-top:0.4rem; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
-                                <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#166534; cursor:pointer;">
+                            <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.4rem; height:38px; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer;">
+                                <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#0f172a; cursor:pointer;">
                                 <span>Wajib Diisi</span>
                             </label>
                         </div>
-                        <div style="padding-top:1.4rem;">
-                            <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
+                        <div style="padding-bottom:1px;">
+                            <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;" title="Hapus Form">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
                         </div>
@@ -2669,7 +2656,7 @@
                         <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
                             Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
                         </label>
-                        <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem;">
+                        <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px;">
                         <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
                     </div>
                 `;
