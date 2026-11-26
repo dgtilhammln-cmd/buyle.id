@@ -253,7 +253,10 @@ class SellerProductController extends Controller
         }
 
         // Pajak tiket (Pajak Daerah / Hiburan / PPN / Multi-Pajak)
-        if ($data['product_type'] === 'ticket') {
+        $isTicketType = ($data['product_type'] === 'ticket') 
+            || in_array($data['product_type'] ?? '', ['ticket', 'event', 'webinar', 'workshop', 'wisata']) 
+            || !empty($data['event_date']);
+        if ($isTicketType) {
             $data['tax_enabled'] = $request->boolean('tax_enabled');
 
             // Multi-tax list parsing
@@ -570,7 +573,10 @@ class SellerProductController extends Controller
         }
 
         // Pajak tiket (Pajak Daerah / Hiburan / PPN / Multi-Pajak)
-        if ($data['product_type'] === 'ticket') {
+        $isTicketType = ($data['product_type'] === 'ticket') 
+            || in_array($data['product_type'] ?? '', ['ticket', 'event', 'webinar', 'workshop', 'wisata']) 
+            || !empty($data['event_date']);
+        if ($isTicketType) {
             $data['tax_enabled'] = $request->boolean('tax_enabled');
 
             // Multi-tax list parsing

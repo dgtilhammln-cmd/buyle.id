@@ -121,36 +121,39 @@ class CheckoutService
                 continue;
             }
             $productType = $cartItem->product->product_type ?? $cartItem->product->type ?? '';
-            if ($productType === 'ticket') {
+            $isTicket = (method_exists($cartItem->product, 'isTicketProduct') && $cartItem->product->isTicketProduct()) || $productType === 'ticket';
+            if ($isTicket) {
                 // Hitung Pajak Daerah / Hiburan / PPN jika diatur pada produk event tiket (mendukung multi-pajak)
-                $taxesList = $cartItem->product->ticket_taxes_list ?? [];
-                if (!empty($taxesList)) {
-                    foreach ($taxesList as $taxItem) {
-                        $tRate = (float)($taxItem['rate'] ?? 0);
-                        if ($tRate > 0) {
-                            $itemTax = round(($cartItem->subtotal * $tRate) / 100, 0);
+                if (!empty($cartItem->product->tax_enabled)) {
+                    $taxesList = $cartItem->product->ticket_taxes_list ?? [];
+                    if (!empty($taxesList)) {
+                        foreach ($taxesList as $taxItem) {
+                            $tRate = (float)($taxItem['rate'] ?? 0);
+                            if ($tRate > 0) {
+                                $itemTax = round(($cartItem->subtotal * $tRate) / 100, 0);
+                                $ticketTaxTotal += $itemTax;
+                                $ticketTaxDetails[] = [
+                                    'product_id'   => $cartItem->product_id,
+                                    'product_name' => $cartItem->product->name,
+                                    'tax_name'     => $taxItem['name'] ?? 'Pajak Tiket',
+                                    'tax_rate'     => $tRate,
+                                    'amount'       => $itemTax,
+                                ];
+                            }
+                        }
+                    } else {
+                        $taxRate = (float) ($cartItem->product->ticket_tax_rate ?? 0);
+                        if ($taxRate > 0) {
+                            $itemTax = round(($cartItem->subtotal * $taxRate) / 100, 0);
                             $ticketTaxTotal += $itemTax;
                             $ticketTaxDetails[] = [
                                 'product_id'   => $cartItem->product_id,
                                 'product_name' => $cartItem->product->name,
-                                'tax_name'     => $taxItem['name'] ?? 'Pajak Tiket',
-                                'tax_rate'     => $tRate,
+                                'tax_name'     => $cartItem->product->ticket_tax_name ?? 'Pajak Daerah / Hiburan',
+                                'tax_rate'     => $taxRate,
                                 'amount'       => $itemTax,
                             ];
                         }
-                    }
-                } else {
-                    $taxRate = (float) ($cartItem->product->ticket_tax_rate ?? 0);
-                    if ($taxRate > 0) {
-                        $itemTax = round(($cartItem->subtotal * $taxRate) / 100, 0);
-                        $ticketTaxTotal += $itemTax;
-                        $ticketTaxDetails[] = [
-                            'product_id'   => $cartItem->product_id,
-                            'product_name' => $cartItem->product->name,
-                            'tax_name'     => $cartItem->product->ticket_tax_name ?? 'Pajak Daerah / Hiburan',
-                            'tax_rate'     => $taxRate,
-                            'amount'       => $itemTax,
-                        ];
                     }
                 }
 
