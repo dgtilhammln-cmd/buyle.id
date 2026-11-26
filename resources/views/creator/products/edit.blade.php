@@ -850,8 +850,9 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="form-grid">
-                                        <div class="form-group" id="eventStartDateWrap">
+                                    {{-- Baris 1: Tanggal Event (Kiri - Kanan) --}}
+                                    <div class="form-grid" style="margin-bottom:0;">
+                                        <div class="form-group" id="eventStartDateWrap" style="grid-column: {{ $hasEndDate ? 'auto' : '1 / -1' }};">
                                             <label class="form-label"
                                                 id="eventStartDateLabel">{{ $hasEndDate ? 'Tanggal Mulai Event' : 'Tanggal Pelaksanaan Event' }}
                                                 <span>*</span></label>
@@ -870,13 +871,17 @@
                                                 style="font-size:0.75rem; color:#64748b; margin-top:2px; display:block;">Hari
                                                 terakhir rangkaian acara</span>
                                         </div>
+                                    </div>
+
+                                    {{-- Baris 2: Waktu Event & Jenis Pelaksanaan Event (Kiri - Kanan) --}}
+                                    <div class="form-grid" style="margin-bottom:0;">
                                         <div class="form-group">
                                             <label class="form-label">Waktu Event (Jam) <span>*</span></label>
                                             <input type="text" name="event_time"
                                                 value="{{ old('event_time', $product->event_time) }}" class="form-input"
-                                                placeholder="Contoh: 19:00 - 22:00 WIB">
+                                                placeholder="Contoh: 15:00 - 23:00 WIB">
                                         </div>
-                                        <div class="form-group full">
+                                        <div class="form-group">
                                             <label class="form-label">Jenis Pelaksanaan Event <span>*</span></label>
                                             <select name="event_type" id="eventTypeSelect" class="form-input"
                                                 onchange="toggleEventTypeFields(this.value)">
@@ -886,10 +891,13 @@
                                                 </option>
                                             </select>
                                         </div>
+                                    </div>
 
+                                    {{-- Baris 3: Lokasi Offline & Jadwal War Tiket (Kiri - Kanan) --}}
+                                    <div class="form-grid">
                                         <div class="form-group" id="offlineLocationWrap">
                                             <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="none" stroke="#166534" stroke-width="2"
+                                                <svg width="15" height="15" fill="none" stroke="#0F172A" stroke-width="2"
                                                     viewBox="0 0 24 24">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                                                     <circle cx="12" cy="10" r="3" />
@@ -920,6 +928,7 @@
                                             <span class="form-hint">Kosongkan jika langsung bisa dibeli. Isi untuk countdown
                                                 hitung mundur.</span>
                                         </div>
+                                    </div>
 
                                         <div class="form-group full" id="onlineLocationWrap" style="display:none;">
                                             <div
@@ -2156,12 +2165,14 @@
         // Event Duration Mode Toggle (Single Day vs Multi Day)
         function toggleEventDurationMode(mode) {
             const endGroup = document.getElementById('eventEndDateWrap');
+            const startGroup = document.getElementById('eventStartDateWrap');
             const startLabel = document.getElementById('eventStartDateLabel');
             const endInput = document.getElementById('eventEndDateInput');
             const startInput = document.getElementById('eventDateInput');
 
             if (mode === 'multi') {
                 if (endGroup) endGroup.style.display = 'block';
+                if (startGroup) startGroup.style.gridColumn = 'auto';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Mulai Event <span>*</span>';
                 if (endInput && startInput && startInput.value) {
                     endInput.min = startInput.value;
@@ -2169,6 +2180,7 @@
                 }
             } else {
                 if (endGroup) endGroup.style.display = 'none';
+                if (startGroup) startGroup.style.gridColumn = '1 / -1';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Pelaksanaan Event <span>*</span>';
                 if (endInput) endInput.value = '';
             }
@@ -2505,12 +2517,14 @@
         // Event Duration Mode Toggle (Single Day vs Multi Day)
         function toggleEventDurationMode(mode) {
             const endGroup = document.getElementById('eventEndDateWrap');
+            const startGroup = document.getElementById('eventStartDateWrap');
             const startLabel = document.getElementById('eventStartDateLabel');
             const endInput = document.getElementById('eventEndDateInput');
             const startInput = document.getElementById('eventDateInput');
 
             if (mode === 'multi') {
                 if (endGroup) endGroup.style.display = 'block';
+                if (startGroup) startGroup.style.gridColumn = 'auto';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Mulai Event <span>*</span>';
                 if (endInput && startInput && startInput.value) {
                     endInput.min = startInput.value;
@@ -2518,6 +2532,7 @@
                 }
             } else {
                 if (endGroup) endGroup.style.display = 'none';
+                if (startGroup) startGroup.style.gridColumn = '1 / -1';
                 if (startLabel) startLabel.innerHTML = 'Tanggal Pelaksanaan Event <span>*</span>';
                 if (endInput) endInput.value = '';
             }
