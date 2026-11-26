@@ -277,11 +277,13 @@
             gap: 0.65rem;
             align-items: end;
         }
+
         @media (max-width: 640px) {
             .cf-fields-grid {
                 grid-template-columns: 1fr auto auto;
                 gap: 0.5rem;
             }
+
             .cf-fields-grid .cf-col-label {
                 grid-column: 1 / -1;
             }
@@ -849,27 +851,29 @@
                                     @php
                                         $hasEndDate = !empty(old('event_end_date', $product->event_end_date?->format('Y-m-d')));
                                     @endphp
-                                    <div class="form-group full" style="margin-bottom: 0.75rem;">
-                                        <label class="form-label" style="margin-bottom:0.35rem;">Durasi Pelaksanaan Event
-                                            <span>*</span></label>
-                                        <div style="display:flex; flex-wrap:wrap; gap:1.25rem; align-items:center;">
-                                            <label
-                                                style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
-                                                <input type="radio" name="event_duration_mode" value="single"
-                                                    id="eventDurSingle" onchange="toggleEventDurationMode('single')" {{ !$hasEndDate ? 'checked' : '' }}>
-                                                <span>1 Hari (Single Day)</span>
-                                            </label>
-                                            <label
-                                                style="display:inline-flex; align-items:center; gap:0.45rem; cursor:pointer; font-size:0.85rem; font-weight:600; color:#334155;">
-                                                <input type="radio" name="event_duration_mode" value="multi"
-                                                    id="eventDurMulti" onchange="toggleEventDurationMode('multi')" {{ $hasEndDate ? 'checked' : '' }}>
-                                                <span>Beberapa hari (Multi Day)</span>
+                                    <div class="form-group full" style="margin-bottom: 0.85rem;">
+                                        <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.65rem 0.85rem; background:#ffffff; border:1.5px solid #e2e8f0; border-radius:10px; font-family:'Montserrat', sans-serif;">
+                                            <div>
+                                                <div style="font-size:0.78rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.4rem;">
+                                                    <span>Event Berlangsung Lebih dari 1 Hari (Multi-Day)</span>
+                                                </div>
+                                                <div style="font-size:0.71rem; color:#64748b; margin-top:2px;">
+                                                    Aktifkan jika acara berlangsung beberapa hari berturut-turut (misal: Festival / Turnamen / Expo).
+                                                </div>
+                                            </div>
+                                            <label style="position:relative; display:inline-block; width:44px; height:24px; cursor:pointer; flex-shrink:0; margin:0;">
+                                                <input type="checkbox" name="event_duration_mode" value="multi" id="eventDurSwitch"
+                                                    onchange="toggleEventDurationMode(this.checked ? 'multi' : 'single')"
+                                                    {{ $hasEndDate ? 'checked' : '' }}
+                                                    style="opacity:0; width:0; height:0;">
+                                                <span class="toggle-slider-s"></span>
                                             </label>
                                         </div>
                                     </div>
                                     {{-- Baris 1: Tanggal Event (Kiri - Kanan) --}}
                                     <div class="form-grid" style="margin-bottom:0;">
-                                        <div class="form-group" id="eventStartDateWrap" style="grid-column: {{ $hasEndDate ? 'auto' : '1 / -1' }};">
+                                        <div class="form-group" id="eventStartDateWrap"
+                                            style="grid-column: {{ $hasEndDate ? 'auto' : '1 / -1' }};">
                                             <label class="form-label"
                                                 id="eventStartDateLabel">{{ $hasEndDate ? 'Tanggal Mulai Event' : 'Tanggal Pelaksanaan Event' }}
                                                 <span>*</span></label>
@@ -947,1056 +951,1081 @@
                                         </div>
                                     </div>
 
-                                        <div class="form-group full" id="onlineLocationWrap" style="display:none;">
-                                            <div
-                                                style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem; display:flex; flex-direction:column; gap:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.02);">
+                                    <div class="form-group full" id="onlineLocationWrap" style="display:none;">
+                                        <div
+                                            style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:1.25rem; display:flex; flex-direction:column; gap:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.02);">
 
-                                                <!-- Pilihan Platform: Banyak pilihan, hanya bisa pilih 1 -->
-                                                <div>
-                                                    <label class="form-label"
-                                                        style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;">
-                                                        <span
-                                                            style="display:flex; align-items:center; gap:0.4rem; font-weight:700;">
-                                                            <svg width="15" height="15" fill="none" stroke="#166534"
-                                                                stroke-width="2" viewBox="0 0 24 24">
-                                                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                                                                <line x1="8" y1="21" x2="16" y2="21" />
-                                                                <line x1="12" y1="17" x2="12" y2="21" />
-                                                            </svg>
-                                                            Pilih Platform Acara Online <span>*</span>
-                                                        </span>
-                                                        <span
-                                                            style="font-size:0.75rem; color:#64748b; font-weight:500;">Pilih
-                                                            salah satu</span>
-                                                    </label>
-
-                                                    <div class="platform-chips-grid"
-                                                        style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:0.5rem;">
-                                                        @php
-                                                            $selPlat = old('event_platform', $product->event_platform ?? 'Zoom Meeting');
-                                                            $platforms = [
-                                                                [
-                                                                    'id' => 'zoom',
-                                                                    'name' => 'Zoom Meeting',
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#2D8CFF"><path d="M4.5 5.5A2.5 2.5 0 0 0 2 8v8a2.5 2.5 0 0 0 2.5 2.5h9a2.5 2.5 0 0 0 2.5-2.5v-1.793l3.646 2.605A1 1 0 0 0 21 16V8a1 1 0 0 0-1.354-.912L16 9.693V8a2.5 2.5 0 0 0-2.5-2.5h-9z"/></svg>',
-                                                                    'placeholder' => 'https://zoom.us/j/123456789 atau link room Zoom',
-                                                                    'label' => 'Tautan Link Zoom Meeting'
-                                                                ],
-                                                                [
-                                                                    'id' => 'gmeet',
-                                                                    'name' => 'Google Meet',
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24"><path d="M15 8l4.5-3.375A1 1 0 0 1 21 5.425v13.15a1 1 0 0 1-1.5.8L15 16V8z" fill="#00AC47"/><rect x="3" y="6" width="12" height="12" rx="2" fill="#00832D"/></svg>',
-                                                                    'placeholder' => 'https://meet.google.com/abc-defg-hij',
-                                                                    'label' => 'Tautan Link Google Meet'
-                                                                ],
-                                                                [
-                                                                    'id' => 'wagroup',
-                                                                    'name' => 'WhatsApp Group Event',
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>',
-                                                                    'placeholder' => 'https://chat.whatsapp.com/...',
-                                                                    'label' => 'Tautan Undangan Grup WhatsApp Event'
-                                                                ],
-                                                                [
-                                                                    'id' => 'youtube',
-                                                                    'name' => 'YouTube Live Streaming',
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
-                                                                    'placeholder' => 'https://youtube.com/live/...',
-                                                                    'label' => 'Tautan YouTube Live Streaming'
-                                                                ],
-                                                                [
-                                                                    'id' => 'teams',
-                                                                    'name' => 'Microsoft Teams',
-                                                                    'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#5059C9"><path d="M19.5 7.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm1.5 2h-3c-.55 0-1 .45-1 1v4.5a3.5 3.5 0 0 0 7 0V10.5c0-.55-.45-1-1-1zM14 6a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm2 2H8c-.55 0-1 .45-1 1v7.5A4.5 4.5 0 0 0 11.5 21h5a4.5 4.5 0 0 0 4.5-4.5V9c0-.55-.45-1-1-1z"/></svg>',
-                                                                    'placeholder' => 'https://teams.microsoft.com/l/...',
-                                                                    'label' => 'Tautan Microsoft Teams'
-                                                                ],
-                                                                [
-                                                                    'id' => 'other',
-                                                                    'name' => 'Webinar / Platform Lainnya',
-                                                                    'svg' => '<svg width="17" height="17" fill="none" stroke="#0284c7" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
-                                                                    'placeholder' => 'https://...',
-                                                                    'label' => 'Tautan Akses Event Online'
-                                                                ],
-                                                            ];
-                                                        @endphp
-
-                                                        @foreach($platforms as $p)
-                                                            @php $isActive = ($selPlat == $p['name']); @endphp
-                                                            <label class="platform-chip-item" style="cursor:pointer; margin:0;">
-                                                                <input type="radio" name="event_platform"
-                                                                    value="{{ $p['name'] }}" {{ $isActive ? 'checked' : '' }}
-                                                                    style="display:none;"
-                                                                    data-placeholder="{{ $p['placeholder'] }}"
-                                                                    data-label="{{ $p['label'] }}"
-                                                                    onchange="selectOnlinePlatform(this)">
-                                                                <div class="platform-chip-box {{ $isActive ? 'active' : '' }}"
-                                                                    style="display:flex; align-items:center; gap:0.45rem; padding:0.55rem 0.75rem; border:1.5px solid {{ $isActive ? '#166534' : '#e2e8f0' }}; border-radius:10px; background:{{ $isActive ? '#f0fdf4' : '#f8fafc' }}; transition:all 0.15s ease;">
-                                                                    <span
-                                                                        style="display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">{!! $p['svg'] !!}</span>
-                                                                    <span
-                                                                        style="font-size:0.8rem; font-weight:{{ $isActive ? '700' : '600' }}; color:{{ $isActive ? '#166534' : '#334155' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['name'] }}</span>
-                                                                </div>
-                                                            </label>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-
-                                                <!-- 1 Input Link yang Menyesuaikan Platform Pilihan -->
-                                                <div id="dynamicLinkFieldWrap"
-                                                    style="padding-top:0.75rem; border-top:1px dashed #e2e8f0;">
-                                                    @php
-                                                        $activePlatObj = collect($platforms)->firstWhere('name', $selPlat) ?? $platforms[0];
-                                                    @endphp
-                                                    <label class="form-label" id="dynamicLinkLabel"
-                                                        style="display:flex; align-items:center; gap:0.4rem;">
+                                            <!-- Pilihan Platform: Banyak pilihan, hanya bisa pilih 1 -->
+                                            <div>
+                                                <label class="form-label"
+                                                    style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem;">
+                                                    <span
+                                                        style="display:flex; align-items:center; gap:0.4rem; font-weight:700;">
                                                         <svg width="15" height="15" fill="none" stroke="#166534"
                                                             stroke-width="2" viewBox="0 0 24 24">
-                                                            <path
-                                                                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                                                            <path
-                                                                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                                                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                                                            <line x1="8" y1="21" x2="16" y2="21" />
+                                                            <line x1="12" y1="17" x2="12" y2="21" />
                                                         </svg>
-                                                        <span>{{ $activePlatObj['label'] }}</span> <span>*</span>
-                                                    </label>
-                                                    <input type="text" name="event_location_online" id="eventLocationOnline"
-                                                        value="{{ old('event_location_online', $product->event_type == 'online' ? $product->event_location : '') }}"
-                                                        class="form-input"
-                                                        placeholder="{{ $activePlatObj['placeholder'] }}">
-                                                    <span class="form-hint"
-                                                        style="color:#64748b; margin-top:0.35rem; display:flex; align-items:center; gap:5px;">
-                                                        <svg width="13" height="13" fill="none" stroke="#64748b"
-                                                            stroke-width="2" viewBox="0 0 24 24">
-                                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                                                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                                                        </svg>
-                                                        <span>Tautan ini aman & hanya dapat diakses oleh pembeli tiket resmi
-                                                            setelah transaksi berhasil.</span>
+                                                        Pilih Platform Acara Online <span>*</span>
                                                     </span>
-                                                </div>
+                                                    <span style="font-size:0.75rem; color:#64748b; font-weight:500;">Pilih
+                                                        salah satu</span>
+                                                </label>
 
-                                            </div>
-                                        </div>
+                                                <div class="platform-chips-grid"
+                                                    style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:0.5rem;">
+                                                    @php
+                                                        $selPlat = old('event_platform', $product->event_platform ?? 'Zoom Meeting');
+                                                        $platforms = [
+                                                            [
+                                                                'id' => 'zoom',
+                                                                'name' => 'Zoom Meeting',
+                                                                'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#2D8CFF"><path d="M4.5 5.5A2.5 2.5 0 0 0 2 8v8a2.5 2.5 0 0 0 2.5 2.5h9a2.5 2.5 0 0 0 2.5-2.5v-1.793l3.646 2.605A1 1 0 0 0 21 16V8a1 1 0 0 0-1.354-.912L16 9.693V8a2.5 2.5 0 0 0-2.5-2.5h-9z"/></svg>',
+                                                                'placeholder' => 'https://zoom.us/j/123456789 atau link room Zoom',
+                                                                'label' => 'Tautan Link Zoom Meeting'
+                                                            ],
+                                                            [
+                                                                'id' => 'gmeet',
+                                                                'name' => 'Google Meet',
+                                                                'svg' => '<svg width="17" height="17" viewBox="0 0 24 24"><path d="M15 8l4.5-3.375A1 1 0 0 1 21 5.425v13.15a1 1 0 0 1-1.5.8L15 16V8z" fill="#00AC47"/><rect x="3" y="6" width="12" height="12" rx="2" fill="#00832D"/></svg>',
+                                                                'placeholder' => 'https://meet.google.com/abc-defg-hij',
+                                                                'label' => 'Tautan Link Google Meet'
+                                                            ],
+                                                            [
+                                                                'id' => 'wagroup',
+                                                                'name' => 'WhatsApp Group Event',
+                                                                'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.556 4.117 1.528 5.849L0 24l6.335-1.508A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.52-5.154-1.422l-.37-.218-3.764.896.924-3.667-.243-.381A9.953 9.953 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/></svg>',
+                                                                'placeholder' => 'https://chat.whatsapp.com/...',
+                                                                'label' => 'Tautan Undangan Grup WhatsApp Event'
+                                                            ],
+                                                            [
+                                                                'id' => 'youtube',
+                                                                'name' => 'YouTube Live Streaming',
+                                                                'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>',
+                                                                'placeholder' => 'https://youtube.com/live/...',
+                                                                'label' => 'Tautan YouTube Live Streaming'
+                                                            ],
+                                                            [
+                                                                'id' => 'teams',
+                                                                'name' => 'Microsoft Teams',
+                                                                'svg' => '<svg width="17" height="17" viewBox="0 0 24 24" fill="#5059C9"><path d="M19.5 7.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm1.5 2h-3c-.55 0-1 .45-1 1v4.5a3.5 3.5 0 0 0 7 0V10.5c0-.55-.45-1-1-1zM14 6a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm2 2H8c-.55 0-1 .45-1 1v7.5A4.5 4.5 0 0 0 11.5 21h5a4.5 4.5 0 0 0 4.5-4.5V9c0-.55-.45-1-1-1z"/></svg>',
+                                                                'placeholder' => 'https://teams.microsoft.com/l/...',
+                                                                'label' => 'Tautan Microsoft Teams'
+                                                            ],
+                                                            [
+                                                                'id' => 'other',
+                                                                'name' => 'Webinar / Platform Lainnya',
+                                                                'svg' => '<svg width="17" height="17" fill="none" stroke="#0284c7" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+                                                                'placeholder' => 'https://...',
+                                                                'label' => 'Tautan Akses Event Online'
+                                                            ],
+                                                        ];
+                                                    @endphp
 
-                                        <div class="form-group">
-                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="none" stroke="#E1306C" stroke-width="2"
-                                                    viewBox="0 0 24 24">
-                                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                                                </svg>
-                                                Instagram Event / EO <span>*</span>
-                                            </label>
-                                            <div style="position:relative;">
-                                                <span
-                                                    style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
-                                                <input type="text" name="instagram_username"
-                                                    value="{{ old('instagram_username', $product->instagram_username) }}"
-                                                    class="form-input" style="padding-left:30px;"
-                                                    placeholder="username.event">
-                                            </div>
-                                            <span class="form-hint">Wajib diisi. Icon Instagram akan tampil di atas waktu
-                                                pelaksanaan pada halaman produk tiket.</span>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z" />
-                                                </svg>
-                                                Username TikTok Resmi Event / EO <span>*</span>
-                                            </label>
-                                            <div style="position:relative;">
-                                                <span
-                                                    style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
-                                                <input type="text" name="tiktok_username"
-                                                    value="{{ old('tiktok_username', $product->tiktok_username) }}"
-                                                    class="form-input" style="padding-left:30px;"
-                                                    placeholder="username.event">
-                                            </div>
-                                            <span class="form-hint">Wajib diisi. Icon TikTok akan tampil di atas waktu
-                                                pelaksanaan pada halaman produk tiket.</span>
-                                        </div>
-
-                                        <div class="form-group full" style="margin-top:0.5rem;">
-                                            <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
-                                                <svg width="15" height="15" fill="none" stroke="#0F172A" stroke-width="2"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
-                                                    </path>
-                                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                                </svg>
-                                                Syarat & Ketentuan Event / T&C <span>*</span>
-                                            </label>
-                                            <textarea name="terms_conditions" rows="6" class="form-input"
-                                                style="height:auto; min-height:130px; line-height:1.6;"
-                                                placeholder="Contoh:&#10;1. Tiket yang sudah dibeli bersifat non-refundable (tidak dapat dikembalikan/ditukar).&#10;2. Pengunjung wajib menunjukkan e-tiket dengan QR Code yang jelas pada saat check-in di gate.&#10;3. Dilarang membawa senjata tajam, obat-obatan terlarang, flare, dan kamera profesional tanpa izin penyelenggara.">{{ old('terms_conditions', $product->terms_conditions) }}</textarea>
-                                            <span class="form-hint">Wajib diisi. Syarat & ketentuan ini akan tampil pada tab
-                                                'T&C' khusus tiket event di halaman produk.</span>
-                                        </div>
-
-                                        {{-- PENGATURAN PAJAK DAERAH / HIBURAN / PPN TIKET (Style matching Variasi Produk) --}}
-                                        <div class="form-group full" id="ticketTaxSection"
-                                            style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.85rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
-                                            <label
-                                                style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
-                                                <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
-                                                    <input type="checkbox" name="tax_enabled" id="ticketTaxToggle" value="1"
-                                                        {{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'checked' : '' }}
-                                                        style="opacity:0; width:0; height:0;" onchange="toggleTicketTaxBox(this.checked)">
-                                                    <span class="toggle-slider-s"></span>
-                                                </div>
-                                                <div style="flex:1;">
-                                                    <div
-                                                        style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
-                                                        Pajak Daerah / Hiburan / Layanan (Opsional)
-                                                    </div>
-                                                    <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">
-                                                        Pajak resmi daerah (PB1 / Pajak Hiburan) yang akan otomatis dihitung dan ditambahkan ke rincian checkout tiket pembeli.
-                                                    </div>
-                                                </div>
-                                            </label>
-
-                                            <div id="ticketTaxBox"
-                                                style="{{ old('tax_enabled', $product->tax_enabled ?? 0) ? '' : 'display:none;' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
-                                                {{-- Multi-Tax Rows Container --}}
-                                                <div id="ticketTaxItemsContainer"
-                                                    style="display:flex; flex-direction:column; gap:0.65rem;">
-                                                    {{-- Diisi secara dinamis oleh JavaScript --}}
-                                                </div>
-
-                                                {{-- Action Row --}}
-                                                <div style="display:flex; align-items:center; justify-content:flex-start; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #e2e8f0;">
-                                                    <button type="button" onclick="addTaxRow({name: '', rate: 10})"
-                                                        style="background:#f8fafc; border:1px solid #cbd5e1; color:#334155; font-size:0.8rem; font-weight:700; padding:0.45rem 0.95rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; transition:all 0.15s;"
-                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor"
-                                                            stroke-width="2.5" viewBox="0 0 24 24">
-                                                            <line x1="12" y1="5" x2="12" y2="19" />
-                                                            <line x1="5" y1="12" x2="19" y2="12" />
-                                                        </svg>
-                                                        <span>+ Tambah Pajak Lainnya</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {{-- PENGATURAN TIKET OTS (ON-THE-SPOT / LOKET VENUE) (Style matching Variasi Produk) --}}
-                                        <div class="form-group full" id="ticketOtsSection"
-                                            style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
-                                            <label
-                                                style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
-                                                <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
-                                                    <input type="checkbox" name="ots_enabled" id="ticketOtsToggle" value="1"
-                                                        {{ old('ots_enabled', (string) ($product->ots_enabled ?? 1)) == '1' ? 'checked' : '' }}
-                                                        style="opacity:0; width:0; height:0;" onchange="toggleTicketOtsBox(this.checked)">
-                                                    <span class="toggle-slider-s"></span>
-                                                </div>
-                                                <div style="flex:1;">
-                                                    <div
-                                                        style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
-                                                        Penjualan Tiket OTS (On-The-Spot / Kasir Loket)
-                                                    </div>
-                                                    <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">
-                                                        Buka penjualan tiket walk-in di pintu masuk (venue) menggunakan antarmuka Kasir Loket cepat oleh Panitia / Crew.
-                                                    </div>
-                                                </div>
-                                            </label>
-
-                                            <div id="ticketOtsBox"
-                                                style="{{ old('ots_enabled', (string) ($product->ots_enabled ?? 1)) == '1' ? '' : 'display:none;' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
-                                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:0.85rem;">
-                                                    <div>
-                                                        <label class="form-label"
-                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
-                                                            Harga Tiket OTS (Rp)
+                                                    @foreach($platforms as $p)
+                                                        @php $isActive = ($selPlat == $p['name']); @endphp
+                                                        <label class="platform-chip-item" style="cursor:pointer; margin:0;">
+                                                            <input type="radio" name="event_platform" value="{{ $p['name'] }}"
+                                                                {{ $isActive ? 'checked' : '' }} style="display:none;"
+                                                                data-placeholder="{{ $p['placeholder'] }}"
+                                                                data-label="{{ $p['label'] }}"
+                                                                onchange="selectOnlinePlatform(this)">
+                                                            <div class="platform-chip-box {{ $isActive ? 'active' : '' }}"
+                                                                style="display:flex; align-items:center; gap:0.45rem; padding:0.55rem 0.75rem; border:1.5px solid {{ $isActive ? '#166534' : '#e2e8f0' }}; border-radius:10px; background:{{ $isActive ? '#f0fdf4' : '#f8fafc' }}; transition:all 0.15s ease;">
+                                                                <span
+                                                                    style="display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">{!! $p['svg'] !!}</span>
+                                                                <span
+                                                                    style="font-size:0.8rem; font-weight:{{ $isActive ? '700' : '600' }}; color:{{ $isActive ? '#166534' : '#334155' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['name'] }}</span>
+                                                            </div>
                                                         </label>
-                                                        <div style="position:relative;">
-                                                            <span
-                                                                style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); font-size:0.82rem; font-weight:700; color:#64748B;">Rp</span>
-                                                            <input type="number" step="1000" min="0" name="ots_price"
-                                                                id="ticketOtsPriceInput"
-                                                                value="{{ old('ots_price', $product->ots_price ? (int) $product->ots_price : '') }}"
-                                                                class="form-input"
-                                                                placeholder="Sama dengan harga normal (otomatis)"
-                                                                style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px; padding-left:2.4rem;">
-                                                        </div>
-                                                        <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.25rem;">
-                                                            Kosongkan jika harga OTS sama dengan harga tiket online.</div>
-                                                    </div>
-                                                    <div>
-                                                        <label class="form-label"
-                                                            style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
-                                                            Alokasi Kuota Khusus OTS (Opsional)
-                                                        </label>
-                                                        <input type="number" min="0" name="ots_quota"
-                                                            id="ticketOtsQuotaInput"
-                                                            value="{{ old('ots_quota', $product->ots_quota ?? '') }}"
-                                                            class="form-input"
-                                                            placeholder="Pakai sisa stok produk (otomatis)"
-                                                            style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px;">
-                                                        <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.25rem;">
-                                                            Kosongkan jika ingin kuota OTS fleksibel dari sisa stok event.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) (Style matching Variasi Produk) --}}
-                                        <div class="form-group full" id="customFieldsSection"
-                                            style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
-                                            <div
-                                                style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; background:#f8fafc; flex-wrap:wrap; gap:0.75rem;">
-                                                <div style="flex:1; min-width:220px;">
-                                                    <div
-                                                        style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
-                                                        Formulir Tambahan Checkout / Data Peserta (Custom Fields)
-                                                    </div>
-                                                    <div style="font-size:0.73rem; color:#64748b; line-height:1.4; margin-top:2px;">
-                                                        Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout. Tambahkan pertanyaan khusus di bawah jika diperlukan (misal: Ukuran Jersey, Institusi, Kontak Darurat, dll).
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <button type="button" onclick="addCustomFieldRow()"
-                                                        style="background:#0f172a; color:#fff; border:none; padding:0.45rem 0.95rem; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-family:'Montserrat', sans-serif; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:all 0.15s;"
-                                                        onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0f172a'">
-                                                        <svg width="14" height="14" fill="none" stroke="currentColor"
-                                                            stroke-width="2.5" viewBox="0 0 24 24">
-                                                            <line x1="12" y1="5" x2="12" y2="19" />
-                                                            <line x1="5" y1="12" x2="19" y2="12" />
-                                                        </svg>
-                                                        <span>+ Tambah Form Custom</span>
-                                                    </button>
+                                                    @endforeach
                                                 </div>
                                             </div>
 
-                                            <div style="border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
-                                                <!-- Preset Buttons: Compact & Mobile Friendly with Clean SVG Icons -->
-                                                <div
-                                                    style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.45rem 0.65rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-family:'Montserrat', sans-serif;">
-                                                    <span style="font-size:0.72rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                        <svg width="12" height="12" fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                                                        Preset Cepat:
-                                                    </span>
-                                                    <button type="button" onclick="applyCustomFieldPreset('run')"
-                                                        style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
-                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
-                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2 2 4"/><path d="M5 11l4-2 3 2 3-1 2 3"/><path d="M9 13l2 4"/></svg>
-                                                        <span>Marathon</span>
-                                                    </button>
-                                                    <button type="button" onclick="applyCustomFieldPreset('seminar')"
-                                                        style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
-                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
-                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
-                                                        <span>Seminar</span>
-                                                    </button>
-                                                    <button type="button" onclick="applyCustomFieldPreset('sport')"
-                                                        style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
-                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
-                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-                                                        <span>Olahraga</span>
-                                                    </button>
-                                                    <button type="button" onclick="applyCustomFieldPreset('concert')"
-                                                        style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
-                                                        onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">
-                                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                                                        <span>Konser</span>
-                                                    </button>
-                                                    <button type="button" onclick="clearAllCustomFields()"
-                                                        style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.25rem;">
-                                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-                                                        <span>Reset</span>
-                                                    </button>
-                                                </div>
-
-                                                <div id="customFieldsContainer"
-                                                    style="display:flex; flex-direction:column; gap:0.65rem;"></div>
-
-                                                <div id="customFieldsEmptyNotice"
-                                                    style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.25rem; background:#F8FAFC; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
-                                                    Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap
-                                                        &amp; Nomor Identitas</strong> saat checkout. Klik <strong>+ Tambah Form
-                                                        Custom</strong> jika memerlukan data lain.
-                                                </div>
+                                            <!-- 1 Input Link yang Menyesuaikan Platform Pilihan -->
+                                            <div id="dynamicLinkFieldWrap"
+                                                style="padding-top:0.75rem; border-top:1px dashed #e2e8f0;">
+                                                @php
+                                                    $activePlatObj = collect($platforms)->firstWhere('name', $selPlat) ?? $platforms[0];
+                                                @endphp
+                                                <label class="form-label" id="dynamicLinkLabel"
+                                                    style="display:flex; align-items:center; gap:0.4rem;">
+                                                    <svg width="15" height="15" fill="none" stroke="#166534"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                                        <path
+                                                            d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                                                    </svg>
+                                                    <span>{{ $activePlatObj['label'] }}</span> <span>*</span>
+                                                </label>
+                                                <input type="text" name="event_location_online" id="eventLocationOnline"
+                                                    value="{{ old('event_location_online', $product->event_type == 'online' ? $product->event_location : '') }}"
+                                                    class="form-input" placeholder="{{ $activePlatObj['placeholder'] }}">
+                                                <span class="form-hint"
+                                                    style="color:#64748b; margin-top:0.35rem; display:flex; align-items:center; gap:5px;">
+                                                    <svg width="13" height="13" fill="none" stroke="#64748b"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                                    </svg>
+                                                    <span>Tautan ini aman & hanya dapat diakses oleh pembeli tiket resmi
+                                                        setelah transaksi berhasil.</span>
+                                                </span>
                                             </div>
+
                                         </div>
                                     </div>
-                                </div>
 
-                                {{-- PHYSICAL PRODUCT SPECIFIC FIELDS --}}
-                                <div class="form-group full" id="physicalFieldsWrap"
-                                    style="display:none; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
-                                    <h5
-                                        style="font-size:0.95rem; font-weight:800; color:#0F172A; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #e2e8f0; padding-bottom:0.75rem;">
-                                        <svg width="20" height="20" fill="none" stroke="#0F172A" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                        </svg>
-                                        Spesifikasi Produk Fisik & Logistik
-                                    </h5>
-                                    <div class="form-grid">
-                                        <div class="form-group">
-                                            <label class="form-label">SKU / Kode Stok (Opsional)</label>
-                                            <input type="text" name="sku" value="{{ old('sku', $product->sku) }}"
-                                                class="form-input" placeholder="Misal: BRG-001-RED">
-                                            <span class="form-hint">Kode unik identifikasi stok barang Anda.</span>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="form-label">Berat Produk (Gram) <span>*</span></label>
-                                            <input type="number" name="weight" id="input_weight"
-                                                value="{{ old('weight', $product->weight) }}" class="form-input"
-                                                placeholder="Misal: 500" min="0">
-                                            <span class="form-hint">Berat dalam hitungan gram (1 Kg = 1000 Gram).</span>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="form-label">Panjang (P) (cm)</label>
-                                            <input type="number" name="length" id="input_length"
-                                                value="{{ old('length', $product->length) }}" class="form-input"
-                                                placeholder="Misal: 20" min="0" step="0.1"
-                                                oninput="calculateProductVolume()">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="form-label">Lebar (L) (cm)</label>
-                                            <input type="number" name="width" id="input_width"
-                                                value="{{ old('width', $product->width) }}" class="form-input"
-                                                placeholder="Misal: 15" min="0" step="0.1"
-                                                oninput="calculateProductVolume()">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="form-label">Tinggi (T) (cm)</label>
-                                            <input type="number" name="height" id="input_height"
-                                                value="{{ old('height', $product->height) }}" class="form-input"
-                                                placeholder="Misal: 10" min="0" step="0.1"
-                                                oninput="calculateProductVolume()">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="form-label">Volume (P x L x T) (cm³)</label>
-                                            <input type="number" name="volume" id="input_volume"
-                                                value="{{ old('volume', $product->volume) }}" class="form-input"
-                                                placeholder="Otomatis dihitung" readonly
-                                                style="background:#f1f5f9; color:#475569; font-weight:700;">
-                                            <span class="form-hint">Dihitung otomatis: P × L × T.</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                @include('creator.products.partials.pricing-model-selector', ['product' => $product])
-
-                                <div class="form-group" id="price-field-wrap">
-                                    <label class="form-label">Harga Normal (Rp) <span>*</span></label>
-                                    <input type="text" name="price" id="input_price"
-                                        value="{{ old('price', number_format($product->price, 0, ',', '.')) }}"
-                                        class="form-input currency-input" placeholder="Misal: 50.000" required
-                                        autocomplete="off">
-                                </div>
-
-                                <div class="form-group" id="sale-price-field-wrap">
-                                    <label class="form-label">Harga Diskon / Promo (Rp)</label>
-                                    <input type="text" name="sale_price" id="input_sale_price"
-                                        value="{{ old('sale_price', $product->sale_price ? number_format($product->sale_price, 0, ',', '.') : '') }}"
-                                        class="form-input currency-input" placeholder="Opsional, misal: 29.000"
-                                        autocomplete="off">
-                                </div>
-
-                                {{-- STOK PRODUK MAKANAN --}}
-                                <div class="form-group" id="foodStockWrap" style="display:none;">
-                                    <label class="form-label">Stok Produk</label>
-                                    <input type="number" name="stock" id="input_stock"
-                                        value="{{ old('stock', $product->stock) }}" class="form-input"
-                                        placeholder="Kosongkan = Unlimited" min="0">
-                                    <span class="form-hint">Kosongkan = stok tidak terbatas. Isi <strong>0</strong> = habis.
-                                        Berkurang otomatis saat ada pesanan.</span>
-                                </div>
-
-                                @include('creator.products.partials.free-product-requirements', ['product' => $product])
-
-                                @include('creator.products.partials.variants-manager', ['product' => $product])
-
-                                <div id="commissionWrap" class="form-group full"
-                                    style="display: {{ $selectedType === 'ticket' ? 'none' : 'block' }}; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
-                                    @php $currentCommRate = old('affiliate_commission_rate', $product->affiliate_commission_rate ?? 10);
-                                    $affOn = ($currentCommRate > 0); @endphp
-                                    <label
-                                        style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
-                                        <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
-                                            <input type="checkbox" id="affiliateCommissionToggle" {{ $affOn ? 'checked' : '' }} style="opacity:0; width:0; height:0;"
-                                                onchange="handleAffiliateToggle(this.checked)">
-                                            <span class="toggle-slider-s"></span>
-                                        </div>
-                                        <div style="flex:1;">
-                                            <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Aktifkan Komisi
-                                                Affiliate</div>
-                                            <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Produk ini bisa
-                                                dipromosikan oleh affiliate dan mereka mendapat komisi.</div>
-                                        </div>
-                                    </label>
-                                    <div id="affiliateRateWrap"
-                                        style="{{ !$affOn ? 'display:none;' : '' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
-                                        <label class="form-label">Besaran Komisi Affiliate (%)</label>
-                                        <div style="position:relative; display:flex; align-items:center;">
-                                            <input type="number" name="affiliate_commission_rate"
-                                                id="affiliate_commission_rate" value="{{ $currentCommRate }}"
-                                                class="form-input" min="5" max="100" step="0.5" placeholder="10"
-                                                style="padding-right:2.5rem;">
+                                    <div class="form-group">
+                                        <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                            <svg width="15" height="15" fill="none" stroke="#E1306C" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                            </svg>
+                                            Instagram Event / EO <span>*</span>
+                                        </label>
+                                        <div style="position:relative;">
                                             <span
-                                                style="position:absolute; right:1rem; font-weight:700; color:#64748B;">%</span>
+                                                style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
+                                            <input type="text" name="instagram_username"
+                                                value="{{ old('instagram_username', $product->instagram_username) }}"
+                                                class="form-input" style="padding-left:30px;" placeholder="username.event">
                                         </div>
-                                        <span class="form-hint"
-                                            style="color:#0284C7; font-weight:600; margin-top:0.35rem; display:inline-flex; align-items:center; gap:0.35rem;">
-                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                viewBox="0 0 24 24">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <line x1="12" y1="16" x2="12" y2="12" />
-                                                <line x1="12" y1="8" x2="12.01" y2="8" />
-                                            </svg>
-                                            Minimum 5%, rekomendasi 10% untuk mendorong penjualan.
-                                        </span>
+                                        <span class="form-hint">Wajib diisi. Icon Instagram akan tampil di atas waktu
+                                            pelaksanaan pada halaman produk tiket.</span>
                                     </div>
-                                </div>
 
-                                @if(auth()->user()->creatorProfile?->is_exclusive || ($product->seller && $product->seller->creatorProfile?->is_exclusive))
-                                    <div class="form-group full"
-                                        style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.04)); border: 1.5px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
-                                        <div
-                                            style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #b45309; font-weight: 700; font-size: 0.95rem;">
-                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                                                viewBox="0 0 24 24">
+                                    <div class="form-group">
+                                        <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
                                                 <path
-                                                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                                    d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.04-4.52z" />
                                             </svg>
-                                            Fitur Creator Eksklusif — Statistik Bintang & Penjual
+                                            Username TikTok Resmi Event / EO <span>*</span>
+                                        </label>
+                                        <div style="position:relative;">
+                                            <span
+                                                style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:#94A3B8;">@</span>
+                                            <input type="text" name="tiktok_username"
+                                                value="{{ old('tiktok_username', $product->tiktok_username) }}"
+                                                class="form-input" style="padding-left:30px;" placeholder="username.event">
                                         </div>
-                                        <div
-                                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                                            <div class="form-group" style="margin-bottom:0;">
-                                                <label class="form-label" style="color:#78350f;">Rating Produk (0.0 -
-                                                    5.0)</label>
-                                                <input type="number" name="rating" value="{{ old('rating', $product->rating) }}"
-                                                    class="form-input" min="0" max="5" step="0.1"
-                                                    placeholder="Kosongkan jika otomatis dari ulasan"
-                                                    style="border-color: rgba(245, 158, 11, 0.4);">
-                                                <span class="form-hint" style="color:#92400e;">Atur rating manual (opsional,
-                                                    kosongkan agar otomatis dihitung dari ulasan asli pembeli).</span>
-                                            </div>
-                                            <div class="form-group" style="margin-bottom:0;">
-                                                <label class="form-label" style="color:#78350f;">Jumlah Terjual (Sales)</label>
-                                                <input type="number" name="sold_count"
-                                                    value="{{ old('sold_count', $product->sold_count ?? 0) }}"
-                                                    class="form-input" min="0" step="1" placeholder="0"
-                                                    style="border-color: rgba(245, 158, 11, 0.4);">
-                                                <span class="form-hint" style="color:#92400e;">Atur angka jumlah produk terjual
-                                                    secara manual.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                <div class="form-group full" id="shortDescWrap"
-                                    style="display: {{ $selectedType === 'ticket' ? 'none' : 'block' }};">
-                                    <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
-                                    <textarea name="short_desc" id="shortDescInput" class="form-input" rows="2"
-                                        placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160" {{ old('product_type', $product->product_type) === 'ticket' ? '' : 'required' }}>{{ old('short_desc', $product->short_desc) }}</textarea>
-                                    <span class="form-hint">Digunakan sebagai meta description SEO jika mode advanced
-                                        dimatikan.</span>
-                                </div>
-
-                                <div class="form-group full" style="margin-bottom:0;">
-                                    <label class="form-label">Deskripsi Lengkap <span>*</span></label>
-                                    @include('admin.partials.rich-editor', ['name' => 'description', 'value' => old('description', $product->description), 'height' => '280px'])
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- TAB 2: MEDIA --}}
-                <div class="tab-pane" id="tab-media">
-                    <div class="prof-card">
-                        <div class="prof-card-head">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                            </svg>
-                            Upload Visual Produk
-                        </div>
-                        <div class="form-body">
-                            {{-- THUMBNAIL UTAMA: PROPORSIONAL 1:1 SQUARE --}}
-                            <div class="form-group">
-                                <label class="form-label">Upload Thumbnail Utama <span>*</span></label>
-                                <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
-                                    <div id="thumbDropzone" onclick="document.getElementById('thumb-input').click()"
-                                        style="width:130px; height:130px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:16px; background:#f9fefb; cursor:pointer; display:{{ $product->image ? 'none' : 'flex' }}; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box;"
-                                        onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
-                                        onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
-                                        <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8"
-                                            viewBox="0 0 24 24">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" />
-                                            <circle cx="8.5" cy="8.5" r="1.5" />
-                                            <polyline points="21 15 16 10 5 21" />
-                                        </svg>
-                                        <div style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">
-                                            Ganti Foto</div>
-                                        <div style="font-size:0.65rem; color:#94A3B8;">1:1 Proporsional</div>
+                                        <span class="form-hint">Wajib diisi. Icon TikTok akan tampil di atas waktu
+                                            pelaksanaan pada halaman produk tiket.</span>
                                     </div>
 
-                                    <div id="thumbPreviewWrap" style="display:{{ $product->image ? 'block' : 'none' }};">
-                                        <div
-                                            style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
-                                            <img id="thumbPreviewImg"
-                                                src="{{ $product->image ? asset('storage/' . $product->image) : '' }}"
-                                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                                    <div class="form-group full" style="margin-top:0.5rem;">
+                                        <label class="form-label" style="display:flex; align-items:center; gap:0.4rem;">
+                                            <svg width="15" height="15" fill="none" stroke="#0F172A" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
+                                                </path>
+                                                <polyline points="14 2 14 8 20 8"></polyline>
+                                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            </svg>
+                                            Syarat & Ketentuan Event / T&C <span>*</span>
+                                        </label>
+                                        <textarea name="terms_conditions" rows="6" class="form-input"
+                                            style="height:auto; min-height:130px; line-height:1.6;"
+                                            placeholder="Contoh:&#10;1. Tiket yang sudah dibeli bersifat non-refundable (tidak dapat dikembalikan/ditukar).&#10;2. Pengunjung wajib menunjukkan e-tiket dengan QR Code yang jelas pada saat check-in di gate.&#10;3. Dilarang membawa senjata tajam, obat-obatan terlarang, flare, dan kamera profesional tanpa izin penyelenggara.">{{ old('terms_conditions', $product->terms_conditions) }}</textarea>
+                                        <span class="form-hint">Wajib diisi. Syarat & ketentuan ini akan tampil pada tab
+                                            'T&C' khusus tiket event di halaman produk.</span>
+                                    </div>
+
+                                    {{-- PENGATURAN PAJAK DAERAH / HIBURAN / PPN TIKET (Style matching Variasi Produk) --}}
+                                    <div class="form-group full" id="ticketTaxSection"
+                                        style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.85rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
+                                        <label
+                                            style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
+                                            <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                                <input type="checkbox" name="tax_enabled" id="ticketTaxToggle" value="1" {{ old('tax_enabled', $product->tax_enabled ?? 0) ? 'checked' : '' }}
+                                                    style="opacity:0; width:0; height:0;"
+                                                    onchange="toggleTicketTaxBox(this.checked)">
+                                                <span class="toggle-slider-s"></span>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div
+                                                    style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
+                                                    Pajak Daerah / Hiburan / Layanan (Opsional)
+                                                </div>
+                                                <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">
+                                                    Pajak resmi daerah (PB1 / Pajak Hiburan) yang akan otomatis dihitung dan
+                                                    ditambahkan ke rincian checkout tiket pembeli.
+                                                </div>
+                                            </div>
+                                        </label>
+
+                                        <div id="ticketTaxBox"
+                                            style="{{ old('tax_enabled', $product->tax_enabled ?? 0) ? '' : 'display:none;' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+                                            {{-- Multi-Tax Rows Container --}}
+                                            <div id="ticketTaxItemsContainer"
+                                                style="display:flex; flex-direction:column; gap:0.65rem;">
+                                                {{-- Diisi secara dinamis oleh JavaScript --}}
+                                            </div>
+
+                                            {{-- Action Row --}}
                                             <div
-                                                style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
-                                                <button type="button"
-                                                    onclick="document.getElementById('thumb-input').click()"
-                                                    style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                                    title="Ganti Foto">✎</button>
-                                                <button type="button" onclick="removeThumbnail()"
-                                                    style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                                    title="Hapus Foto">✕</button>
+                                                style="display:flex; align-items:center; justify-content:flex-start; margin-top:0.85rem; padding-top:0.75rem; border-top:1px dashed #e2e8f0;">
+                                                <button type="button" onclick="addTaxRow({name: '', rate: 10})"
+                                                    style="background:#f8fafc; border:1px solid #cbd5e1; color:#334155; font-size:0.8rem; font-weight:700; padding:0.45rem 0.95rem; border-radius:8px; cursor:pointer; font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.35rem; transition:all 0.15s;"
+                                                    onmouseover="this.style.background='#f1f5f9'"
+                                                    onmouseout="this.style.background='#f8fafc'">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor"
+                                                        stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <line x1="12" y1="5" x2="12" y2="19" />
+                                                        <line x1="5" y1="12" x2="19" y2="12" />
+                                                    </svg>
+                                                    <span>Tambah Pajak Lainnya</span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <input type="file" name="image" id="thumb-input" accept="image/*"
-                                    onchange="previewSingleThumb(event)" style="display:none;">
-                                <input type="hidden" name="remove_image" id="remove_image_input" value="0">
-                                <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan: Persegi
-                                    (1:1), minimal 600x600 px. Biarkan kosong jika tidak ingin mengubah thumbnail.</span>
-                            </div>
 
-                            <div class="form-group" id="posterUploadWrap"
-                                style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
-                                <label class="form-label"
-                                    style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
-                                    <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2"
-                                        viewBox="0 0 24 24">
-                                        <rect x="2" y="4" width="20" height="16" rx="2" />
-                                        <polygon points="10,9 15,12 10,15" />
-                                    </svg>
-                                    Upload Poster Event (Landscape 16:9) <span style="color:#ef4444;">*</span>
-                                </label>
-                                <span class="form-hint"
-                                    style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe produk Tiket
-                                    Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
-                                <div class="img-upload-area" id="posterDropzone"
-                                    onclick="document.getElementById('poster-input').click()"
-                                    style="margin-bottom:0.75rem; background:#fff; {{ $product->og_image ? 'display:none;' : '' }}">
-                                    <div>
-                                        <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6"
-                                            viewBox="0 0 24 24">
-                                            <rect x="2" y="4" width="20" height="16" rx="2" />
-                                            <circle cx="8" cy="10" r="2" />
-                                            <path d="M22 15l-5-5-8 8" />
-                                        </svg>
-                                        <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
-                                            {{ $product->og_image ? 'Ganti Poster Event Landscape (16:9)' : 'Pilih Poster Event Landscape (16:9)' }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div id="posterPreviewWrap"
-                                    style="{{ $product->og_image ? 'display:block;' : 'display:none;' }} margin-bottom:0.5rem;">
-                                    <div
-                                        style="position:relative; display:inline-block; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
-                                        <img id="posterPreviewImg"
-                                            src="{{ $product->og_image ? asset('storage/' . $product->og_image) : '' }}"
-                                            style="width:240px; height:135px; object-fit:cover; display:block;">
-                                        <div
-                                            style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
-                                            <button type="button" onclick="document.getElementById('poster-input').click()"
-                                                style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                                title="Ganti Poster">✎</button>
-                                            <button type="button" onclick="removePoster()"
-                                                style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
-                                                title="Hapus Poster">✕</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="file" name="og_image" id="poster-input" accept="image/*"
-                                    onchange="previewPosterThumb(event)" style="display:none;">
-                                <span class="form-hint">Biarkan kosong jika tidak ingin mengubah poster saat ini.</span>
-                            </div>
-
-                            {{-- FOTO GALERI: GRID PROPORSIONAL 1:1 SQUARE DENGAN TOMBOL TAMBAH TERINTEGRASI --}}
-                            <div class="form-group">
-                                <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
-                                <input type="hidden" name="existing_gallery_submitted" value="1">
-                                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
-                                    <div id="galleryPreview"
-                                        style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
-                                        @if(!empty($product->gallery) && is_array($product->gallery))
-                                            @foreach($product->gallery as $idx => $gal)
-                                                <div class="existing-gallery-item"
-                                                    style="position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:1.5px solid #cbd5e1; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;">
-                                                    <input type="hidden" name="existing_gallery[]" value="{{ $gal }}">
-                                                    <img src="{{ asset('storage/' . $gal) }}"
-                                                        style="width:100%; height:100%; object-fit:cover; display:block;">
-                                                    <button type="button" onclick="removeExistingGallery(this)"
-                                                        title="Hapus Foto Ini"
-                                                        style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25); transition:transform 0.15s ease;"
-                                                        onmouseover="this.style.transform='scale(1.15)'"
-                                                        onmouseout="this.style.transform='scale(1)'">✕</button>
-                                                    <div
-                                                        style="position:absolute; bottom:0; left:0; right:0; background:rgba(15,23,42,0.7); color:#fff; font-size:9px; font-weight:600; text-align:center; padding:2px 0;">
-                                                        Lama #{{$idx + 1}}</div>
+                                    {{-- PENGATURAN TIKET OTS (ON-THE-SPOT / LOKET VENUE) (Style matching Variasi Produk)
+                                    --}}
+                                    <div class="form-group full" id="ticketOtsSection"
+                                        style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
+                                        <label
+                                            style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
+                                            <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                                <input type="checkbox" name="ots_enabled" id="ticketOtsToggle" value="1" {{ old('ots_enabled', (string) ($product->ots_enabled ?? 1)) == '1' ? 'checked' : '' }} style="opacity:0; width:0; height:0;"
+                                                    onchange="toggleTicketOtsBox(this.checked)">
+                                                <span class="toggle-slider-s"></span>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <div
+                                                    style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
+                                                    Penjualan Tiket OTS (On-The-Spot / Kasir Loket)
                                                 </div>
-                                            @endforeach
-                                        @endif
-                                    </div>
+                                                <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">
+                                                    Buka penjualan tiket walk-in di pintu masuk (venue) menggunakan
+                                                    antarmuka Kasir Loket cepat oleh Panitia / Crew.
+                                                </div>
+                                            </div>
+                                        </label>
 
-                                    <div id="galleryDropzone" onclick="document.getElementById('gallery-input').click()"
-                                        style="width:110px; height:110px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:14px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box; flex-shrink:0;"
-                                        onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
-                                        onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
-                                        <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2"
-                                            viewBox="0 0 24 24">
-                                            <line x1="12" y1="5" x2="12" y2="19" />
-                                            <line x1="5" y1="12" x2="19" y2="12" />
-                                        </svg>
-                                        <div style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">+
-                                            Foto</div>
-                                        <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">
-                                            ({{ count($product->gallery ?? []) }}/6)</div>
-                                    </div>
-                                </div>
-                                <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
-                                    onchange="previewGalleryList(event)" style="display:none;">
-                                <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto
-                                    galeri pendukung (proporsional 1:1).</span>
-                            </div>
-
-                            {{-- LINK VIDEO OPSIONAL --}}
-                            @php
-                                $curPlatform = old('video_platform', $product->video_platform ?? 'youtube');
-                                $pVideoUrls = old('tiktok_video_urls', $product->video_urls ?? []);
-                                $ytPrefill = old('youtube_video_url', ($curPlatform === 'youtube' && !empty($pVideoUrls)) ? $pVideoUrls[0] : ($product->youtube_video_url ?? ''));
-                                $tt1 = $pVideoUrls[0] ?? '';
-                                $tt2 = $pVideoUrls[1] ?? '';
-                                $tt3 = $pVideoUrls[2] ?? '';
-                            @endphp
-                            <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
-                                <div
-                                    style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
-                                    <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;"
-                                        onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
-                                        <div
-                                            style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                            <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24">
-                                                <polygon points="5 3 19 12 5 21 5 3" />
-                                            </svg>
+                                        <div id="ticketOtsBox"
+                                            style="{{ old('ots_enabled', (string) ($product->ots_enabled ?? 1)) == '1' ? '' : 'display:none;' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+                                            <div
+                                                style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:0.85rem;">
+                                                <div>
+                                                    <label class="form-label"
+                                                        style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
+                                                        Harga Tiket OTS (Rp)
+                                                    </label>
+                                                    <div style="position:relative;">
+                                                        <span
+                                                            style="position:absolute; left:0.75rem; top:50%; transform:translateY(-50%); font-size:0.82rem; font-weight:700; color:#64748B;">Rp</span>
+                                                        <input type="number" step="1000" min="0" name="ots_price"
+                                                            id="ticketOtsPriceInput"
+                                                            value="{{ old('ots_price', $product->ots_price ? (int) $product->ots_price : '') }}"
+                                                            class="form-input"
+                                                            placeholder="Sama dengan harga normal (otomatis)"
+                                                            style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px; padding-left:2.4rem;">
+                                                    </div>
+                                                    <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.25rem;">
+                                                        Kosongkan jika harga OTS sama dengan harga tiket online.</div>
+                                                </div>
+                                                <div>
+                                                    <label class="form-label"
+                                                        style="font-size:0.78rem; font-weight:700; margin-bottom:0.35rem; color:#334155;">
+                                                        Alokasi Kuota Khusus OTS (Opsional)
+                                                    </label>
+                                                    <input type="number" min="0" name="ots_quota" id="ticketOtsQuotaInput"
+                                                        value="{{ old('ots_quota', $product->ots_quota ?? '') }}"
+                                                        class="form-input" placeholder="Pakai sisa stok produk (otomatis)"
+                                                        style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:40px;">
+                                                    <div style="font-size:0.7rem; color:#94a3b8; margin-top:0.25rem;">
+                                                        Kosongkan jika ingin kuota OTS fleksibel dari sisa stok event.
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div style="flex:1;">
-                                            <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link Video
+                                    </div>
+
+                                    {{-- FORMULIR TAMBAHAN CHECKOUT / DATA PESERTA (CUSTOM FIELDS) (Style matching Variasi
+                                    Produk) --}}
+                                    <div class="form-group full" id="customFieldsSection"
+                                        style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box; font-family:'Montserrat', sans-serif;">
+                                        <div
+                                            style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; background:#f8fafc; flex-wrap:wrap; gap:0.75rem;">
+                                            <div style="flex:1; min-width:220px;">
+                                                <div
+                                                    style="font-size:0.88rem; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:0.45rem;">
+                                                    Formulir Tambahan Checkout / Data Peserta (Custom Fields)
+                                                </div>
+                                                <div
+                                                    style="font-size:0.73rem; color:#64748b; line-height:1.4; margin-top:2px;">
+                                                    Nama Lengkap &amp; Nomor KTP/Paspor sudah otomatis ada di checkout.
+                                                    Tambahkan pertanyaan khusus di bawah jika diperlukan (misal: Ukuran
+                                                    Jersey, Institusi, Kontak Darurat, dll).
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <button type="button" onclick="addCustomFieldRow()"
+                                                    style="background:#0f172a; color:#fff; border:none; padding:0.45rem 0.95rem; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-family:'Montserrat', sans-serif; box-shadow:0 1px 3px rgba(0,0,0,0.1); transition:all 0.15s;"
+                                                    onmouseover="this.style.background='#1e293b'"
+                                                    onmouseout="this.style.background='#0f172a'">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor"
+                                                        stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <line x1="12" y1="5" x2="12" y2="19" />
+                                                        <line x1="5" y1="12" x2="19" y2="12" />
+                                                    </svg>
+                                                    <span>+ Tambah Form Custom</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            style="border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+                                            <!-- Preset Buttons: Compact & Mobile Friendly with Clean SVG Icons -->
+                                            <div
+                                                style="display:flex; align-items:center; gap:0.35rem; flex-wrap:wrap; margin-bottom:0.85rem; padding:0.45rem 0.65rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; font-family:'Montserrat', sans-serif;">
                                                 <span
-                                                    style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span>
+                                                    style="font-size:0.72rem; font-weight:700; color:#475569; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    <svg width="12" height="12" fill="none" stroke="#eab308"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                                    </svg>
+                                                    Preset Cepat:
+                                                </span>
+                                                <button type="button" onclick="applyCustomFieldPreset('run')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
+                                                    onmouseover="this.style.background='#f1f5f9'"
+                                                    onmouseout="this.style.background='#fff'">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <circle cx="13" cy="4" r="2" />
+                                                        <path d="M7 21l3-6 3 2 2 4" />
+                                                        <path d="M5 11l4-2 3 2 3-1 2 3" />
+                                                        <path d="M9 13l2 4" />
+                                                    </svg>
+                                                    <span>Marathon</span>
+                                                </button>
+                                                <button type="button" onclick="applyCustomFieldPreset('seminar')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
+                                                    onmouseover="this.style.background='#f1f5f9'"
+                                                    onmouseout="this.style.background='#fff'">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                                                        <path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5" />
+                                                    </svg>
+                                                    <span>Seminar</span>
+                                                </button>
+                                                <button type="button" onclick="applyCustomFieldPreset('sport')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
+                                                    onmouseover="this.style.background='#f1f5f9'"
+                                                    onmouseout="this.style.background='#fff'">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2" />
+                                                        <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2" />
+                                                        <path d="M4 22h16" />
+                                                        <path
+                                                            d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34" />
+                                                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+                                                    </svg>
+                                                    <span>Olahraga</span>
+                                                </button>
+                                                <button type="button" onclick="applyCustomFieldPreset('concert')"
+                                                    style="font-family:'Montserrat', sans-serif; background:#fff; border:1px solid #CBD5E1; color:#334155; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:0.3rem;"
+                                                    onmouseover="this.style.background='#f1f5f9'"
+                                                    onmouseout="this.style.background='#fff'">
+                                                    <svg width="12" height="12" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path d="M9 18V5l12-2v13" />
+                                                        <circle cx="6" cy="18" r="3" />
+                                                        <circle cx="18" cy="16" r="3" />
+                                                    </svg>
+                                                    <span>Konser</span>
+                                                </button>
+                                                <button type="button" onclick="clearAllCustomFields()"
+                                                    style="font-family:'Montserrat', sans-serif; background:#FEE2E2; border:1px solid #FCA5A5; color:#DC2626; font-size:0.72rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:0.25rem;">
+                                                    <svg width="11" height="11" fill="none" stroke="currentColor"
+                                                        stroke-width="2.5" viewBox="0 0 24 24">
+                                                        <polyline points="1 4 1 10 7 10"></polyline>
+                                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                                    </svg>
+                                                    <span>Reset</span>
+                                                </button>
                                             </div>
-                                            <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok
-                                                (hingga 3 video)</div>
-                                        </div>
-                                        <svg id="videoLinkChevron" width="16" height="16" fill="none" stroke="#94a3b8"
-                                            stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s;">
-                                            <path d="m6 9 6 6 6-6" />
-                                        </svg>
-                                    </div>
-                                    <div id="videoLinkPanel" style="display:none; padding:1.25rem;">
-                                        {{-- Platform Selection Tabs --}}
-                                        <div
-                                            style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
-                                            <button type="button" id="btnPlatformYt" onclick="setVideoPlatform('youtube')"
-                                                style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'youtube' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
-                                                <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-                                                </svg>
-                                                YouTube
-                                            </button>
-                                            <button type="button" id="btnPlatformTt" onclick="setVideoPlatform('tiktok')"
-                                                style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'tiktok' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
-                                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
-                                                </svg>
-                                                TikTok (Hingga 3 Video)
-                                            </button>
-                                        </div>
-                                        <input type="hidden" name="video_platform" id="videoPlatformInput"
-                                            value="{{ $curPlatform }}">
 
-                                        {{-- YOUTUBE INPUT (1 Link) --}}
-                                        <div id="youtubeInputWrap"
-                                            style="{{ $curPlatform === 'youtube' ? 'display:block;' : 'display:none;' }}">
-                                            <input type="url" name="youtube_video_url" id="videoUrlInput"
-                                                value="{{ $ytPrefill }}" class="form-input"
-                                                placeholder="Paste link YouTube atau YouTube Shorts di sini..."
-                                                oninput="debounceVideoPreview(this.value)" style="margin-bottom:0.5rem;">
-                                            <span class="form-hint" style="display:block; margin-bottom:0.75rem;">Mendukung
-                                                link video
-                                                YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
-                                        </div>
+                                            <div id="customFieldsContainer"
+                                                style="display:flex; flex-direction:column; gap:0.65rem;"></div>
 
-                                        {{-- TIKTOK INPUTS (Up to 3 Links) --}}
-                                        <div id="tiktokInputsWrap"
-                                            style="{{ $curPlatform === 'tiktok' ? 'display:block;' : 'display:none;' }} margin-bottom:0.75rem;">
-                                            <div style="display:flex; flex-direction:column; gap:0.65rem;">
-                                                <div>
-                                                    <label
-                                                        style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link
-                                                        TikTok 1 <span style="color:#ef4444;">*</span></label>
-                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1"
-                                                        class="form-input tiktok-url-inp" value="{{ $tt1 }}"
-                                                        placeholder="https://www.tiktok.com/@username/video/..."
-                                                        oninput="debounceTiktokPreviews()">
-                                                </div>
-                                                <div>
-                                                    <label
-                                                        style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
-                                                        TikTok 2 (Opsional)</label>
-                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2"
-                                                        class="form-input tiktok-url-inp" value="{{ $tt2 }}"
-                                                        placeholder="https://www.tiktok.com/@username/video/..."
-                                                        oninput="debounceTiktokPreviews()">
-                                                </div>
-                                                <div>
-                                                    <label
-                                                        style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
-                                                        TikTok 3 (Opsional)</label>
-                                                    <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3"
-                                                        class="form-input tiktok-url-inp" value="{{ $tt3 }}"
-                                                        placeholder="https://www.tiktok.com/@username/video/..."
-                                                        oninput="debounceTiktokPreviews()">
-                                                </div>
+                                            <div id="customFieldsEmptyNotice"
+                                                style="font-family:'Montserrat', sans-serif; text-align:center; padding:1.25rem; background:#F8FAFC; border:1.5px dashed #CBD5E1; border-radius:12px; color:#64748B; font-size:0.8rem;">
+                                                Belum ada form tambahan. Peserta hanya akan mengisi <strong>Nama Lengkap
+                                                    &amp; Nomor Identitas</strong> saat checkout. Klik <strong>+ Tambah Form
+                                                    Custom</strong> jika memerlukan data lain.
                                             </div>
-                                            <span class="form-hint" style="margin-top:0.5rem; display:block;">Di halaman
-                                                produk pembeli, video akan tampil jejer horizontal rapi dan pas di dalam
-                                                box deskripsi.</span>
-                                        </div>
-
-                                        {{-- VIDEO PREVIEW BOX --}}
-                                        <div id="videoPreviewBox"
-                                            style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="prof-card" id="digitalAccessCard" style="{{ $selectedType === 'ticket' ? 'display:none;' : '' }}">
-                        <div class="prof-card-head">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="7 10 12 15 17 10" />
-                                <line x1="12" y1="15" x2="12" y2="3" />
-                            </svg>
-                            Akses File Digital <span>*</span>
-                        </div>
-                        <div class="form-body">
-                            <div class="form-group">
-                                <label class="form-label">Tautan Eksternal (G-Drive / Notion / Website)</label>
-                                <input type="url" name="digital_resource" id="externalLink"
-                                    value="{{ old('digital_resource', $product->digital_resource) }}" class="form-input"
-                                    placeholder="https://...">
-                                <span id="linkStatus"
-                                    style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
-                            </div>
-                        </div>
-                    </div>
+                            {{-- PHYSICAL PRODUCT SPECIFIC FIELDS --}}
+                            <div class="form-group full" id="physicalFieldsWrap"
+                                style="display:none; background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:16px; padding:1.5rem; width:100%; box-sizing:border-box;">
+                                <h5
+                                    style="font-size:0.95rem; font-weight:800; color:#0F172A; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px dashed #e2e8f0; padding-bottom:0.75rem;">
+                                    <svg width="20" height="20" fill="none" stroke="#0F172A" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                    </svg>
+                                    Spesifikasi Produk Fisik & Logistik
+                                </h5>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">SKU / Kode Stok (Opsional)</label>
+                                        <input type="text" name="sku" value="{{ old('sku', $product->sku) }}"
+                                            class="form-input" placeholder="Misal: BRG-001-RED">
+                                        <span class="form-hint">Kode unik identifikasi stok barang Anda.</span>
+                                    </div>
 
-                    {{-- WHITE LABEL CARD --}}
-                    <div class="prof-card" style="border: 2px solid #E2E8F0; transition: border-color 0.2s; {{ $selectedType === 'ticket' ? 'display:none;' : '' }}"
-                        id="whitelabelCard">
-                        <div class="prof-card-head"
-                            style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; justify-content:space-between; align-items:center;">
-                            <div style="display:flex; align-items:center; gap:0.5rem;">
-                                <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5"
-                                    viewBox="0 0 24 24">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                                </svg>
-                                <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali
-                                    (Lisensi Resell & Re-Brand)</span>
-                            </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Berat Produk (Gram) <span>*</span></label>
+                                        <input type="number" name="weight" id="input_weight"
+                                            value="{{ old('weight', $product->weight) }}" class="form-input"
+                                            placeholder="Misal: 500" min="0">
+                                        <span class="form-hint">Berat dalam hitungan gram (1 Kg = 1000 Gram).</span>
+                                    </div>
 
-                            @if($product->is_whitelabel)
-                                @if($product->whitelabel_approval_status === 'pending')
-                                    <span
-                                        style="background:#FEF3C7; color:#D97706; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <polyline points="12 6 12 12 16 14" />
-                                        </svg>
-                                        Menunggu Review Tim Buyle
-                                    </span>
-                                @elseif($product->whitelabel_approval_status === 'approved')
-                                    <span
-                                        style="background:#DCFCE7; color:#16A34A; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <polyline points="20 6 9 17 4 12" />
-                                        </svg>
-                                        Approved (Disetujui)
-                                    </span>
-                                @elseif($product->whitelabel_approval_status === 'rejected')
-                                    <span
-                                        style="background:#FEE2E2; color:#DC2626; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <line x1="18" y1="6" x2="6" y2="18" />
-                                            <line x1="6" y1="6" x2="18" y2="18" />
-                                        </svg>
-                                        Ditolak Admin
-                                    </span>
-                                @endif
-                            @endif
-                        </div>
-                        <div class="form-body">
-                            @if($product->is_whitelabel && $product->whitelabel_approval_status === 'rejected' && $product->whitelabel_rejection_reason)
-                                <div
-                                    style="background:#FEE2E2; border:1px solid #FCA5A5; border-radius:12px; padding:0.9rem 1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#991B1B;">
-                                    <strong style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem;">
-                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
-                                            viewBox="0 0 24 24">
-                                            <path
-                                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                                            <line x1="12" y1="9" x2="12" y2="13" />
-                                            <line x1="12" y1="17" x2="12.01" y2="17" />
-                                        </svg>
-                                        Catatan Penolakan dari Admin Tim Buyle:
-                                    </strong>
-                                    <div>{{ $product->whitelabel_rejection_reason }}</div>
-                                    <div style="font-size:0.75rem; margin-top:0.3rem; color:#7F1D1D;">Silakan perbaiki aset/file
-                                        Anda agar netral (tanpa watermark) dan simpan ulang untuk mengajukan review baru.</div>
+                                    <div class="form-group">
+                                        <label class="form-label">Panjang (P) (cm)</label>
+                                        <input type="number" name="length" id="input_length"
+                                            value="{{ old('length', $product->length) }}" class="form-input"
+                                            placeholder="Misal: 20" min="0" step="0.1" oninput="calculateProductVolume()">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Lebar (L) (cm)</label>
+                                        <input type="number" name="width" id="input_width"
+                                            value="{{ old('width', $product->width) }}" class="form-input"
+                                            placeholder="Misal: 15" min="0" step="0.1" oninput="calculateProductVolume()">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Tinggi (T) (cm)</label>
+                                        <input type="number" name="height" id="input_height"
+                                            value="{{ old('height', $product->height) }}" class="form-input"
+                                            placeholder="Misal: 10" min="0" step="0.1" oninput="calculateProductVolume()">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Volume (P x L x T) (cm³)</label>
+                                        <input type="number" name="volume" id="input_volume"
+                                            value="{{ old('volume', $product->volume) }}" class="form-input"
+                                            placeholder="Otomatis dihitung" readonly
+                                            style="background:#f1f5f9; color:#475569; font-weight:700;">
+                                        <span class="form-hint">Dihitung otomatis: P × L × T.</span>
+                                    </div>
                                 </div>
-                            @endif
+                            </div>
 
-                            <div
-                                style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                            @include('creator.products.partials.pricing-model-selector', ['product' => $product])
+
+                            <div class="form-group" id="price-field-wrap">
+                                <label class="form-label">Harga Normal (Rp) <span>*</span></label>
+                                <input type="text" name="price" id="input_price"
+                                    value="{{ old('price', number_format($product->price, 0, ',', '.')) }}"
+                                    class="form-input currency-input" placeholder="Misal: 50.000" required
+                                    autocomplete="off">
+                            </div>
+
+                            <div class="form-group" id="sale-price-field-wrap">
+                                <label class="form-label">Harga Diskon / Promo (Rp)</label>
+                                <input type="text" name="sale_price" id="input_sale_price"
+                                    value="{{ old('sale_price', $product->sale_price ? number_format($product->sale_price, 0, ',', '.') : '') }}"
+                                    class="form-input currency-input" placeholder="Opsional, misal: 29.000"
+                                    autocomplete="off">
+                            </div>
+
+                            {{-- STOK PRODUK MAKANAN --}}
+                            <div class="form-group" id="foodStockWrap" style="display:none;">
+                                <label class="form-label">Stok Produk</label>
+                                <input type="number" name="stock" id="input_stock"
+                                    value="{{ old('stock', $product->stock) }}" class="form-input"
+                                    placeholder="Kosongkan = Unlimited" min="0">
+                                <span class="form-hint">Kosongkan = stok tidak terbatas. Isi <strong>0</strong> = habis.
+                                    Berkurang otomatis saat ada pesanan.</span>
+                            </div>
+
+                            @include('creator.products.partials.free-product-requirements', ['product' => $product])
+
+                            @include('creator.products.partials.variants-manager', ['product' => $product])
+
+                            <div id="commissionWrap" class="form-group full"
+                                style="display: {{ $selectedType === 'ticket' ? 'none' : 'block' }}; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:14px; margin-top:0.75rem; margin-bottom:0.75rem; overflow:hidden; box-sizing:border-box;">
+                                @php $currentCommRate = old('affiliate_commission_rate', $product->affiliate_commission_rate ?? 10);
+                                $affOn = ($currentCommRate > 0); @endphp
                                 <label
-                                    style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-weight:700; color:#15803D; font-size:0.88rem;">
-                                    <input type="checkbox" name="is_whitelabel" id="isWhitelabelCheck" value="1" {{ old('is_whitelabel', $product->is_whitelabel) ? 'checked' : '' }}
-                                        onchange="toggleWhitelabelFields(this.checked)"
-                                        style="width:18px; height:18px; accent-color:#1eb349; cursor:pointer;">
-                                    <span>Tawarkan Produk Ini Sebagai White Label (Dapat Dijual Kembali Oleh Reseller /
-                                        Creator Lain)</span>
+                                    style="display:flex; align-items:center; gap:0.75rem; padding:0.85rem 1rem; cursor:pointer; user-select:none; margin:0; background:#f8fafc;">
+                                    <div style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                                        <input type="checkbox" id="affiliateCommissionToggle" {{ $affOn ? 'checked' : '' }}
+                                            style="opacity:0; width:0; height:0;"
+                                            onchange="handleAffiliateToggle(this.checked)">
+                                        <span class="toggle-slider-s"></span>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <div style="font-size:0.88rem; font-weight:700; color:#0f172a;">Aktifkan Komisi
+                                            Affiliate</div>
+                                        <div style="font-size:0.73rem; color:#64748b; line-height:1.4;">Produk ini bisa
+                                            dipromosikan oleh affiliate dan mereka mendapat komisi.</div>
+                                    </div>
                                 </label>
-                            </div>
-
-                            <div id="whitelabelOptionsWrap" style="display:none;">
-                                <div
-                                    style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#92400E; line-height:1.5;">
-                                    <strong
-                                        style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem; font-size:0.88rem; color:#B45309;">
-                                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                                <div id="affiliateRateWrap"
+                                    style="{{ !$affOn ? 'display:none;' : '' }} border-top:1px solid #e2e8f0; padding:1.25rem 1.4rem; background:#ffffff;">
+                                    <label class="form-label">Besaran Komisi Affiliate (%)</label>
+                                    <div style="position:relative; display:flex; align-items:center;">
+                                        <input type="number" name="affiliate_commission_rate" id="affiliate_commission_rate"
+                                            value="{{ $currentCommRate }}" class="form-input" min="5" max="100" step="0.5"
+                                            placeholder="10" style="padding-right:2.5rem;">
+                                        <span
+                                            style="position:absolute; right:1rem; font-weight:700; color:#64748B;">%</span>
+                                    </div>
+                                    <span class="form-hint"
+                                        style="color:#0284C7; font-weight:600; margin-top:0.35rem; display:inline-flex; align-items:center; gap:0.35rem;">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
                                             viewBox="0 0 24 24">
                                             <circle cx="12" cy="12" r="10" />
                                             <line x1="12" y1="16" x2="12" y2="12" />
                                             <line x1="12" y1="8" x2="12.01" y2="8" />
                                         </svg>
-                                        Ketentuan & Panduan White Label:
-                                    </strong>
-                                    <ul
-                                        style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.25rem;">
-                                        <li><strong>Aset Netral:</strong> File / link produk <u>TIDAK BOLEH</u> mengandung
-                                            watermark, logo personal, atau nomor kontak yang mengikat.</li>
-                                        <li><strong>Bebas Markup:</strong> Creator / reseller lain dapat menyalin link
-                                            produk ini ke Bio Link / Store mereka dan menaikkan harga jual sesuai keinginan.
-                                        </li>
-                                        <li><strong>Harga Dasar:</strong> Menggunakan harga produk utama yang diinput pada
-                                            Informasi Utama Produk.</li>
-                                        <li><strong>Approval Tim Buyle:</strong> Setelah disimpan/diubah, produk akan
-                                            ditinjau kembali oleh Admin Tim Buyle jika ada perubahan status.</li>
-                                    </ul>
+                                        Minimum 5%, rekomendasi 10% untuk mendorong penjualan.
+                                    </span>
+                                </div>
+                            </div>
+
+                            @if(auth()->user()->creatorProfile?->is_exclusive || ($product->seller && $product->seller->creatorProfile?->is_exclusive))
+                                <div class="form-group full"
+                                    style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.04)); border: 1.5px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                                    <div
+                                        style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #b45309; font-weight: 700; font-size: 0.95rem;">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                        </svg>
+                                        Fitur Creator Eksklusif — Statistik Bintang & Penjual
+                                    </div>
+                                    <div
+                                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label" style="color:#78350f;">Rating Produk (0.0 -
+                                                5.0)</label>
+                                            <input type="number" name="rating" value="{{ old('rating', $product->rating) }}"
+                                                class="form-input" min="0" max="5" step="0.1"
+                                                placeholder="Kosongkan jika otomatis dari ulasan"
+                                                style="border-color: rgba(245, 158, 11, 0.4);">
+                                            <span class="form-hint" style="color:#92400e;">Atur rating manual (opsional,
+                                                kosongkan agar otomatis dihitung dari ulasan asli pembeli).</span>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0;">
+                                            <label class="form-label" style="color:#78350f;">Jumlah Terjual (Sales)</label>
+                                            <input type="number" name="sold_count"
+                                                value="{{ old('sold_count', $product->sold_count ?? 0) }}" class="form-input"
+                                                min="0" step="1" placeholder="0" style="border-color: rgba(245, 158, 11, 0.4);">
+                                            <span class="form-hint" style="color:#92400e;">Atur angka jumlah produk terjual
+                                                secara manual.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="form-group full" id="shortDescWrap"
+                                style="display: {{ $selectedType === 'ticket' ? 'none' : 'block' }};">
+                                <label class="form-label">Deskripsi Singkat (Exerp) <span>*</span></label>
+                                <textarea name="short_desc" id="shortDescInput" class="form-input" rows="2"
+                                    placeholder="Deskripsi singkat maksimal 160 karakter" maxlength="160" {{ old('product_type', $product->product_type) === 'ticket' ? '' : 'required' }}>{{ old('short_desc', $product->short_desc) }}</textarea>
+                                <span class="form-hint">Digunakan sebagai meta description SEO jika mode advanced
+                                    dimatikan.</span>
+                            </div>
+
+                            <div class="form-group full" style="margin-bottom:0;">
+                                <label class="form-label">Deskripsi Lengkap <span>*</span></label>
+                                @include('admin.partials.rich-editor', ['name' => 'description', 'value' => old('description', $product->description), 'height' => '280px'])
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        {{-- TAB 2: MEDIA --}}
+        <div class="tab-pane" id="tab-media">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                    </svg>
+                    Upload Visual Produk
+                </div>
+                <div class="form-body">
+                    {{-- THUMBNAIL UTAMA: PROPORSIONAL 1:1 SQUARE --}}
+                    <div class="form-group">
+                        <label class="form-label">Upload Thumbnail Utama <span>*</span></label>
+                        <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+                            <div id="thumbDropzone" onclick="document.getElementById('thumb-input').click()"
+                                style="width:130px; height:130px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:16px; background:#f9fefb; cursor:pointer; display:{{ $product->image ? 'none' : 'flex' }}; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box;"
+                                onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
+                                onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
+                                <svg width="28" height="28" fill="none" stroke="#1eb349" stroke-width="1.8"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                                <div style="font-size:0.75rem; color:#1E293B; margin-top:0.35rem; font-weight:700;">
+                                    Ganti Foto</div>
+                                <div style="font-size:0.65rem; color:#94A3B8;">1:1 Proporsional</div>
+                            </div>
+
+                            <div id="thumbPreviewWrap" style="display:{{ $product->image ? 'block' : 'none' }};">
+                                <div
+                                    style="position:relative; width:130px; height:130px; border-radius:16px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08); background:#f8fafc;">
+                                    <img id="thumbPreviewImg"
+                                        src="{{ $product->image ? asset('storage/' . $product->image) : '' }}"
+                                        style="width:100%; height:100%; object-fit:cover; display:block;">
+                                    <div
+                                        style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                        <button type="button" onclick="document.getElementById('thumb-input').click()"
+                                            style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                            title="Ganti Foto">✎</button>
+                                        <button type="button" onclick="removeThumbnail()"
+                                            style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                            title="Hapus Foto">✕</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="file" name="image" id="thumb-input" accept="image/*"
+                            onchange="previewSingleThumb(event)" style="display:none;">
+                        <input type="hidden" name="remove_image" id="remove_image_input" value="0">
+                        <span class="form-hint" style="margin-top:0.5rem; display:block;">Format disarankan: Persegi
+                            (1:1), minimal 600x600 px. Biarkan kosong jika tidak ingin mengubah thumbnail.</span>
+                    </div>
+
+                    <div class="form-group" id="posterUploadWrap"
+                        style="{{ $selectedType === 'ticket' ? 'display:block;' : 'display:none;' }} background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:1.25rem; margin-bottom:1.25rem;">
+                        <label class="form-label"
+                            style="color:#166534; font-weight:800; display:flex; align-items:center; gap:0.4rem;">
+                            <svg width="18" height="18" fill="none" stroke="#166534" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="2" y="4" width="20" height="16" rx="2" />
+                                <polygon points="10,9 15,12 10,15" />
+                            </svg>
+                            Upload Poster Event (Landscape 16:9) <span style="color:#ef4444;">*</span>
+                        </label>
+                        <span class="form-hint" style="margin-bottom:0.75rem; color:#15803d; font-weight:600;">Khusus tipe
+                            produk Tiket
+                            Event / Wisata / Webinar. Diupload dalam format landscape 16:9.</span>
+                        <div class="img-upload-area" id="posterDropzone"
+                            onclick="document.getElementById('poster-input').click()"
+                            style="margin-bottom:0.75rem; background:#fff; {{ $product->og_image ? 'display:none;' : '' }}">
+                            <div>
+                                <svg width="32" height="32" fill="none" stroke="#1eb349" stroke-width="1.6"
+                                    viewBox="0 0 24 24">
+                                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                                    <circle cx="8" cy="10" r="2" />
+                                    <path d="M22 15l-5-5-8 8" />
+                                </svg>
+                                <p style="font-size:0.82rem; color:#1E293B; margin-top:0.4rem; font-weight:700;">
+                                    {{ $product->og_image ? 'Ganti Poster Event Landscape (16:9)' : 'Pilih Poster Event Landscape (16:9)' }}
+                                </p>
+                            </div>
+                        </div>
+                        <div id="posterPreviewWrap"
+                            style="{{ $product->og_image ? 'display:block;' : 'display:none;' }} margin-bottom:0.5rem;">
+                            <div
+                                style="position:relative; display:inline-block; border-radius:14px; overflow:hidden; border:2px solid #1eb349; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
+                                <img id="posterPreviewImg"
+                                    src="{{ $product->og_image ? asset('storage/' . $product->og_image) : '' }}"
+                                    style="width:240px; height:135px; object-fit:cover; display:block;">
+                                <div
+                                    style="position:absolute; top:6px; right:6px; display:flex; gap:4px; background:rgba(11,18,12,0.65); padding:3px 5px; border-radius:20px; backdrop-filter:blur(4px);">
+                                    <button type="button" onclick="document.getElementById('poster-input').click()"
+                                        style="background:#3b82f6; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                        title="Ganti Poster">✎</button>
+                                    <button type="button" onclick="removePoster()"
+                                        style="background:#ef4444; color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:11px; font-weight:bold; display:flex; align-items:center; justify-content:center;"
+                                        title="Hapus Poster">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="file" name="og_image" id="poster-input" accept="image/*"
+                            onchange="previewPosterThumb(event)" style="display:none;">
+                        <span class="form-hint">Biarkan kosong jika tidak ingin mengubah poster saat ini.</span>
+                    </div>
+
+                    {{-- FOTO GALERI: GRID PROPORSIONAL 1:1 SQUARE DENGAN TOMBOL TAMBAH TERINTEGRASI --}}
+                    <div class="form-group">
+                        <label class="form-label">Upload Foto Galeri / Screenshot (Opsional)</label>
+                        <input type="hidden" name="existing_gallery_submitted" value="1">
+                        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                            <div id="galleryPreview" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+                                @if(!empty($product->gallery) && is_array($product->gallery))
+                                    @foreach($product->gallery as $idx => $gal)
+                                        <div class="existing-gallery-item"
+                                            style="position:relative; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px; overflow:hidden; border:1.5px solid #cbd5e1; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#f8fafc; flex-shrink:0;">
+                                            <input type="hidden" name="existing_gallery[]" value="{{ $gal }}">
+                                            <img src="{{ asset('storage/' . $gal) }}"
+                                                style="width:100%; height:100%; object-fit:cover; display:block;">
+                                            <button type="button" onclick="removeExistingGallery(this)" title="Hapus Foto Ini"
+                                                style="position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:#ef4444; color:#fff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.25); transition:transform 0.15s ease;"
+                                                onmouseover="this.style.transform='scale(1.15)'"
+                                                onmouseout="this.style.transform='scale(1)'">✕</button>
+                                            <div
+                                                style="position:absolute; bottom:0; left:0; right:0; background:rgba(15,23,42,0.7); color:#fff; font-size:9px; font-weight:600; text-align:center; padding:2px 0;">
+                                                Lama #{{$idx + 1}}</div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <div id="galleryDropzone" onclick="document.getElementById('gallery-input').click()"
+                                style="width:110px; height:110px; aspect-ratio:1/1; border:2px dashed #bbf7d0; border-radius:14px; background:#f9fefb; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; transition:all 0.2s; box-sizing:border-box; flex-shrink:0;"
+                                onmouseover="this.style.borderColor='#1eb349'; this.style.background='#f0fdf4';"
+                                onmouseout="this.style.borderColor='#bbf7d0'; this.style.background='#f9fefb';">
+                                <svg width="22" height="22" fill="none" stroke="#1eb349" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                                <div style="font-size:0.75rem; font-weight:700; color:#1E293B; margin-top:0.3rem;">+
+                                    Foto</div>
+                                <div id="galleryCounterText" style="font-size:0.65rem; color:#94A3B8;">
+                                    ({{ count($product->gallery ?? []) }}/6)</div>
+                            </div>
+                        </div>
+                        <input type="file" name="gallery[]" id="gallery-input" accept="image/*" multiple max="6"
+                            onchange="previewGalleryList(event)" style="display:none;">
+                        <span class="form-hint" style="margin-top:0.4rem; display:block;">Maksimal total 6 foto
+                            galeri pendukung (proporsional 1:1).</span>
+                    </div>
+
+                    {{-- LINK VIDEO OPSIONAL --}}
+                    @php
+                        $curPlatform = old('video_platform', $product->video_platform ?? 'youtube');
+                        $pVideoUrls = old('tiktok_video_urls', $product->video_urls ?? []);
+                        $ytPrefill = old('youtube_video_url', ($curPlatform === 'youtube' && !empty($pVideoUrls)) ? $pVideoUrls[0] : ($product->youtube_video_url ?? ''));
+                        $tt1 = $pVideoUrls[0] ?? '';
+                        $tt2 = $pVideoUrls[1] ?? '';
+                        $tt3 = $pVideoUrls[2] ?? '';
+                    @endphp
+                    <div class="form-group full" id="videoLinkWrap" style="margin-top:1.25rem;">
+                        <div style="border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; background:#fff;">
+                            <div style="display:flex; align-items:center; gap:0.65rem; padding:0.75rem 1rem; background:#f8fafc; border-bottom:1px solid #f1f5f9; cursor:pointer; user-select:none;"
+                                onclick="toggleVideoLinkPanel()" id="videoLinkToggleBtn">
+                                <div
+                                    style="width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1eb349,#a5cf37); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    <svg width="15" height="15" fill="#fff" viewBox="0 0 24 24">
+                                        <polygon points="5 3 19 12 5 21 5 3" />
+                                    </svg>
+                                </div>
+                                <div style="flex:1;">
+                                    <div style="font-size:0.82rem; font-weight:700; color:#0f172a;">Link Video
+                                        <span style="font-size:0.72rem; font-weight:500; color:#94a3b8;">(Opsional)</span>
+                                    </div>
+                                    <div style="font-size:0.7rem; color:#64748b;">Pilih YouTube atau TikTok
+                                        (hingga 3 video)</div>
+                                </div>
+                                <svg id="videoLinkChevron" width="16" height="16" fill="none" stroke="#94a3b8"
+                                    stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform 0.2s;">
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
+                            </div>
+                            <div id="videoLinkPanel" style="display:none; padding:1.25rem;">
+                                {{-- Platform Selection Tabs --}}
+                                <div
+                                    style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; background:#f1f5f9; padding:0.3rem; border-radius:12px; width:fit-content; max-width:100%;">
+                                    <button type="button" id="btnPlatformYt" onclick="setVideoPlatform('youtube')"
+                                        style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'youtube' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
+                                        <svg width="15" height="15" fill="#ef4444" viewBox="0 0 24 24">
+                                            <path
+                                                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                                        </svg>
+                                        YouTube
+                                    </button>
+                                    <button type="button" id="btnPlatformTt" onclick="setVideoPlatform('tiktok')"
+                                        style="padding:0.45rem 1.1rem; border-radius:9px; font-size:0.78rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:0.45rem; {{ $curPlatform === 'tiktok' ? 'background:#fff; color:#0f172a; box-shadow:0 2px 6px rgba(0,0,0,0.06);' : 'background:transparent; color:#64748b;' }} transition:all 0.15s;">
+                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" />
+                                        </svg>
+                                        TikTok (Hingga 3 Video)
+                                    </button>
+                                </div>
+                                <input type="hidden" name="video_platform" id="videoPlatformInput"
+                                    value="{{ $curPlatform }}">
+
+                                {{-- YOUTUBE INPUT (1 Link) --}}
+                                <div id="youtubeInputWrap"
+                                    style="{{ $curPlatform === 'youtube' ? 'display:block;' : 'display:none;' }}">
+                                    <input type="url" name="youtube_video_url" id="videoUrlInput" value="{{ $ytPrefill }}"
+                                        class="form-input" placeholder="Paste link YouTube atau YouTube Shorts di sini..."
+                                        oninput="debounceVideoPreview(this.value)" style="margin-bottom:0.5rem;">
+                                    <span class="form-hint" style="display:block; margin-bottom:0.75rem;">Mendukung
+                                        link video
+                                        YouTube biasa dan YouTube Shorts. Preview muncul otomatis.</span>
                                 </div>
 
-                                <div class="form-grid">
-                                    <div class="form-group full">
-                                        <label class="form-label">Ketentuan Lisensi / Catatan Reseller (Opsional)</label>
-                                        <textarea name="whitelabel_terms" class="form-input" rows="2"
-                                            placeholder="Contoh: Boleh ubah nama & cover produk, dilarang menjual di bawah harga normal...">{{ old('whitelabel_terms', $product->whitelabel_terms) }}</textarea>
+                                {{-- TIKTOK INPUTS (Up to 3 Links) --}}
+                                <div id="tiktokInputsWrap"
+                                    style="{{ $curPlatform === 'tiktok' ? 'display:block;' : 'display:none;' }} margin-bottom:0.75rem;">
+                                    <div style="display:flex; flex-direction:column; gap:0.65rem;">
+                                        <div>
+                                            <label
+                                                style="font-size:0.75rem; font-weight:700; color:#1e293b; margin-bottom:0.25rem; display:block;">Link
+                                                TikTok 1 <span style="color:#ef4444;">*</span></label>
+                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl1"
+                                                class="form-input tiktok-url-inp" value="{{ $tt1 }}"
+                                                placeholder="https://www.tiktok.com/@username/video/..."
+                                                oninput="debounceTiktokPreviews()">
+                                        </div>
+                                        <div>
+                                            <label
+                                                style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
+                                                TikTok 2 (Opsional)</label>
+                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl2"
+                                                class="form-input tiktok-url-inp" value="{{ $tt2 }}"
+                                                placeholder="https://www.tiktok.com/@username/video/..."
+                                                oninput="debounceTiktokPreviews()">
+                                        </div>
+                                        <div>
+                                            <label
+                                                style="font-size:0.75rem; font-weight:600; color:#64748b; margin-bottom:0.25rem; display:block;">Link
+                                                TikTok 3 (Opsional)</label>
+                                            <input type="url" name="tiktok_video_urls[]" id="tiktokUrl3"
+                                                class="form-input tiktok-url-inp" value="{{ $tt3 }}"
+                                                placeholder="https://www.tiktok.com/@username/video/..."
+                                                oninput="debounceTiktokPreviews()">
+                                        </div>
                                     </div>
+                                    <span class="form-hint" style="margin-top:0.5rem; display:block;">Di halaman
+                                        produk pembeli, video akan tampil jejer horizontal rapi dan pas di dalam
+                                        box deskripsi.</span>
+                                </div>
+
+                                {{-- VIDEO PREVIEW BOX --}}
+                                <div id="videoPreviewBox"
+                                    style="display:none; border-radius:14px; overflow:hidden; background:#0f172a; margin-top:0.75rem;">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {{-- TAB 3: SEO & FAQ --}}
-                <div class="tab-pane" id="tab-seo">
-                    <div class="prof-card">
-                        <div class="prof-card-head">
-                            Meta Data Custom
+            <div class="prof-card" id="digitalAccessCard" style="{{ $selectedType === 'ticket' ? 'display:none;' : '' }}">
+                <div class="prof-card-head">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Akses File Digital <span>*</span>
+                </div>
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="form-label">Tautan Eksternal (G-Drive / Notion / Website)</label>
+                        <input type="url" name="digital_resource" id="externalLink"
+                            value="{{ old('digital_resource', $product->digital_resource) }}" class="form-input"
+                            placeholder="https://...">
+                        <span id="linkStatus"
+                            style="font-size:0.75rem; font-weight:600; display:none; margin-top:0.5rem; padding:0.5rem; border-radius:6px;"></span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- WHITE LABEL CARD --}}
+            <div class="prof-card"
+                style="border: 2px solid #E2E8F0; transition: border-color 0.2s; {{ $selectedType === 'ticket' ? 'display:none;' : '' }}"
+                id="whitelabelCard">
+                <div class="prof-card-head"
+                    style="background: linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%); display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="18" height="18" fill="none" stroke="#1eb349" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
+                        <span style="color:#1E293B; font-weight:800;">Fitur White Label & Lisensi Jual Kembali
+                            (Lisensi Resell & Re-Brand)</span>
+                    </div>
+
+                    @if($product->is_whitelabel)
+                        @if($product->whitelabel_approval_status === 'pending')
+                            <span
+                                style="background:#FEF3C7; color:#D97706; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Menunggu Review Tim Buyle
+                            </span>
+                        @elseif($product->whitelabel_approval_status === 'approved')
+                            <span
+                                style="background:#DCFCE7; color:#16A34A; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Approved (Disetujui)
+                            </span>
+                        @elseif($product->whitelabel_approval_status === 'rejected')
+                            <span
+                                style="background:#FEE2E2; color:#DC2626; font-size:.73rem; font-weight:700; padding:.25rem .65rem; border-radius:20px; display:inline-flex; align-items:center; gap:.3rem;">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                                Ditolak Admin
+                            </span>
+                        @endif
+                    @endif
+                </div>
+                <div class="form-body">
+                    @if($product->is_whitelabel && $product->whitelabel_approval_status === 'rejected' && $product->whitelabel_rejection_reason)
+                        <div
+                            style="background:#FEE2E2; border:1px solid #FCA5A5; border-radius:12px; padding:0.9rem 1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#991B1B;">
+                            <strong style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                                    <line x1="12" y1="9" x2="12" y2="13" />
+                                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                                </svg>
+                                Catatan Penolakan dari Admin Tim Buyle:
+                            </strong>
+                            <div>{{ $product->whitelabel_rejection_reason }}</div>
+                            <div style="font-size:0.75rem; margin-top:0.3rem; color:#7F1D1D;">Silakan perbaiki aset/file
+                                Anda agar netral (tanpa watermark) dan simpan ulang untuk mengajukan review baru.</div>
                         </div>
-                        <div class="form-body">
-                            <div class="form-hint" style="margin-bottom:1.25rem;">Jika dikosongkan, sistem akan otomatis
-                                menggunakan Informasi Utama Produk untuk SEO.</div>
+                    @endif
+
+                    <div
+                        style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:1rem; margin-bottom:1.25rem;">
+                        <label
+                            style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; font-weight:700; color:#15803D; font-size:0.88rem;">
+                            <input type="checkbox" name="is_whitelabel" id="isWhitelabelCheck" value="1" {{ old('is_whitelabel', $product->is_whitelabel) ? 'checked' : '' }}
+                                onchange="toggleWhitelabelFields(this.checked)"
+                                style="width:18px; height:18px; accent-color:#1eb349; cursor:pointer;">
+                            <span>Tawarkan Produk Ini Sebagai White Label (Dapat Dijual Kembali Oleh Reseller /
+                                Creator Lain)</span>
+                        </label>
+                    </div>
+
+                    <div id="whitelabelOptionsWrap" style="display:none;">
+                        <div
+                            style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:1rem; margin-bottom:1.25rem; font-size:0.83rem; color:#92400E; line-height:1.5;">
+                            <strong
+                                style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.4rem; font-size:0.88rem; color:#B45309;">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="16" x2="12" y2="12" />
+                                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                                </svg>
+                                Ketentuan & Panduan White Label:
+                            </strong>
+                            <ul style="margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.25rem;">
+                                <li><strong>Aset Netral:</strong> File / link produk <u>TIDAK BOLEH</u> mengandung
+                                    watermark, logo personal, atau nomor kontak yang mengikat.</li>
+                                <li><strong>Bebas Markup:</strong> Creator / reseller lain dapat menyalin link
+                                    produk ini ke Bio Link / Store mereka dan menaikkan harga jual sesuai keinginan.
+                                </li>
+                                <li><strong>Harga Dasar:</strong> Menggunakan harga produk utama yang diinput pada
+                                    Informasi Utama Produk.</li>
+                                <li><strong>Approval Tim Buyle:</strong> Setelah disimpan/diubah, produk akan
+                                    ditinjau kembali oleh Admin Tim Buyle jika ada perubahan status.</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group full">
+                                <label class="form-label">Ketentuan Lisensi / Catatan Reseller (Opsional)</label>
+                                <textarea name="whitelabel_terms" class="form-input" rows="2"
+                                    placeholder="Contoh: Boleh ubah nama & cover produk, dilarang menjual di bawah harga normal...">{{ old('whitelabel_terms', $product->whitelabel_terms) }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- TAB 3: SEO & FAQ --}}
+        <div class="tab-pane" id="tab-seo">
+            <div class="prof-card">
+                <div class="prof-card-head">
+                    Meta Data Custom
+                </div>
+                <div class="form-body">
+                    <div class="form-hint" style="margin-bottom:1.25rem;">Jika dikosongkan, sistem akan otomatis
+                        menggunakan Informasi Utama Produk untuk SEO.</div>
+                    <div class="form-group">
+                        <label class="form-label">Meta Title SEO</label>
+                        <input type="text" name="meta_title" value="{{ old('meta_title', $product->meta_title) }}"
+                            class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Meta Description SEO</label>
+                        <textarea name="meta_description" class="form-input"
+                            rows="2">{{ old('meta_description', $product->meta_desc) }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Meta Keywords</label>
+                        <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $product->meta_keywords) }}"
+                            class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="prof-card">
+                <div class="prof-card-head" style="justify-content:space-between;">
+                    FAQ Schema
+                    <button type="button" onclick="addFaqRow()"
+                        style="background:#f0fdf4; color:#1eb349; border:none; padding:0.4rem 0.8rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">+
+                        Tambah FAQ</button>
+                </div>
+                <div class="form-body" id="faqContainer">
+                    @php 
+                        $oldFaqs = old('faqs', !empty($product->faqs) ? $product->faqs : [['question' => '', 'answer' => '']]); 
+                    @endphp
+                    @foreach($oldFaqs as $idx => $faq)
+                        <div class="faq-row"
+                            style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
                             <div class="form-group">
-                                <label class="form-label">Meta Title SEO</label>
-                                <input type="text" name="meta_title" value="{{ old('meta_title', $product->meta_title) }}"
+                                <label class="form-label">Pertanyaan</label>
+                                <input type="text" name="faqs[{{$idx}}][question]" value="{{ $faq['question'] ?? '' }}"
                                     class="form-input">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Meta Description SEO</label>
-                                <textarea name="meta_description" class="form-input"
-                                    rows="2">{{ old('meta_description', $product->meta_desc) }}</textarea>
+                                <label class="form-label">Jawaban</label>
+                                <textarea name="faqs[{{$idx}}][answer]" class="form-input"
+                                    rows="2">{{ $faq['answer'] ?? '' }}</textarea>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Meta Keywords</label>
-                                <input type="text" name="meta_keywords"
-                                    value="{{ old('meta_keywords', $product->meta_keywords) }}" class="form-input">
-                            </div>
+                            <button type="button" onclick="this.closest('.faq-row').remove()"
+                                style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
                         </div>
-                    </div>
-
-                    <div class="prof-card">
-                        <div class="prof-card-head" style="justify-content:space-between;">
-                            FAQ Schema
-                            <button type="button" onclick="addFaqRow()"
-                                style="background:#f0fdf4; color:#1eb349; border:none; padding:0.4rem 0.8rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.8rem;">+
-                                Tambah FAQ</button>
-                        </div>
-                        <div class="form-body" id="faqContainer">
-                            @php 
-                                $oldFaqs = old('faqs', !empty($product->faqs) ? $product->faqs : [['question' => '', 'answer' => '']]); 
-                            @endphp
-                            @foreach($oldFaqs as $idx => $faq)
-                                <div class="faq-row"
-                                    style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                    <div class="form-group">
-                                        <label class="form-label">Pertanyaan</label>
-                                        <input type="text" name="faqs[{{$idx}}][question]" value="{{ $faq['question'] ?? '' }}"
-                                            class="form-input">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Jawaban</label>
-                                        <textarea name="faqs[{{$idx}}][answer]" class="form-input"
-                                            rows="2">{{ $faq['answer'] ?? '' }}</textarea>
-                                    </div>
-                                    <button type="button" onclick="this.closest('.faq-row').remove()"
-                                        style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
-
-                <div class="form-footer">
-                    <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
-                        class="btn-cancel">Batal</a>
-                    <button type="submit" class="btn-submit">Simpan</button>
-                </div>
-            </form>
+            </div>
         </div>
+
+        <div class="form-footer">
+            <a href="{{ request('from') === 'ticketing' ? url('/creator/event-attendance') : route('creator.products.index', request('from') ? ['from' => request('from')] : []) }}"
+                class="btn-cancel">Batal</a>
+            <button type="submit" class="btn-submit">Simpan</button>
+        </div>
+        </form>
+    </div>
     </div>
 @endsection
 
@@ -2079,17 +2108,17 @@
         function addFaqRow() {
             const container = document.getElementById('faqContainer');
             const html = `
-                                                                                                                                                                                <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
-                                                                                                                                                                                    <div class="form-group">
-                                                                                                                                                                                        <label class="form-label">Pertanyaan</label>
-                                                                                                                                                                                        <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
-                                                                                                                                                                                    </div>
-                                                                                                                                                                                    <div class="form-group">
-                                                                                                                                                                                        <label class="form-label">Jawaban</label>
-                                                                                                                                                                                        <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
-                                                                                                                                                                                    </div>
-                                                                                                                                                                                    <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
-                                                                                                                                                                                </div>`;
+                                                                                                                                                                                    <div class="faq-row" style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:12px; margin-bottom:1rem; position:relative;">
+                                                                                                                                                                                        <div class="form-group">
+                                                                                                                                                                                            <label class="form-label">Pertanyaan</label>
+                                                                                                                                                                                            <input type="text" name="faqs[${faqIdx}][question]" class="form-input">
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                        <div class="form-group">
+                                                                                                                                                                                            <label class="form-label">Jawaban</label>
+                                                                                                                                                                                            <textarea name="faqs[${faqIdx}][answer]" class="form-input" rows="2"></textarea>
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                        <button type="button" onclick="this.closest('.faq-row').remove()" style="position:absolute; top:1rem; right:1rem; background:#fee2e2; color:#ef4444; border:none; border-radius:6px; padding:0.25rem 0.5rem; cursor:pointer; font-size:0.75rem; font-weight:bold;">Hapus</button>
+                                                                                                                                                                                    </div>`;
             container.insertAdjacentHTML('beforeend', html);
             faqIdx++;
         }
@@ -2413,42 +2442,42 @@
             row.style.cssText = 'background:#FFFFFF; border:1.5px solid #E2E8F0; border-radius:12px; padding:0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.03); font-family:\'Montserrat\', sans-serif;';
 
             row.innerHTML = `
-                <div class="cf-fields-grid" style="font-family:'Montserrat', sans-serif;">
-                    <div class="cf-col-label">
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
-                        <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
+                    <div class="cf-fields-grid" style="font-family:'Montserrat', sans-serif;">
+                        <div class="cf-col-label">
+                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Judul Pertanyaan / Kolom <span style="color:#ef4444;">*</span></label>
+                            <input type="text" name="custom_fields[${idx}][label]" class="form-input cf-label" placeholder="Misal: Ukuran Jersey / Asal Institusi" value="${escapeHtml(label)}" required style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
+                        </div>
+                        <div class="cf-col-type">
+                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
+                            <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
+                                <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
+                                <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
+                                <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
+                                <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
+                                <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
+                            </select>
+                        </div>
+                        <div class="cf-col-req">
+                            <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
+                            <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.4rem; height:38px; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer; white-space:nowrap;">
+                                <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#0f172a; cursor:pointer;">
+                                <span>Wajib Diisi</span>
+                            </label>
+                        </div>
+                        <div class="cf-col-del" style="padding-bottom:1px;">
+                            <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;" title="Hapus Form">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="cf-col-type">
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Tipe Isian</label>
-                        <select name="custom_fields[${idx}][type]" class="form-input cf-type" onchange="handleCfTypeChange(this)" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
-                            <option value="text" ${type === 'text' ? 'selected' : ''}>Teks Bebas</option>
-                            <option value="select" ${type === 'select' ? 'selected' : ''}>Pilihan Dropdown</option>
-                            <option value="number" ${type === 'number' ? 'selected' : ''}>Angka</option>
-                            <option value="date" ${type === 'date' ? 'selected' : ''}>Tanggal</option>
-                            <option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Teks Panjang</option>
-                        </select>
-                    </div>
-                    <div class="cf-col-req">
-                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">Sifat</label>
-                        <label style="font-family:'Montserrat', sans-serif; display:inline-flex; align-items:center; gap:0.4rem; height:38px; font-size:0.78rem; font-weight:600; color:#334155; cursor:pointer; white-space:nowrap;">
-                            <input type="checkbox" name="custom_fields[${idx}][required]" value="1" ${isReq ? 'checked' : ''} style="width:16px; height:16px; accent-color:#0f172a; cursor:pointer;">
-                            <span>Wajib Diisi</span>
+                    <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
+                        <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
+                            Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
                         </label>
+                        <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
+                        <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
                     </div>
-                    <div class="cf-col-del" style="padding-bottom:1px;">
-                        <button type="button" onclick="removeCustomFieldRow(this)" style="background:#fee2e2; color:#ef4444; border:none; border-radius:8px; width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;" title="Hapus Form">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="cf-options-wrap" style="display:${type === 'select' ? 'block' : 'none'}; margin-top:0.65rem; padding-top:0.6rem; border-top:1px dashed #E2E8F0; font-family:'Montserrat', sans-serif;">
-                    <label style="font-family:'Montserrat', sans-serif; font-size:0.75rem; font-weight:700; color:#334155; display:block; margin-bottom:0.25rem;">
-                        Pilihan Dropdown (Pisahkan dengan koma) <span style="color:#ef4444;">*</span>
-                    </label>
-                    <input type="text" name="custom_fields[${idx}][options]" class="form-input cf-options" placeholder="Contoh: XS, S, M, L, XL, XXL atau 5K, 10K, Half Marathon" value="${escapeHtml(options)}" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; padding:0.45rem 0.65rem; height:38px; width:100%;">
-                    <span style="font-family:'Montserrat', sans-serif; font-size:0.71rem; color:#64748B; margin-top:0.2rem; display:block;">Pembeli tiket akan memilih salah satu dari opsi ini saat checkout.</span>
-                </div>
-            `;
+                `;
 
             container.appendChild(row);
             if (emptyNotice) emptyNotice.style.display = 'none';
@@ -2530,56 +2559,6 @@
                 checkEmptyCustomFields();
             }
         });
-
-        // Event Duration Mode Toggle (Single Day vs Multi Day)
-        function toggleEventDurationMode(mode) {
-            const endGroup = document.getElementById('eventEndDateWrap');
-            const startGroup = document.getElementById('eventStartDateWrap');
-            const startLabel = document.getElementById('eventStartDateLabel');
-            const endInput = document.getElementById('eventEndDateInput');
-            const startInput = document.getElementById('eventDateInput');
-
-            if (mode === 'multi') {
-                if (endGroup) endGroup.style.display = 'block';
-                if (startGroup) startGroup.style.gridColumn = 'auto';
-                if (startLabel) startLabel.innerHTML = 'Tanggal Mulai Event <span>*</span>';
-                if (endInput && startInput && startInput.value) {
-                    endInput.min = startInput.value;
-                    if (!endInput.value) endInput.value = startInput.value;
-                }
-            } else {
-                if (endGroup) endGroup.style.display = 'none';
-                if (startGroup) startGroup.style.gridColumn = '1 / -1';
-                if (startLabel) startLabel.innerHTML = 'Tanggal Pelaksanaan Event <span>*</span>';
-                if (endInput) endInput.value = '';
-            }
-        }
-
-        function handleEventStartDateChange(val) {
-            const endInput = document.getElementById('eventEndDateInput');
-            if (endInput) {
-                endInput.min = val;
-                if (endInput.value && endInput.value < val) {
-                    endInput.value = val;
-                }
-            }
-        }
-
-        // Event Type Toggle (Offline vs Online)
-        function toggleEventTypeFields(val) {
-            const offWrap = document.getElementById('offlineLocationWrap');
-            const onWrap = document.getElementById('onlineLocationWrap');
-            const warWrap = document.getElementById('ticketWarWrap');
-            if (val === 'online') {
-                if (offWrap) offWrap.style.display = 'none';
-                if (onWrap) onWrap.style.display = 'block';
-                if (warWrap) warWrap.classList.add('full');
-            } else {
-                if (offWrap) offWrap.style.display = 'block';
-                if (onWrap) onWrap.style.display = 'none';
-                if (warWrap) warWrap.classList.remove('full');
-            }
-        }
 
         // Single Platform Selector for Online Event
         function selectOnlinePlatform(radio) {
@@ -2984,18 +2963,18 @@
                 const ttMatch = url.match(/(?:tiktok\.com\/.*\/video\/|tiktok\.com\/v\/)(\d+)/i);
                 if (ttMatch) {
                     html += `
-                                                                                                                                                                                    <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
-                                                                                                                                                                                        <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
-                                                                                                                                                                                            style="width:100%; height:100%; border:none; display:block;"
-                                                                                                                                                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                                                                                                                                            allowfullscreen loading="lazy"></iframe>
-                                                                                                                                                                                    </div>`;
+                                                                                                                                                                                        <div style="flex:0 0 min(260px, 75vw); aspect-ratio:9/16; max-height:460px; border-radius:10px; overflow:hidden; background:#000; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+                                                                                                                                                                                            <iframe src="https://www.tiktok.com/player/v1/${ttMatch[1]}?music_info=1&description=1"
+                                                                                                                                                                                                style="width:100%; height:100%; border:none; display:block;"
+                                                                                                                                                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                                                                                                                                allowfullscreen loading="lazy"></iframe>
+                                                                                                                                                                                        </div>`;
                 } else {
                     html += `
-                                                                                                                                                                                    <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-                                                                                                                                                                                        <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
-                                                                                                                                                                                        <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
-                                                                                                                                                                                    </div>`;
+                                                                                                                                                                                        <div style="flex:0 0 min(260px, 75vw); border-radius:10px; background:#1e293b; padding:1rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                                                                                                                                                                                            <span style="font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">Video TikTok #${i + 1}</span>
+                                                                                                                                                                                            <a href="${url}" target="_blank" rel="noopener" style="color:#a5cf37; font-size:0.75rem; word-break:break-all;">${url}</a>
+                                                                                                                                                                                        </div>`;
                 }
             });
             html += '</div>';
@@ -3092,35 +3071,35 @@
             const actualVal = matchedPreset ? matchedPreset.val : trimmedName;
 
             return `
-                <div class="ticket-tax-row" id="tax_row_${idx}" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.65rem 0.85rem;">
-                    <div style="display:grid; grid-template-columns: 2fr 1.1fr auto; gap:0.65rem; align-items:end;">
-                        <div>
-                            <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Nama Pajak / Tagihan</label>
-                            <select class="form-input tax-preset-select" onchange="handleTaxPresetChange(this, ${idx})" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; background:#fff; margin-bottom:${isCustom ? '0.35rem' : '0'};">
-                                <option value="Pajak Hiburan / Daerah" data-rate="10" ${(!isCustom && actualVal === 'Pajak Hiburan / Daerah') ? 'selected' : ''}>Pajak Hiburan / Daerah (10%)</option>
-                                <option value="Pajak Hiburan (15%)" data-rate="15" ${(!isCustom && actualVal === 'Pajak Hiburan (15%)') ? 'selected' : ''}>Pajak Hiburan (15%)</option>
-                                <option value="Pajak Daerah / PB1" data-rate="10" ${(!isCustom && actualVal === 'Pajak Daerah / PB1') ? 'selected' : ''}>Pajak Daerah / PB1 (10%)</option>
-                                <option value="PPN" data-rate="11" ${(!isCustom && actualVal === 'PPN') ? 'selected' : ''}>PPN (11%)</option>
-                                <option value="Pajak Daerah" data-rate="5" ${(!isCustom && actualVal === 'Pajak Daerah') ? 'selected' : ''}>Pajak Daerah (5%)</option>
-                                <option value="custom" ${isCustom ? 'selected' : ''}>-- Ketik Nama Lainnya (Custom) --</option>
-                            </select>
-                            <input type="${isCustom ? 'text' : 'hidden'}" name="ticket_taxes[${idx}][name]" value="${escapeHtml(actualVal || 'Pajak Hiburan / Daerah')}" class="form-input tax-name-input" placeholder="Tuliskan nama pajak khusus..." style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:36px; background:#fff; ${isCustom ? '' : 'display:none;'}" oninput="updateTaxTotalSummary()">
-                        </div>
-                        <div>
-                            <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Tarif Pajak (%)</label>
-                            <div style="position:relative;">
-                                <input type="number" step="0.1" min="0" max="100" name="ticket_taxes[${idx}][rate]" value="${rate}" class="form-input tax-rate-input" placeholder="10" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; padding-right:1.8rem; background:#fff;" oninput="updateTaxTotalSummary()">
-                                <span style="position:absolute; right:8px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.78rem;">%</span>
+                    <div class="ticket-tax-row" id="tax_row_${idx}" style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:0.65rem 0.85rem;">
+                        <div style="display:grid; grid-template-columns: 2fr 1.1fr auto; gap:0.65rem; align-items:end;">
+                            <div>
+                                <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Nama Pajak / Tagihan</label>
+                                <select class="form-input tax-preset-select" onchange="handleTaxPresetChange(this, ${idx})" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; background:#fff; margin-bottom:${isCustom ? '0.35rem' : '0'};">
+                                    <option value="Pajak Hiburan / Daerah" data-rate="10" ${(!isCustom && actualVal === 'Pajak Hiburan / Daerah') ? 'selected' : ''}>Pajak Hiburan / Daerah (10%)</option>
+                                    <option value="Pajak Hiburan (15%)" data-rate="15" ${(!isCustom && actualVal === 'Pajak Hiburan (15%)') ? 'selected' : ''}>Pajak Hiburan (15%)</option>
+                                    <option value="Pajak Daerah / PB1" data-rate="10" ${(!isCustom && actualVal === 'Pajak Daerah / PB1') ? 'selected' : ''}>Pajak Daerah / PB1 (10%)</option>
+                                    <option value="PPN" data-rate="11" ${(!isCustom && actualVal === 'PPN') ? 'selected' : ''}>PPN (11%)</option>
+                                    <option value="Pajak Daerah" data-rate="5" ${(!isCustom && actualVal === 'Pajak Daerah') ? 'selected' : ''}>Pajak Daerah (5%)</option>
+                                    <option value="custom" ${isCustom ? 'selected' : ''}>-- Ketik Nama Lainnya (Custom) --</option>
+                                </select>
+                                <input type="${isCustom ? 'text' : 'hidden'}" name="ticket_taxes[${idx}][name]" value="${escapeHtml(actualVal || 'Pajak Hiburan / Daerah')}" class="form-input tax-name-input" placeholder="Tuliskan nama pajak khusus..." style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:36px; background:#fff; ${isCustom ? '' : 'display:none;'}" oninput="updateTaxTotalSummary()">
+                            </div>
+                            <div>
+                                <label style="font-size:0.74rem; font-weight:700; margin-bottom:0.25rem; color:#334155; display:block;">Tarif Pajak (%)</label>
+                                <div style="position:relative;">
+                                    <input type="number" step="0.1" min="0" max="100" name="ticket_taxes[${idx}][rate]" value="${rate}" class="form-input tax-rate-input" placeholder="10" style="font-family:'Montserrat', sans-serif; font-size:0.82rem; height:38px; padding-right:1.8rem; background:#fff;" oninput="updateTaxTotalSummary()">
+                                    <span style="position:absolute; right:8px; top:50%; transform:translateY(-50%); font-weight:700; color:#94a3b8; font-size:0.78rem;">%</span>
+                                </div>
+                            </div>
+                            <div style="padding-bottom:1px;">
+                                <button type="button" onclick="removeTaxRow(${idx})" style="background:#FEE2E2; border:none; color:#EF4444; width:36px; height:36px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" title="Hapus Pajak Ini">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
                             </div>
                         </div>
-                        <div style="padding-bottom:1px;">
-                            <button type="button" onclick="removeTaxRow(${idx})" style="background:#FEE2E2; border:none; color:#EF4444; width:36px; height:36px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" title="Hapus Pajak Ini">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                            </button>
-                        </div>
                     </div>
-                </div>
-            `;
+                `;
         }
 
         function addTaxRow(data = {}) {

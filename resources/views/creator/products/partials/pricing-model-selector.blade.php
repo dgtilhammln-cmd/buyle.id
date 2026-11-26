@@ -49,12 +49,12 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
     .buyle-ptab-card {
         background: #ffffff;
         border: 1.5px solid #e2e8f0;
-        border-radius: 14px;
-        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        padding: 0.75rem 0.85rem;
         cursor: pointer;
         display: flex;
         align-items: flex-start;
-        gap: 0.75rem;
+        gap: 0.65rem;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         text-align: left;
         width: 100%;
@@ -75,9 +75,9 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
     }
 
     .buyle-ptab-icon {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
         background: #f1f5f9;
         color: #475569;
         display: flex;
@@ -85,7 +85,7 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
         justify-content: center;
         flex-shrink: 0;
         transition: all 0.2s;
-        font-size: 1.15rem;
+        font-size: 1rem;
     }
 
     .buyle-ptab-card.active .buyle-ptab-icon {
@@ -99,7 +99,7 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
     }
 
     .buyle-ptab-title {
-        font-size: 0.88rem;
+        font-size: 0.82rem;
         font-weight: 700;
         color: #0f172a;
         margin-bottom: 2px;
@@ -109,10 +109,10 @@ Desain selaras tema Buyle (Montserrat, Emerald #1eb349, Slate & Clean neutral ca
     }
 
     .buyle-ptab-desc {
-        font-size: 0.73rem;
+        font-size: 0.71rem;
         font-weight: 500;
         color: #64748b;
-        line-height: 1.4;
+        line-height: 1.35;
     }
 
     .buyle-ptab-radio {
