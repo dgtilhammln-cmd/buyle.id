@@ -2284,11 +2284,17 @@
         }
 
         .pos-header-logo-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             z-index: 1;
+            pointer-events: auto;
+            width: auto;
         }
 
         .pos-header-logo-center img {
@@ -2310,23 +2316,19 @@
             .pos-ref-header {
                 min-height: 44px;
             }
-
-            .pos-header-logo-center {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                pointer-events: auto;
-                width: auto;
-            }
         }
 
         @media (min-width: 768px) {
+            .pos-ref-header {
+                min-height: 48px;
+            }
+
             .pos-header-logo-center {
-                position: static;
-                transform: none;
-                margin-left: 12px;
-                margin-right: auto;
+                position: absolute !important;
+                left: 50% !important;
+                top: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                margin: 0 !important;
             }
         }
 
